@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>685</width>
+    <height>543</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>AzConvert</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="azc_res.qrc">
+    <normaloff>:/res/AzConvert.ico</normaloff>:/res/AzConvert.ico</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_5">
+    <property name="margin">
+     <number>5</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <property name="spacing">
+        <number>9</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QTextEdit" name="txtSource">
+             <property name="font">
+              <font>
+               <family>Tahoma</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="verticalScrollBarPolicy">
+              <enum>Qt::ScrollBarAlwaysOn</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QPushButton" name="btnNew">
+               <property name="text">
+                <string>&amp;New</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnOpen">
+               <property name="text">
+                <string>&amp;Open...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnPaste">
+               <property name="minimumSize">
+                <size>
+                 <width>71</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>&amp;Paste</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QTextEdit" name="txtResult">
+             <property name="font">
+              <font>
+               <family>Tahoma</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="verticalScrollBarPolicy">
+              <enum>Qt::ScrollBarAlwaysOn</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QPushButton" name="btnSave">
+               <property name="text">
+                <string>&amp;Save...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnCopy">
+               <property name="text">
+                <string>&amp;Copy</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnClear">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>75</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Cle&amp;ar</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>685</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_Convert">
+     <property name="tearOffEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>&amp;Convert</string>
+     </property>
+     <addaction name="action_Latin_to_Arabic"/>
+     <addaction name="action_Arabic_to_Latin"/>
+     <addaction name="action_Cyrillic_to_Latin"/>
+    </widget>
+    <addaction name="menu_Convert"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Tools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <widget class="QMenu" name="menu_Language">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>&amp;Language</string>
+     </property>
+     <addaction name="action_LangEnglish"/>
+     <addaction name="action_LangAzerbaijani"/>
+     <addaction name="action_LangTurkish"/>
+     <addaction name="action_LangAzTurkish"/>
+     <addaction name="action_LangPersian"/>
+    </widget>
+    <addaction name="action_ConvertText"/>
+    <addaction name="action_Reload_dictionaries"/>
+    <addaction name="action_Add_word_to_dictionary"/>
+    <addaction name="separator"/>
+    <addaction name="actionCalendar_converter"/>
+    <addaction name="separator"/>
+    <addaction name="action_Options"/>
+    <addaction name="menu_Language"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Tools"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionClear_All"/>
+   <addaction name="separator"/>
+   <addaction name="actionCalendar_converter"/>
+   <addaction name="action_Add_word_to_dictionary"/>
+   <addaction name="separator"/>
+   <addaction name="action_ConvertText"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="action_Latin_to_Arabic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;1) Latin to Arabic</string>
+   </property>
+   <property name="toolTip">
+    <string>Latin script to Arabic script convert mode</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
+   </property>
+  </action>
+  <action name="action_Arabic_to_Latin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;2) Arabic to Latin</string>
+   </property>
+   <property name="toolTip">
+    <string>Arabic script to Latin script convert mode</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
+   </property>
+  </action>
+  <action name="action_Cyrillic_to_Latin">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;3) Cyrillic to Latin</string>
+   </property>
+   <property name="toolTip">
+    <string>Cyrillic script to Latin script convert mode</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
+   </property>
+  </action>
+  <action name="action_ConvertText">
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/player_rew.png</normaloff>:/res/player_rew.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Convert</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="action_Reload_dictionaries">
+   <property name="text">
+    <string>&amp;Reload dictionaries</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="action_Add_word_to_dictionary">
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/AddWord.png</normaloff>:/res/AddWord.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add word...</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
+   </property>
+  </action>
+  <action name="actionCalendar_converter">
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Calendar.png</normaloff>:/res/Calendar.png</iconset>
+   </property>
+   <property name="text">
+    <string>Calen&amp;dar switch...</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="action_Options">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Options...</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+  </action>
+  <action name="actionClear_All">
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Clear.png</normaloff>:/res/Clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear All</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear both boxes</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About &amp;Qt...</string>
+   </property>
+  </action>
+  <action name="action_LangEnglish">
+   <property name="text">
+    <string notr="true">English</string>
+   </property>
+  </action>
+  <action name="action_LangAzerbaijani">
+   <property name="text">
+    <string notr="true">Azərbaycanca</string>
+   </property>
+  </action>
+  <action name="action_LangTurkish">
+   <property name="text">
+    <string notr="true">Türkçe</string>
+   </property>
+  </action>
+  <action name="action_LangAzTurkish">
+   <property name="text">
+    <string notr="true">تورکجه</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
+  </action>
+  <action name="action_LangPersian">
+   <property name="text">
+    <string notr="true">فارسی</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>txtSource</tabstop>
+  <tabstop>txtResult</tabstop>
+  <tabstop>btnNew</tabstop>
+  <tabstop>btnOpen</tabstop>
+  <tabstop>btnPaste</tabstop>
+  <tabstop>btnSave</tabstop>
+  <tabstop>btnCopy</tabstop>
+  <tabstop>btnClear</tabstop>
+ </tabstops>
+ <resources>
+  <include location="azc_res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,0 +1,15 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\l2aconversion.o
+./release\mydata.o
+./release\c2lconversion.o
+./release\a2lconversion.o
+./release\addworddialog.o
+./release\calendarconverter.o
+./release\calendarswitchdialog.o
+./release\moc_mainwindow.o
+./release\moc_addworddialog.o
+./release\moc_calendarswitchdialog.o
+./release\qrc_azc_res.o
+);

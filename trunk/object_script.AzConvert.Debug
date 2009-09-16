@@ -1,0 +1,15 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\l2aconversion.o
+./debug\mydata.o
+./debug\c2lconversion.o
+./debug\a2lconversion.o
+./debug\addworddialog.o
+./debug\calendarconverter.o
+./debug\calendarswitchdialog.o
+./debug\moc_mainwindow.o
+./debug\moc_addworddialog.o
+./debug\moc_calendarswitchdialog.o
+./debug\qrc_azc_res.o
+);
