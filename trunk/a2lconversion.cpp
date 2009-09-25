@@ -19,6 +19,7 @@ void A2LConversion::ChangeAlternativeForms()
     strSource = strSource.replace(QChar('\x4e', '\x06'), QChar('\x59', '\x02'));
     strSource = strSource.replace(QChar('\x4f', '\x06'), 'o');
     strSource = strSource.replace(QChar('\x50', '\x06'), 'e');
+    strSource = strSource.replace("\u0649", "\u06cc");
 }
 
 QString A2LConversion::ChangePostfixes(const QString& w)
