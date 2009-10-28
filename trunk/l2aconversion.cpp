@@ -35,6 +35,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         (str = CheckPostfix(w, "f"+QString(uh)+"ru"+QString(sh), 2)) != (w) ||
         (str = CheckPostfix(w, "dar", 3)) != (w) ||
         (str = CheckPostfix(w, "xah", 2)) != (w) ||
+        (str = CheckPostfix(w, "b\u0259x\u015f", 2)) != w ||
         (str = CheckPostfix(w, "sev"+QString(eh)+"r", 2)) != (w))
         return str;
 
