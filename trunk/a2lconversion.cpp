@@ -20,6 +20,7 @@ void A2LConversion::ChangeAlternativeForms()
     strSource = strSource.replace(QChar('\x4f', '\x06'), 'o');
     strSource = strSource.replace(QChar('\x50', '\x06'), 'e');
     strSource = strSource.replace("\u0649", "\u06cc");
+    strSource = strSource.replace("\u0640", "");    //Ignore '-'
 }
 
 QString A2LConversion::ChangePostfixes(const QString& w)
@@ -702,6 +703,13 @@ QString A2LConversion::ConvertWord(const QString& wo, int bf, bool beforeVs)
                 continue;
             }
 
+            //Tashdid:
+            else if (c == QChar('\x51', '\x06'))
+            {
+                w += w[w.length() - 1];
+                continue;
+            }
+
             else if (c == QChar('\x24', '\x06'))
             {
                 w = w + "\u00f6";
@@ -935,6 +943,8 @@ QString A2LConversion::GetWord(int i)
 QString A2LConversion::GetWordFromDictionary(const QString& wo)
 {
     QString word(wo);
+    //Remove tashdid:
+    word = word.replace("\u0651", "");
     word = "[" + word + "]";
     if (!AA2AL.contains(word))
         return "";

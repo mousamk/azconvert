@@ -259,8 +259,16 @@ QString L2AConversion::ChangePostfixes(const QString& word)
 
     //"?l?s" & "?las":
     if (w.length() > 3 &&
-        ((IsFrontVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != (w)) ||
+        ((IsFrontVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
         (IsBackVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
+            return str;
+    if (w.length() > 3 &&
+        ((IsFrontVowel(w[w.length() - 5]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
+         (IsBackVowel(w[w.length() - 5]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
+            return str;
+    if (w.length() > 3 &&
+        ((IsFrontVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
+         (IsBackVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
             return str;
 
 
