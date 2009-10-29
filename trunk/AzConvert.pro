@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     a2lconversion.cpp \
     addworddialog.cpp \
     calendarconverter.cpp \
-    calendarswitchdialog.cpp
+    calendarswitchdialog.cpp \
+    settings.cpp
 HEADERS += mainwindow.h \
     l2aconversion.h \
     mydata.h \
@@ -21,7 +22,8 @@ HEADERS += mainwindow.h \
     a2lconversion.h \
     addworddialog.h \
     calendarconverter.h \
-    calendarswitchdialog.h
+    calendarswitchdialog.h \
+    settings.h
 FORMS += mainwindow.ui \
     aboutdialog.ui \
     addworddialog.ui \

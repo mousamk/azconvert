@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QFile>
 
+#include "settings.h"
 #include "mainwindow.h"
 #include "addworddialog.h"
 #include "calendarswitchdialog.h"
@@ -23,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     InitData();
     SetModeDirection();
+
+    //Load settings:
+    ui->actionWikipediaMode->setChecked(Settings::GetInstance()->GetWikiMode());
 }
 
 MainWindow::~MainWindow()
@@ -231,4 +235,18 @@ void MainWindow::on_actionCalendar_converter_triggered()
 {
     CalendarSwitchDialog* dlg = new CalendarSwitchDialog(this);
     dlg->show();
+}
+
+void MainWindow::on_actionWikipediaMode_triggered()
+{
+    bool check = ui->actionWikipediaMode->isChecked();
+    Settings::GetInstance()->SetWikiMode(check);
+
+    //Show information:
+    if (check)
+    {
+        QMessageBox::information(this, tr("Wikipedia mode"), tr("This mode is for transliterating Azerbaijani wikipedia's articles."
+                                                                "\nIn this mode, AzConvert automatically knows WikiMedia's formats and considers them in tranliteration."
+                                                                "\n\nIt's not perfect yet and still is in development."), tr("Ok"));
+    }
 }

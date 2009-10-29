@@ -47,6 +47,7 @@ private:
 
 
 private slots:
+    void on_actionWikipediaMode_triggered();
     void on_actionCalendar_converter_triggered();
     void on_action_Add_word_to_dictionary_triggered();
     void on_btnClear_clicked();

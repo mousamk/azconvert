@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 
 #include "l2aconversion.h"
+#include "settings.h"
 
 
 L2AConversion::L2AConversion()
@@ -263,11 +264,11 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         ((IsFrontVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
         (IsBackVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
             return str;
-    if (w.length() > 3 &&
+    if (w.length() > 4 &&
         ((IsFrontVowel(w[w.length() - 5]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
          (IsBackVowel(w[w.length() - 5]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
             return str;
-    if (w.length() > 3 &&
+    if (w.length() > 5 &&
         ((IsFrontVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
          (IsBackVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
             return str;
@@ -619,6 +620,14 @@ void L2AConversion::PreprocessText()
 
 QString L2AConversion::Convert(QProgressDialog* prg)
 {
+    //Load wiki mode:
+    bool wikiMode = Settings::GetInstance()->GetWikiMode();
+
+    //These variables are used in wiki mode:
+    int doubleBracket=0;
+    bool openBracketSeen = false;
+    bool closeBracketSeen = false;
+
     PreprocessText();
 
     int length = strSource.length();
@@ -641,18 +650,76 @@ QString L2AConversion::Convert(QProgressDialog* prg)
         if (prg->wasCanceled())
             break;
 
-        strResult = strResult + ConvertWord(word, true);
+
+        //In 'Wiki' mode, don't convert the texts between double brackets
+        if (!wikiMode || (doubleBracket == 0 || !IsThereColonBeforeDoubleCloseBrackets(i)))
+            strResult += ConvertWord(word, true);
+        else
+            strResult += word;
+
+
         while ((i < length) && !IsCharAInWordChar(strSource[i]))
         {
-            QChar ch = GetSpecialChar(strSource[i]);
+            QChar curChar = strSource[i];
+            //Wikimode:
+            //*********** Counting double brackets used in wiki format: ************
+            if (curChar == '[')
+            {
+                if (openBracketSeen)
+                {
+                    openBracketSeen = false;
+                    doubleBracket++;
+                }
+                else
+                    openBracketSeen = true;
+            }
+            else
+                openBracketSeen = false;
+
+            if (curChar == ']')
+            {
+                if (closeBracketSeen)
+                {
+                    closeBracketSeen = false;
+                    if (doubleBracket > 0)
+                        doubleBracket--;
+                }
+                else
+                    closeBracketSeen = true;
+            }
+            else
+                closeBracketSeen = false;
+            //******************* End counting double brakcets: *********************
+
+
+            //Converting characters:
+            QChar ch = GetSpecialChar(curChar);
             if (ch != ' ')
                 strResult = strResult + QString(ch);
             else
-                strResult = strResult + QString(strSource[i]);
+                strResult = strResult + QString(curChar);
             i++;
         }
     }
     return GetResult();
+}
+
+
+//This function is used in for 'Wiki' mode
+bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
+{
+    int count = strSource.length();
+    for (int i=index; i<count; i++)
+    {
+        if (strSource[i] == ']' && i>0 && strSource[i-1] == ']')
+            return false;
+        else if (strSource[i] == '|')
+            return false;
+        else if (strSource[i] == ':')
+            return true;
+    }
+
+    return false;
 }
 
 

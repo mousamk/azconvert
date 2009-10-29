@@ -37,6 +37,7 @@ private:
     bool    IsSesli(QChar c);
     bool    IsSessiz(QChar c);
     bool    IsSonrayaYapisan(QChar c);
+    bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
     void    PreprocessText();
 
 
