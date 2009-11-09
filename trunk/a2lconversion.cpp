@@ -1,4 +1,5 @@
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include <QMessageBox>
 
@@ -1081,7 +1082,7 @@ bool A2LConversion::IsSessizYV(const QString& w, int ind)
 
 void A2LConversion::OpenDicts()
 {
-    QFile file("./dicts/dict_AzA2AzL.dat");
+    QFile file(QDir::currentPath() + QDir::separator() + "dicts" + QDir::separator() + "dict_AzA2AzL.dat");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AA2AL = QString::fromUtf8(file.readAll());
@@ -1093,7 +1094,7 @@ void A2LConversion::OpenDicts()
         return;
     }
 
-    QFile file2("./dicts/dict_AzA2AzL_user.dat");
+    QFile file2(QDir::currentPath() + QDir::separator() + "dicts" + QDir::separator() + "dict_AzA2AzL_user.dat");
     if (file2.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AA2AL += QString::fromUtf8(file2.readAll());

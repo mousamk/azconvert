@@ -1,3 +1,4 @@
+#include <QDir>
 #include <QFile>
 #include <QMessageBox>
 #include <QCoreApplication>
@@ -1166,7 +1167,8 @@ bool L2AConversion::IsSonrayaYapisan(QChar c)
 
 void L2AConversion::OpenDicts()
 {
-    QFile file("./dicts/Dict_AzL2AzA.dat");
+    QFile file(QDir::currentPath() + QDir::separator() + "dicts" + QDir::separator() + "dict_AzL2AzA.dat");
+    QMessageBox::warning(NULL, "", file.fileName());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AL2AA = QString::fromUtf8(file.readAll());
@@ -1178,7 +1180,7 @@ void L2AConversion::OpenDicts()
         return;
     }
 
-    QFile file2("./dicts/Dict_AzL2AzA_user.dat");
+    QFile file2(QDir::currentPath() + QDir::separator() + "dicts" + QDir::separator() + "/dicts/dict_AzL2AzA_user.dat");
     if (file2.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AL2AA += QString::fromUtf8(file2.readAll());
