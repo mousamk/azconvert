@@ -1167,8 +1167,10 @@ bool L2AConversion::IsSonrayaYapisan(QChar c)
 
 void L2AConversion::OpenDicts()
 {
-    QFile file(QDir::currentPath() + QDir::separator() + "dicts" + QDir::separator() + "dict_AzL2AzA.dat");
-    QMessageBox::warning(NULL, "", file.fileName());
+    QString path = QDir::currentPath();
+    path = path + QDir::separator() + "dicts" + QDir::separator();
+    QFile file(path + "dict_AzL2AzA.dat");
+    //QMessageBox::warning(NULL, "", QDir::currentPath());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AL2AA = QString::fromUtf8(file.readAll());
@@ -1180,7 +1182,7 @@ void L2AConversion::OpenDicts()
         return;
     }
 
-    QFile file2(QDir::currentPath() + QDir::separator() + "dicts" + QDir::separator() + "/dicts/dict_AzL2AzA_user.dat");
+    QFile file2(path + "dict_AzL2AzA_user.dat");
     if (file2.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AL2AA += QString::fromUtf8(file2.readAll());

@@ -1,5 +1,6 @@
 #include <QMessageBox>
 #include <QFile>
+#include <QDir>
 
 #include "addworddialog.h"
 
@@ -52,6 +53,11 @@ void AddWordDialog::changeEvent(QEvent *e)
 
 void AddWordDialog::on_btnAdd_clicked()
 {
+    //Path:
+    QString path = QDir::currentPath();
+    path = path + QDir::separator() + "dicts" + QDir::separator();
+
+
     QString str;
     if (isL2A)
         m_ui.txtEqual->setText(Standardize(m_ui.txtEqual->text()));
@@ -62,16 +68,16 @@ void AddWordDialog::on_btnAdd_clicked()
     if (m_ui.rdbUser->isChecked())
     {
         if (isL2A)
-            fileName = "./dicts/dict_AzL2AzA_user.dat";
+            fileName = path + "dict_AzL2AzA_user.dat";
         else
-            fileName = "./dicts/dict_AzA2AzL_user.dat";
+            fileName = path + "dict_AzA2AzL_user.dat";
     }
     else if (m_ui.rdbSystem->isChecked())
     {
         if (isL2A)
-            fileName = "./dicts/dict_AzL2AzA.dat";
+            fileName = path + "dict_AzL2AzA.dat";
         else
-            fileName = "./dicts/dict_AzA2AzL.dat";
+            fileName = path + "dict_AzA2AzL.dat";
     }
 
     QFile file(fileName);

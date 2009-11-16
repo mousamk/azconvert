@@ -29,3 +29,14 @@ FORMS += mainwindow.ui \
     addworddialog.ui \
     calendarswitchdialog.ui
 RESOURCES += azc_res.qrc
+
+# only for unix:
+unix {
+    # in debug mode...
+    CONFIG(debug, debug|release) {
+        DESTDIR = debug
+    }
+    else {
+        DESTDIR = release
+    }
+}
