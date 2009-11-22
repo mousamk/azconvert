@@ -14,7 +14,7 @@
    <string>AzConvert</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="azc_res.qrc">
     <normaloff>:/res/AzConvert.ico</normaloff>:/res/AzConvert.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -313,8 +313,8 @@
   </action>
   <action name="action_ConvertText">
    <property name="icon">
-    <iconset>
-     <normaloff>:/res/player_rew.png</normaloff>:/res/player_rew.png</iconset>
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Convert.png</normaloff>:/res/Convert.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Convert</string>
@@ -333,7 +333,7 @@
   </action>
   <action name="action_Add_word_to_dictionary">
    <property name="icon">
-    <iconset>
+    <iconset resource="azc_res.qrc">
      <normaloff>:/res/AddWord.png</normaloff>:/res/AddWord.png</iconset>
    </property>
    <property name="text">
@@ -345,7 +345,7 @@
   </action>
   <action name="actionCalendar_converter">
    <property name="icon">
-    <iconset>
+    <iconset resource="azc_res.qrc">
      <normaloff>:/res/Calendar.png</normaloff>:/res/Calendar.png</iconset>
    </property>
    <property name="text">
@@ -370,7 +370,7 @@
   </action>
   <action name="actionClear_All">
    <property name="icon">
-    <iconset>
+    <iconset resource="azc_res.qrc">
      <normaloff>:/res/Clear.png</normaloff>:/res/Clear.png</iconset>
    </property>
    <property name="text">
@@ -443,6 +443,8 @@
   <tabstop>btnCopy</tabstop>
   <tabstop>btnClear</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="azc_res.qrc"/>
+ </resources>
  <connections/>
 </ui>

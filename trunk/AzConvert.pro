@@ -30,6 +30,8 @@ FORMS += mainwindow.ui \
     calendarswitchdialog.ui
 RESOURCES += azc_res.qrc
 
+RC_FILE = AzConvert.rc
+
 # only for unix:
 unix {
     # in debug mode...

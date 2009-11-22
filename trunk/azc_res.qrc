@@ -3,7 +3,7 @@
         <file>res/AddWord.png</file>
         <file>res/Clear.png</file>
         <file>res/Calendar.png</file>
-        <file>res/player_rew.png</file>
+        <file>res/Convert.png</file>
         <file>res/AzConvert.ico</file>
     </qresource>
 </RCC>
