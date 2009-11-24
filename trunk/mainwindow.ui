@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="azc_res.qrc">
-    <normaloff>:/res/AzConvert.ico</normaloff>:/res/AzConvert.ico</iconset>
+    <normaloff>:/res/Convert.png</normaloff>:/res/Convert.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_5">

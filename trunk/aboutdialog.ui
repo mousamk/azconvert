@@ -32,7 +32,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>59</x>
+     <x>100</x>
      <y>10</y>
      <width>221</width>
      <height>51</height>
@@ -55,7 +55,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>209</x>
+     <x>250</x>
      <y>60</y>
      <width>101</width>
      <height>16</height>
@@ -118,8 +118,29 @@ p, li { white-space: pre-wrap; }
 &lt;li style=&quot; font-size:10pt;&quot; align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You! &lt;span style=&quot; font-size:8pt; color:#00aa00;&quot;&gt;(For using AzConvert)&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>16</x>
+     <y>7</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="azc_res.qrc">:/res/Convert.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="azc_res.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btnOk</sender>
