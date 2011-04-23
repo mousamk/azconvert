@@ -29,6 +29,7 @@ private:
     QChar   GetSpecialChar(QChar c);
     QString GetSpecialWord(const QString& w);
     QString GetWord(int i);
+    QString GetWord(int i, QChar delim);
     QString GetWordFromDictionary(const QString& w);
     bool    IsBackVowel(QChar c);
     bool    IsCharAInWordChar(QChar c);

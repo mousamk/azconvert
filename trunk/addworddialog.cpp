@@ -18,7 +18,12 @@ AddWordDialog::AddWordDialog(MainWindow* main, QString word, QWidget* parent) :
     m_ui.setupUi(this);
 
 
+    //Preprocessing the word:
     word = word.trimmed();
+    word = word.replace("I", "\u0131");
+    word = word.toLower();
+
+    //Setting the word to the text box:
     m_ui.txtWord->setText(word);
 
     isL2A = mainWindow->cMode == L2A;

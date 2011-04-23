@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QDebug>
 #include <QMessageBox>
 
 #include "a2lconversion.h"
@@ -1082,9 +1083,11 @@ bool A2LConversion::IsSessizYV(const QString& w, int ind)
 
 void A2LConversion::OpenDicts()
 {
-    QString path = QDir::currentPath();
+	//QString path = QDir::currentPath();
+	QString path = QCoreApplication::applicationDirPath();
     path = path + QDir::separator() + "dicts" + QDir::separator();
     QFile file(path + "dict_AzA2AzL.dat");
+	qDebug() << "path: " << path;
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AA2AL = QString::fromUtf8(file.readAll());

@@ -1019,6 +1019,11 @@ QString L2AConversion::GetSpecialWord(const QString& w)
     return "";
 }
 
+QString L2AConversion::GetWord(int i, QChar delim)
+{
+
+}
+
 QString L2AConversion::GetWord(int i)
 {
     QString word = "";
@@ -1114,7 +1119,8 @@ bool L2AConversion::IsCharAInWordChar(QChar c)
              c == ')' || c == '[' || c == ']' || c == '{' ||
              c == '}' || c == '"' || c == '-' || c == '=' ||
              c == ',' || c == ':' || c == ';' || c == '<' ||
-             c == '>' || c == QChar('\x1c', '\x20') || c == QChar('\x1d', '\x20'));
+             c == '>' || c == '|' ||
+             c == QChar('\x1c', '\x20') || c == QChar('\x1d', '\x20'));
 }
 
 bool L2AConversion::IsFrontVowel(QChar c)
@@ -1167,7 +1173,8 @@ bool L2AConversion::IsSonrayaYapisan(QChar c)
 
 void L2AConversion::OpenDicts()
 {
-    QString path = QDir::currentPath();
+	//QString path = QDir::currentPath();
+	QString path = QCoreApplication::applicationDirPath();
     path = path + QDir::separator() + "dicts" + QDir::separator();
     QFile file(path + "dict_AzL2AzA.dat");
     //QMessageBox::warning(NULL, "", QDir::currentPath());
