@@ -622,7 +622,7 @@ void L2AConversion::PreprocessText()
 QString L2AConversion::Convert(QProgressDialog* prg)
 {
     //Load wiki mode:
-    bool wikiMode = Settings::GetInstance()->GetWikiMode();
+	bool wikiMode = Settings::GetInstance(this->parent())->GetWikiMode();
 
     //These variables are used in wiki mode:
     int doubleBracket=0;

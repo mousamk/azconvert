@@ -1,8 +1,12 @@
 #include <QProgressDialog>
+#include <QDesktopServices>
 #include <QMessageBox>
 #include <QClipboard>
 #include <QFileDialog>
+#include <QTimer>
 #include <QFile>
+#include <QDebug>
+#include <QResizeEvent>
 
 #include "settings.h"
 #include "mainwindow.h"
@@ -11,22 +15,31 @@
 #include "ui_mainwindow.h"
 #include "ui_aboutdialog.h"
 #include "l2aconversion.h"
+#include "update.h"
 
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    //ui->mainToolBar->setVisible(false);
-    //ui->action_ConvertText->setIcon(QIcon(":/res/Convert.ico"));
+	ui->setupUi(this);
+	infoLabel = new QLabel(this);
+	infoLabel->setGeometry(0, 0, 0, 0);
     on_action_Latin_to_Arabic_triggered();
+
+	//Setup connections:
+	connect(infoLabel, SIGNAL(linkActivated(const QString&)), this, SLOT(handleFlashUrlClick(const QString&)), Qt::UniqueConnection);
+	connect(this, SIGNAL(windowResized(QResizeEvent*)), this, SLOT(on_windowResized(QResizeEvent*)), Qt::UniqueConnection);
 
     InitData();
     SetModeDirection();
 
     //Load settings:
-    ui->actionWikipediaMode->setChecked(Settings::GetInstance()->GetWikiMode());
+	ui->actionWikipediaMode->setChecked(Settings::GetInstance(this)->GetWikiMode());
+
+	//Check for update:
+	if (Settings::GetInstance(this)->getUpdateCheck())
+		QTimer::singleShot(10000, this, SLOT(checkForUpdate()));
 }
 
 MainWindow::~MainWindow()
@@ -240,7 +253,7 @@ void MainWindow::on_actionCalendar_converter_triggered()
 void MainWindow::on_actionWikipediaMode_triggered()
 {
     bool check = ui->actionWikipediaMode->isChecked();
-    Settings::GetInstance()->SetWikiMode(check);
+	Settings::GetInstance(this)->SetWikiMode(check);
 
     //Show information:
     if (check)
@@ -249,4 +262,55 @@ void MainWindow::on_actionWikipediaMode_triggered()
                                                                 "\nIn this mode, AzConvert automatically knows WikiMedia's formats and considers them in tranliteration."
                                                                 "\n\nIt's not perfect yet and still is in development."), tr("Ok"));
     }
+}
+
+void MainWindow::checkForUpdate()
+{
+	Update::getInstance(this, this->parent())->checkForUpdate();
+}
+
+void MainWindow::showFlashInfo(const QString &message)
+{
+	//Configure info label:
+	infoLabel->setGeometry(this->width()-210, 0, 200, 20);
+	infoLabel->setStyleSheet("background-color: #FFFF44;");
+	infoLabel->setText(message);
+	infoLabel->show();
+}
+
+void MainWindow::handleFlashUrlClick(const QString &url)
+{
+	//Construct url object:
+	QUrl togoUrl(url);
+
+	//Check if it's not valid:
+	if (!togoUrl.isValid())
+		qDebug() << "Invalid url: " << url;
+	else
+	{
+		//Open the url in browser:
+		if (!QDesktopServices::openUrl(togoUrl))
+			qDebug() << "Going to url " << url << " was not successful!";
+	}
+}
+
+void MainWindow::newVersionAvailable(QString version)
+{
+	QString url = Settings::GetInstance(this)->getApplicationHomepage();
+	showFlashInfo("&nbsp; <a href=\"" + url + "\">New Versian " + version + " is Available!</a>");
+}
+
+void MainWindow::on_windowResized(QResizeEvent* e)
+{
+	//Update info label's position:
+	if (infoLabel->isVisible())
+		infoLabel->setGeometry(this->width()-210, 0, 200, 20);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *e)
+{
+	//call the base method:
+	QMainWindow::resizeEvent(e);
+
+	emit windowResized(e);
 }

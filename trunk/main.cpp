@@ -12,6 +12,11 @@ int main(int argc, char *argv[])
 
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
+	//Set application attributes:
+	QCoreApplication::setOrganizationName("AzTools");
+	QCoreApplication::setOrganizationDomain("AzTools.com");
+	QCoreApplication::setApplicationName("AzConvert");
+
     /*QTranslator translator;
     translator.load("azconvert_fa.qm");
     a.installTranslator(&translator);*/

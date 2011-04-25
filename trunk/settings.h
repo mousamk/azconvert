@@ -1,24 +1,48 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-class Settings
-{
-public:
-    static Settings* GetInstance();
-    Settings();
-    void LoadSettings();
-    void SaveSettings();
+#include <QObject>
+#include <QDate>
+#include <QString>
+#include <QSettings>
 
-    //Setter and getter functions:
+
+class Settings : public QObject
+{
+	//Q_OBJECT
+
+
+public:
+	static Settings* GetInstance(QObject* parent = NULL);
+	//~Settings();
+    void LoadSettings();
+	//void SaveSettings();
+
+
+private:
+	Settings(QObject* parent = NULL);
+	void initReadOnlySettings();
+
+
 public:
     bool GetWikiMode();
-    void SetWikiMode(bool mode);
+	void SetWikiMode(bool);
+	bool getUpdateCheck();
+	void setUpdateCheck(bool);
+	QString getUpdateUrl();
+	QString getCurrentVersion();
+	QString getApplicationHomepage();
 
 private:
     bool wikiMode;
+	bool updateCheck;
+	QString curVersion;
+	QString updateUrl;
+	QString appHomepage;
 
 private:
     static Settings* instance;
+	QSettings settings;
 };
 
 

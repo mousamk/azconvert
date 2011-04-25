@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include <QLabel>
 
 #include "l2aconversion.h"
 #include "c2lconversion.h"
@@ -34,6 +35,7 @@ private:
     //void SetupConnections();
     void InitData();
     void SetModeDirection();
+	void showFlashInfo(const QString&);
 
 
 public:
@@ -41,9 +43,19 @@ public:
 
 private:
     Ui::MainWindow *ui;
+	QLabel* infoLabel;
+	//QString infoLabelUrl;
     L2AConversion* l2aEngine;
     C2LConversion* c2lEngine;
     A2LConversion* a2lEngine;
+
+
+public:
+	void newVersionAvailable(QString version);
+
+
+signals:
+	void windowResized(QResizeEvent*);
 
 
 private slots:
@@ -65,6 +77,13 @@ private slots:
     void on_action_Latin_to_Arabic_triggered();
     void on_action_ConvertText_triggered();
     void on_actionExit_triggered();
+	void on_windowResized(QResizeEvent*);
+	void checkForUpdate();
+	void handleFlashUrlClick(const QString&);
+
+
+protected:
+	void resizeEvent(QResizeEvent*);
 };
 
 #endif // MAINWINDOW_H
