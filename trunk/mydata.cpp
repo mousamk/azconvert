@@ -1,4 +1,4 @@
-#include "mydata.h"
+﻿#include "mydata.h"
 
 
 MyData::MyData()

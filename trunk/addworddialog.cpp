@@ -59,7 +59,7 @@ void AddWordDialog::changeEvent(QEvent *e)
 void AddWordDialog::on_btnAdd_clicked()
 {
     //Path:
-    QString path = QDir::currentPath();
+    QString path = QApplication::applicationDirPath();
     path = path + QDir::separator() + "dicts" + QDir::separator();
 
 

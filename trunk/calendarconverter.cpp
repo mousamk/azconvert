@@ -1,4 +1,4 @@
-/* This file is part of:
+﻿/* This file is part of:
  *    Jalali, a Gregorian to Jalali and inverse date convertor
  * Copyright (C) 2001  Roozbeh Pournader <roozbeh@sharif.edu>
  * Copyright (C) 2001  Mohammad Toossi <mohammad@bamdad.org>

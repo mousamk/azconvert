@@ -18,7 +18,7 @@ L2AConversion::L2AConversion()
         oh('\xf6', '\x00'),
         gh('\x1f', '\x01'),
         vs('\x0c', '\x20')
-{
+{ 
     OpenDicts();
 }
 
@@ -199,11 +199,11 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         return str;
 
 
-    //"çi/4":
-    if ((str = CheckPostfix(w, "çi", 2)) != (w) ||
-        (str = CheckPostfix(w, "ç"+QString(ih), 2)) != (w) ||
-        (str = CheckPostfix(w, "çu", 2)) != (w) ||
-        (str = CheckPostfix(w, "ç"+QString(uh), 2)) != (w))
+	//"ï¿½i/4":
+    if ((str = CheckPostfix(w, "ï¿½i", 2)) != (w) ||
+        (str = CheckPostfix(w, "ï¿½"+QString(ih), 2)) != (w) ||
+        (str = CheckPostfix(w, "ï¿½u", 2)) != (w) ||
+        (str = CheckPostfix(w, "ï¿½"+QString(uh), 2)) != (w))
         return str;
 
 
@@ -260,6 +260,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         return str;
 
 
+	//<<<Issue remains in php:
     //"?l?s" & "?las":
     if (w.length() > 3 &&
         ((IsFrontVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
@@ -273,6 +274,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         ((IsFrontVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
          (IsBackVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
             return str;
+	//>>>
 
 
     //"r?k" & "raq":
@@ -292,6 +294,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         return str;
 
 
+	//<<<Issue: ignored left condition
     //"?sini/8":
     if (w.length() > 4 &&
         ((w[w.length() - 5] == eh && (str = CheckPostfix(w, "sini", 3)) != (w)) ||
@@ -303,8 +306,10 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         (w[w.length() - 5] == oh && (str = CheckPostfix(w, "s"+QString(uh)+"n"+QString(uh), 1)) != (w)) ||
         (w[w.length() - 5] == 'o' && (str = CheckPostfix(w, "sunu", 1)) != (w))))
         return str;
+	//>>>
 
 
+	//<<<Issue: ignored left condition
     //"?sin/8":
     if (w.length() > 3 &&
         ((w[w.length() - 4] == eh && (str = CheckPostfix(w, "sin", 3)) != (w)) ||
@@ -316,6 +321,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         (w[w.length() - 4] == oh && (str = CheckPostfix(w, "s"+QString(uh)+"n", 1)) != (w)) ||
         (w[w.length() - 4] == 'o' && (str = CheckPostfix(w, "sun", 1)) != (w))))
         return str;
+	//>>>
 
 
     //"ini/4":
@@ -326,6 +332,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         return str;
 
 
+	//<<<Issue: ignored left condition
     //"?si/8":
     if (w.length() > 2 &&
         ((w[w.length() - 3] == eh && (str = CheckPostfix(w, "si", 3)) != (w)) ||
@@ -401,6 +408,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
         return str;
 
 
+	//<<<Continue from here...
     //"dir/4":
     if ((str = CheckPostfix(w, "dir", 2)) != (w) ||
         (str = CheckPostfix(w, "d"+QString(ih)+"r", 2)) != (w) ||

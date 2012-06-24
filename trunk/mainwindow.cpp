@@ -1,4 +1,4 @@
-#include <QProgressDialog>
+﻿#include <QProgressDialog>
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QClipboard>

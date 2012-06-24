@@ -860,8 +860,8 @@ QString A2LConversion::DescriptWord(const QString& w)
             }
             else
             {
-                IsSessiz(str, i + 1);
-                IsSessiz(str, i - 1);
+                IsSessiz(str, i + 1);       //What does this line do?!
+                IsSessiz(str, i - 1);       //"
                 if ((((str[i] == QChar('\x46', '\x06')) || (str[i] == QChar('\x33', '\x06'))) || ((str[i] == QChar('\x44', '\x06')) || (str[i] == QChar('\x31', '\x06')))) && (IsSessiz(str, i + 1) && IsSessiz(str, i - 1)))
                 {
                     str = str.insert(i + 1, "\u0259");

@@ -1,4 +1,4 @@
-#include <QMessageBox>
+﻿#include <QMessageBox>
 #include <QIntValidator>
 
 #include "calendarswitchdialog.h"

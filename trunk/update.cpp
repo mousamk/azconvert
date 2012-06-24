@@ -1,4 +1,4 @@
-#include <QNetworkReply>
+﻿#include <QNetworkReply>
 #include <QDebug>
 
 #include "update.h"

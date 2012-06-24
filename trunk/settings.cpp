@@ -1,4 +1,4 @@
-#include <QSettings>
+﻿#include <QSettings>
 #include "settings.h"
 
 
@@ -17,7 +17,7 @@ Settings::Settings(QObject* parent)
 void Settings::initReadOnlySettings()
 {
 	//Program current version:
-	curVersion = "3.1.4";
+	curVersion = "3.2";
 
 	//Program latest version source:
 	updateUrl = "http://azconvert.sourceforge.net/lastver.txt";
