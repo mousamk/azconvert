@@ -39,6 +39,12 @@ private:
     bool    IsSonrayaYapisan(QChar c);
     bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
     void    PreprocessText();
+    void getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
+    
+    
+protected:
+    //void getTablesPostfix();
+    void loadChars();
 
 
 public:

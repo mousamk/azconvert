@@ -1,9 +1,12 @@
+#include <QVariant>
 #include "c2lconversion.h"
+#include "dbservice.h"
 
 
 C2LConversion::C2LConversion(QObject* parent)
     : Convertor(parent)
 {
+    loadChars();
 }
 
 
@@ -16,6 +19,41 @@ Qt::LayoutDirection C2LConversion::getSourceLayoutDirection()
 Qt::LayoutDirection C2LConversion::getDestinationLayoutDirection()
 {
     return Qt::LeftToRight;
+}
+
+
+/*void C2LConversion::getTablesPostfix()
+{
+    return "_c2l";
+}*/
+
+
+void C2LConversion::loadChars()
+{
+    //TODO: Update this code for this mode of conversion!
+    QSqlRecord record;
+    QSqlQuery query;
+    DbService::getInstance()->getCharacters("_l2a", record, query);
+    int size = query.size();
+    if (size <= 0)      //If size could not be determined
+        size = 100;
+    numOfChars = size;
+    chars = new QString*[numOfChars];
+    int i=0;
+    while(query.next())
+    {
+        //TODO: Guard larger than 100 rows!
+        chars[i] = new QString[7];
+        chars[i][0] = query.value(record.indexOf("source")).toString();
+        chars[i][1] = query.value(record.indexOf("start")).toString();
+        chars[i][2] = query.value(record.indexOf("mid")).toString();
+        chars[i][3] = query.value(record.indexOf("end")).toString();
+        chars[i][4] = query.value(record.indexOf("start_voc")).toString();
+        chars[i][5] = query.value(record.indexOf("mid_voc")).toString();
+        chars[i][6] = query.value(record.indexOf("end_voc")).toString();
+        
+        i++;
+    }
 }
 
 

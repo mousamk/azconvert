@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by Qt Creator 2.5.0, 2012-06-25T03:37:18. -->
+<!-- Written by Qt Creator 2.5.0, 2012-06-25T06:26:32. -->
 <qtcreator>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -106,12 +106,12 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4BuildConfiguration</value>
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">2</value>
-    <value type="QString" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory">/media/stuff/Qt/AzConvert/AzConvert-build-desktop</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory">/home/mousa/Code/azconvert/AzConvert-build-desktop/</value>
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.QtVersionId">2</value>
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
-    <value type="QString" key="ProjectExplorer.BuildCOnfiguration.ToolChain">INVALID</value>
+    <value type="QString" key="ProjectExplorer.BuildCOnfiguration.ToolChain">ProjectExplorer.ToolChain.Gcc:{de9f8610-b167-43d3-b27e-dcb94753d25e}</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -155,12 +155,12 @@
     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">2</value>
     <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">false</value>
     <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Release</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Qt in PATH Release</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4BuildConfiguration</value>
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">0</value>
-    <value type="QString" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory">E:/Qt/AzConvert/AzConvert-build-desktop</value>
-    <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.QtVersionId">-1</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory">/home/mousa/Code/azconvert/AzConvert-build-desktop/</value>
+    <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.QtVersionId">2</value>
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.BuildConfigurationCount">2</value>
@@ -218,7 +218,7 @@
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseTerminal">false</value>
     <valuelist type="QVariantList" key="Qt4ProjectManager.Qt4RunConfiguration.UserEnvironmentChanges"/>
-    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory"></value>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory">/home/mousa/Code/azconvert/AzConvert-build-desktop/</value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>

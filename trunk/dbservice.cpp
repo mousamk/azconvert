@@ -1,5 +1,10 @@
 #include <QSqlError>
 #include <QDebug>
+#include <QSqlQuery>
+#include <QSqlRecord>
+//#include <QFile>
+#include <QDir>
+#include <QCoreApplication>
 #include "dbservice.h"
 
 
@@ -31,13 +36,29 @@ DbService* DbService::getInstance()
 
 bool DbService::loadDb()
 {
+    /*QFile file("./test.test");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "success";
+        file.write("test!");
+    }*/
+    
     db = QSqlDatabase::addDatabase("QSQLITE", "TransliterationDb");
-    db.setDatabaseName("db.sqlite");
+    QString dbFilePath = QCoreApplication::applicationDirPath() + QDir::separator() + "db.sqlite";
+    db.setDatabaseName(dbFilePath);
     if (!db.open())
     {
-        qDebug() << "Error opening db: " << db.lastError().text();
+        //qDebug() << "Error opening db: " << db.lastError().text();
         return false;
     }
     
     return true;
+}
+
+
+void DbService::getCharacters(QString tablePostfix, QSqlRecord& record, QSqlQuery& query)
+{
+    QString queryStr = "SELECT * FROM characters" + tablePostfix + ";"; 
+    query = QSqlQuery(queryStr, db);
+    record = query.record();
 }

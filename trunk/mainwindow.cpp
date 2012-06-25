@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->setupUi(this);
 	infoLabel = new QLabel(this);
 	infoLabel->setGeometry(0, 0, 0, 0);
-    on_action_Latin_to_Arabic_triggered();
     
     //Initialize db:
     if (!DbService::createInstance(this))
@@ -39,6 +38,9 @@ MainWindow::MainWindow(QWidget *parent)
                               " If even by reinstalling this error occurred again, please contact the developer.", QMessageBox::Ok);
         this->close();
     }
+    
+    //Set initial mode to L2A:
+    on_action_Latin_to_Arabic_triggered();
 
 	//Setup connections:
 	connect(infoLabel, SIGNAL(linkActivated(const QString&)), this, SLOT(handleFlashUrlClick(const QString&)), Qt::UniqueConnection);
@@ -265,7 +267,7 @@ void MainWindow::newVersionAvailable(QString version)
 }
 
 
-void MainWindow::updateInfoLabelPosition(QResizeEvent* e)
+void MainWindow::updateInfoLabelPosition(QResizeEvent*)
 {
 	//Update info label's position:
 	if (infoLabel->isVisible())
@@ -273,7 +275,7 @@ void MainWindow::updateInfoLabelPosition(QResizeEvent* e)
 }
 
 
-void MainWindow::resizeEvent(QResizeEvent *e)
+void MainWindow::resizeEvent(QResizeEvent*e)
 {
 	//call the base method:
 	QMainWindow::resizeEvent(e);

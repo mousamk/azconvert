@@ -46,12 +46,12 @@ RESOURCES += azc_res.qrc
 RC_FILE = AzConvert.rc
 
 # only for unix:
-unix {
+#unix {
     # in debug mode...
-    CONFIG(debug, debug|release) {
-        DESTDIR = debug
-    }
-    else {
-        DESTDIR = release
-    }
-}
+#    CONFIG(debug, debug|release) {
+#        DESTDIR = debug
+#    }
+#    else {
+#        DESTDIR = release
+#    }
+#}

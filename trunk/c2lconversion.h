@@ -15,6 +15,11 @@ public:
     void openDicts() {}
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
+    
+    
+protected:
+    //void getTablesPostfix();
+    void loadChars();
 };
 
 #endif // C2LCONVERSION_H

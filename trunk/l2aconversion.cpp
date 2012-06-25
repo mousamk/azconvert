@@ -2,9 +2,12 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QCoreApplication>
+#include <QVariant>
+#include <QDebug>
 
 #include "l2aconversion.h"
 #include "settings.h"
+#include "dbservice.h"
 
 
 L2AConversion::L2AConversion(QObject* parent)
@@ -20,6 +23,48 @@ L2AConversion::L2AConversion(QObject* parent)
       vs('\x0c', '\x20')
 { 
     openDicts();
+    loadChars();
+}
+
+
+/*void L2AConversion::getTablesPostfix()
+{
+    return "_l2a";
+}*/
+
+
+void L2AConversion::loadChars()
+{
+    QSqlRecord record;
+    QSqlQuery query;
+    DbService::getInstance()->getCharacters("_l2a", record, query);
+    int size = query.size();
+    if (size <= 0)      //If size could not be determined
+        size = 100;
+    numOfChars = size;
+    chars = new QString*[numOfChars];
+    int i=0;
+    while(query.next())
+    {
+        //TODO: Guard larger than 100 rows!
+        chars[i] = new QString[7];
+        chars[i][0] = query.value(record.indexOf("source")).toString();
+        chars[i][1] = query.value(record.indexOf("start")).toString();
+        chars[i][2] = query.value(record.indexOf("mid")).toString();
+        chars[i][3] = query.value(record.indexOf("end")).toString();
+        chars[i][4] = query.value(record.indexOf("start_voc")).toString();
+        chars[i][5] = query.value(record.indexOf("mid_voc")).toString();
+        chars[i][6] = query.value(record.indexOf("end_voc")).toString();
+        
+        i++;
+    }
+    numOfChars = i;
+    
+    while(i < 100)
+    {
+        chars[i] = NULL;
+        i++;
+    }
 }
 
 
@@ -877,7 +922,7 @@ QChar L2AConversion::ConvertSessizChar(QChar c)
 QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
 {
     QString word(wo);
-    if (word.isNull() || word.isEmpty())
+    if (word.isEmpty())
         return "";
 
     if (IsNonConvertableWord(word))
@@ -926,103 +971,42 @@ QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
         int length = word.length();
         for (int i = 0; i < length; i++)
         {
+            //Choose letter position mode:
+            int modeIndex = 0;
+            if (0 == i) modeIndex = 1;
+            else if (length-1 == i) modeIndex = 3;
+            else modeIndex = 2;
+            //TODO: Consider 'voc' modes too
+            
             QChar c = word[i];
-            //QString chr = "a";
-            if (i == 0)
-            {
-                if (c == eh || c == QChar('\xd9', '\x04'))
-                {
-                    str = str + QChar('\x27', '\x06');
-                    continue;
-                }
-
-                else if (c == 'a')
-                {
-                    str += QString(QChar('\x22', '\x06'));
-                    continue;
-                }
-
-                else if (c == 'o' || c == 'u' || c == uh)
-                {
-                    str = str + QChar('\x27', '\x06')+ QChar('\x48', '\x06');
-                    continue;
-                }
-
-                else if (c == oh)
-                {
-                    str = str + QChar('\x27', '\x06')+QChar('\x24', '\x06');
-                    continue;
-                }
-
-                else if (c == 'e')
-                {
-                    str = str + QChar('\x27', '\x06')+QChar('\x26', '\x06');
-                    continue;
-                }
-
-                else if (c == 'i' || c == ih)
-                {
-                    str = str + QChar('\x27', '\x06')+QChar('\xcc', '\x06');
-                    continue;
-                }
-            }
-            else if ((i == length - 1) && (c == eh || c == QChar('\xd9', '\x04')))
-            {
-                str = str + QChar('\x47', '\x06');
-                continue;
-                break;
-            }
-            else
-            {
-                if (c == eh || c == QChar('\xd9', '\x04') || c == '\'')
-                    continue;
-
-                else if (c == 'a')
-                {
-                    str = str + QChar('\x27', '\x06');
-                    continue;
-                }
-
-                else if (c == 'o' || c == 'u' || c == uh)
-                {
-                    str = str + QChar('\x48', '\x06');
-                    continue;
-                }
-
-                else if (c == oh)
-                {
-                    str = str + QChar('\x24', '\x06');
-                    continue;
-                }
-
-                else if (c == 'e')
-                {
-                    str = str + QChar('\x26', '\x06');
-                    continue;
-                }
-
-                else if (c == 'i' || c == ih)
-                {
-                    str = str + QChar('\xcc', '\x06');
-                    continue;
-                }
-            }
-
-
-            if (IsSessiz(c))
-            {
-                str += QString(ConvertSessizChar(c));
-                continue;
-            }
-            else
-            {
-                str += QString(c);
-                continue;
-            }
+            QString eq;
+            getCharEquivalent(c, modeIndex, eq);
+            str += eq;
         }
     }
+    
     return str;
 }
+
+
+void L2AConversion::getCharEquivalent(const QChar &ch, int columnIndex, QString &equivalent)
+{
+    qDebug() << "char: " << ch;
+    //TODO: Why arabic scripts are comming to this function?!
+    //Lookup the character:
+    for(int i=0; i<numOfChars; i++)
+    {
+        if (chars[i][0].at(0) == ch)
+        {
+            equivalent = chars[i][columnIndex];
+            return;
+        }
+    }
+    
+    //Now that no equivalent is found, return the same source:
+    equivalent = QString(ch);
+}
+
 
 QString L2AConversion::GetResult()
 {

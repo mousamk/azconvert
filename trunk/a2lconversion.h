@@ -46,6 +46,11 @@ private:
     bool    IsSessizYV(const QString&, int);
     void    RaiseUpFirstLetters();
     int     GetHicaNumber(const QString&, int);
+    
+    
+protected:
+    //void getTablesPostfix();
+    void loadChars();
 
 
 public:

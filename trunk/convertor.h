@@ -9,6 +9,7 @@
 #define CONVERTOR_H
 
 #include <QObject>
+#include <QList>
 
 
 class QProgressDialog;
@@ -29,6 +30,11 @@ public:
      * @param parent Parent for the new object to be created
      */
     Convertor(QObject* parent);
+    
+    /*!
+     * @brief Class destructor
+     */
+    ~Convertor();
     
     /*!
      * @brief Converts the previously set original text and returns the result.
@@ -64,8 +70,28 @@ public:
     
     
 protected:
+    /*!
+     * @brief Loads character table used for base transliteration
+     */
+    virtual void loadChars() = 0;
+    
+    /*!
+     * @brief Gets the convertor's postfix for database tables
+     * @return The postfix of the convertor in db tables
+     */
+    //virtual QString getTablesPostfix() = 0;
+    
+    
+protected:
     /// @brief The original source text to be converted
     QString strSource;
+    
+    /// @brief The transliteration table of characeters
+    QString** chars;
+    
+    /// @brief Number of level 1 arrays (i.e. number of different characters
+    ///  in the array above
+    int numOfChars;
 };
 
 #endif // CONVERTOR_H

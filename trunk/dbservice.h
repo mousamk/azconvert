@@ -9,6 +9,8 @@
 
 #include <QObject>
 #include <QSqlDatabase>
+#include <QSqlRecord>
+#include <QSqlQuery>
 
 
 /*!
@@ -23,6 +25,7 @@ class DbService : public QObject
 public:
     static bool createInstance(QObject* parent);
     static DbService* getInstance();
+    void getCharacters(QString tablePostfix, QSqlRecord& record, QSqlQuery& query);
     
     
 private:
