@@ -15,7 +15,10 @@
 #include "ui_mainwindow.h"
 #include "ui_aboutdialog.h"
 #include "l2aconversion.h"
+#include "a2lconversion.h"
+#include "c2lconversion.h"
 #include "update.h"
+#include "dbservice.h"
 
 
 
@@ -26,12 +29,21 @@ MainWindow::MainWindow(QWidget *parent)
 	infoLabel = new QLabel(this);
 	infoLabel->setGeometry(0, 0, 0, 0);
     on_action_Latin_to_Arabic_triggered();
+    
+    //Initialize db:
+    if (!DbService::createInstance(this))
+    {
+        QMessageBox::critical(this, tr("Database Error"), "An error happened loading database."
+                              "\nThe Database is crucial for AzConvert to work."
+                              "\n\nReinstalling application may help."
+                              " If even by reinstalling this error occurred again, please contact the developer.", QMessageBox::Ok);
+        this->close();
+    }
 
 	//Setup connections:
 	connect(infoLabel, SIGNAL(linkActivated(const QString&)), this, SLOT(handleFlashUrlClick(const QString&)), Qt::UniqueConnection);
-	connect(this, SIGNAL(windowResized(QResizeEvent*)), this, SLOT(on_windowResized(QResizeEvent*)), Qt::UniqueConnection);
+	connect(this, SIGNAL(windowResized(QResizeEvent*)), this, SLOT(updateInfoLabelPosition(QResizeEvent*)), Qt::UniqueConnection);
 
-    InitData();
     SetModeDirection();
 
     //Load settings:
@@ -42,31 +54,10 @@ MainWindow::MainWindow(QWidget *parent)
 		QTimer::singleShot(10000, this, SLOT(checkForUpdate()));
 }
 
+
 MainWindow::~MainWindow()
 {
-    delete l2aEngine;
     delete ui;
-}
-
-
-/*void MainWindow::SetupConnections()
-{
-    connect(ui->actionExit, SIGNAL(triggered(bool)), qApp, SLOT(quit()));
-}*/
-
-
-void MainWindow::on_actionExit_triggered()
-{
-    qApp->quit();
-}
-
-
-void MainWindow::InitData()
-{
-    cMode = L2A;
-    l2aEngine = new L2AConversion();
-    c2lEngine = new C2LConversion();
-    a2lEngine = new A2LConversion();
 }
 
 
@@ -78,32 +69,17 @@ void MainWindow::on_action_ConvertText_triggered()
     progress->setWindowModality(Qt::WindowModal);
     progress->show();
 
-    switch(cMode)
-    {
-        case L2A:
-            l2aEngine->SetOriginalText(ui->txtSource->toPlainText());
-            ui->txtResult->document()->setPlainText(l2aEngine->Convert(progress));
-            /*l2aEngine->SetOriginalText(ui->txtSource->toHtml());
-            ui->txtResult->document()->setHtml(l2aEngine->ConvertHtml());*/
-            break;
-        case A2L:
-            a2lEngine->SetOriginalText(ui->txtSource->toPlainText());
-            ui->txtResult->document()->setPlainText(a2lEngine->Convert(progress));
-            break;
-        case C2L:
-            QString str = c2lEngine->Convert(ui->txtSource->toPlainText());
-            ui->txtResult->document()->setPlainText(str);
-            break;
-    }
-
+    convertor->setOriginalText(ui->txtSource->toPlainText());
+    ui->txtResult->document()->setPlainText(convertor->convert(progress));
+    
     progress->close();
-
     setCursor(Qt::ArrowCursor);
 }
 
 void MainWindow::on_action_Latin_to_Arabic_triggered()
 {
-    cMode = L2A;
+    cMode = LatinToArabic;
+    convertor = new L2AConversion(this);
 
     ui->action_Arabic_to_Latin->setChecked(false);
     ui->action_Latin_to_Arabic->setChecked(true);
@@ -116,7 +92,8 @@ void MainWindow::on_action_Latin_to_Arabic_triggered()
 
 void MainWindow::on_action_Arabic_to_Latin_triggered()
 {
-    cMode = A2L;
+    cMode = ArabicToLatin;
+    convertor = new A2LConversion(this);
 
     ui->action_Arabic_to_Latin->setChecked(true);
     ui->action_Latin_to_Arabic->setChecked(false);
@@ -130,12 +107,12 @@ void MainWindow::on_action_Arabic_to_Latin_triggered()
 
 void MainWindow::on_action_Cyrillic_to_Latin_triggered()
 {
-    cMode = C2L;
+    cMode = CyrillicToLatin;
+    convertor = new C2LConversion(this);
 
     ui->action_Arabic_to_Latin->setChecked(false);
     ui->action_Latin_to_Arabic->setChecked(false);
     ui->action_Cyrillic_to_Latin->setChecked(true);
-
     ui->action_Add_word_to_dictionary->setEnabled(false);
 
     SetModeDirection();
@@ -144,31 +121,14 @@ void MainWindow::on_action_Cyrillic_to_Latin_triggered()
 
 void MainWindow::SetModeDirection()
 {
-    if (cMode == L2A || cMode == C2L)
-    {
-        /*ui->frame->setLayoutDirection(Qt::LeftToRight);
-        ui->btnConvert->setText(tr("==>"));
-        ui->txtResult->setLayoutDirection(Qt::RightToLeft);*/
-        ui->txtSource->setLayoutDirection(Qt::LeftToRight);
-        if (cMode == L2A)
-            ui->txtResult->setLayoutDirection(Qt::RightToLeft);
-        else
-            ui->txtResult->setLayoutDirection(Qt::LeftToRight);
-    }
-    else if (cMode == A2L)
-    {
-        ui->txtSource->setLayoutDirection(Qt::RightToLeft);
-        ui->txtResult->setLayoutDirection(Qt::LeftToRight);
-    }
+    ui->txtSource->setLayoutDirection(convertor->getSourceLayoutDirection());
+    ui->txtResult->setLayoutDirection(convertor->getDestinationLayoutDirection());
 }
 
 
 void MainWindow::on_action_Reload_dictionaries_triggered()
 {
-    if (cMode == L2A)
-        l2aEngine->OpenDicts();
-    else if (cMode == A2L)
-        a2lEngine->OpenDicts();
+    convertor->openDicts();
 }
 
 void MainWindow::on_btnNew_clicked()
@@ -264,10 +224,12 @@ void MainWindow::on_actionWikipediaMode_triggered()
     }
 }
 
+
 void MainWindow::checkForUpdate()
 {
 	Update::getInstance(this, this->parent())->checkForUpdate();
 }
+
 
 void MainWindow::showFlashInfo(const QString &message)
 {
@@ -277,6 +239,7 @@ void MainWindow::showFlashInfo(const QString &message)
 	infoLabel->setText(message);
 	infoLabel->show();
 }
+
 
 void MainWindow::handleFlashUrlClick(const QString &url)
 {
@@ -294,18 +257,21 @@ void MainWindow::handleFlashUrlClick(const QString &url)
 	}
 }
 
+
 void MainWindow::newVersionAvailable(QString version)
 {
 	QString url = Settings::GetInstance(this)->getApplicationHomepage();
 	showFlashInfo("&nbsp; <a href=\"" + url + "\">New Versian " + version + " is Available!</a>");
 }
 
-void MainWindow::on_windowResized(QResizeEvent* e)
+
+void MainWindow::updateInfoLabelPosition(QResizeEvent* e)
 {
 	//Update info label's position:
 	if (infoLabel->isVisible())
 		infoLabel->setGeometry(this->width()-210, 0, 200, 20);
 }
+
 
 void MainWindow::resizeEvent(QResizeEvent *e)
 {

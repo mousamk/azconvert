@@ -7,9 +7,29 @@
 #include "a2lconversion.h"
 
 
-A2LConversion::A2LConversion()
+A2LConversion::A2LConversion(QObject* parent)
+    : Convertor(parent)
 {
-    OpenDicts();
+    openDicts();
+}
+
+
+Qt::LayoutDirection A2LConversion::getSourceLayoutDirection()
+{
+    return Qt::RightToLeft;
+}
+
+
+Qt::LayoutDirection A2LConversion::getDestinationLayoutDirection()
+{
+    return Qt::LeftToRight;
+}
+
+
+void A2LConversion::setOriginalText(const QString &text)
+{
+    Convertor::setOriginalText(text);
+    this->strResult = "";
 }
 
 
@@ -416,7 +436,7 @@ bool A2LConversion::ContainsBackVowel(const QString& w)
     return false;
 }
 
-QString A2LConversion::Convert(QProgressDialog* prg)
+QString A2LConversion::convert(QProgressDialog* prg)
 {
     ChangeAlternativeForms();
     int length = strSource.length();
@@ -1081,13 +1101,11 @@ bool A2LConversion::IsSessizYV(const QString& w, int ind)
     return true;
 }
 
-void A2LConversion::OpenDicts()
+void A2LConversion::openDicts()
 {
-	//QString path = QDir::currentPath();
 	QString path = QCoreApplication::applicationDirPath();
     path = path + QDir::separator() + "dicts" + QDir::separator();
     QFile file(path + "dict_AzA2AzL.dat");
-	qDebug() << "path: " << path;
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         AA2AL = QString::fromUtf8(file.readAll());
@@ -1124,10 +1142,3 @@ void A2LConversion::RaiseUpFirstLetters()
             flag = true;
     }
 }
-
-void A2LConversion::SetOriginalText(const QString& str)
-{
-    strSource = str;
-    strResult = "";
-}
-

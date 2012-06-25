@@ -3,12 +3,18 @@
 
 #include <QObject>
 #include <QString>
+#include <QProgressDialog>
+#include "convertor.h"
 
-class C2LConversion : public QObject
+
+class C2LConversion : public Convertor
 {
 public:
-    C2LConversion();
-    QString Convert(QString);
+    C2LConversion(QObject* parent);
+    QString convert(QProgressDialog* progressDialog);
+    void openDicts() {}
+    Qt::LayoutDirection getSourceLayoutDirection();
+    Qt::LayoutDirection getDestinationLayoutDirection();
 };
 
 #endif // C2LCONVERSION_H

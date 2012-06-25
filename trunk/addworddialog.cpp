@@ -26,7 +26,7 @@ AddWordDialog::AddWordDialog(MainWindow* main, QString word, QWidget* parent) :
     //Setting the word to the text box:
     m_ui.txtWord->setText(word);
 
-    isL2A = mainWindow->cMode == L2A;
+    isL2A = mainWindow->cMode == LatinToArabic;
 
     if (isL2A)
     {

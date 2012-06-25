@@ -4,24 +4,16 @@
 #include <QtGui/QMainWindow>
 #include <QLabel>
 
-#include "l2aconversion.h"
-#include "c2lconversion.h"
-#include "a2lconversion.h"
+#include "convertor.h"
+#include "util.h"
 
-
-
-enum ConvertMode
-{
-    L2A = 0,
-    A2L,
-    C2L
-};
 
 
 namespace Ui
 {
     class MainWindow;
 }
+
 
 class MainWindow : public QMainWindow
 {
@@ -30,28 +22,16 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void newVersionAvailable(QString version);
+    
+    
+protected:
+	void resizeEvent(QResizeEvent*);
+    
 
 private:
-    //void SetupConnections();
-    void InitData();
     void SetModeDirection();
 	void showFlashInfo(const QString&);
-
-
-public:
-    ConvertMode cMode;
-
-private:
-    Ui::MainWindow *ui;
-	QLabel* infoLabel;
-	//QString infoLabelUrl;
-    L2AConversion* l2aEngine;
-    C2LConversion* c2lEngine;
-    A2LConversion* a2lEngine;
-
-
-public:
-	void newVersionAvailable(QString version);
 
 
 signals:
@@ -76,14 +56,20 @@ private slots:
     void on_action_Arabic_to_Latin_triggered();
     void on_action_Latin_to_Arabic_triggered();
     void on_action_ConvertText_triggered();
-    void on_actionExit_triggered();
-	void on_windowResized(QResizeEvent*);
+	void updateInfoLabelPosition(QResizeEvent*);
 	void checkForUpdate();
 	void handleFlashUrlClick(const QString&);
+    
+    
+public:
+    ConvertMode cMode;
 
-
-protected:
-	void resizeEvent(QResizeEvent*);
+    
+private:
+    Ui::MainWindow *ui;
+	QLabel* infoLabel;
+	//QString infoLabelUrl;
+    Convertor* convertor;
 };
 
 #endif // MAINWINDOW_H

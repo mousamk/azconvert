@@ -1,31 +1,30 @@
 #ifndef L2ACONVERSION_H
 #define L2ACONVERSION_H
 
-
-#include <QString>
 #include <QObject>
 #include <QProgressDialog>
+#include "convertor.h"
 
 
-class L2AConversion : public QObject
+class L2AConversion : public Convertor
 {
-    //Q_DECLARE_TR_FUNCTIONS(L2AConversion);
-
 public:
-    L2AConversion();
-    QString ChangePostfixes(const QString& w);
-    QString ChangePrefixes(const QString& w);
+    L2AConversion(QObject* parent);
+    QString convert(QProgressDialog*);
+    void    openDicts();
+    Qt::LayoutDirection getSourceLayoutDirection();
+    Qt::LayoutDirection getDestinationLayoutDirection();
+    void setOriginalText(const QString &text);
+
+
+private:
     QString CheckPostfix(const QString& w, const QString& pf, int sp);
-    QString Convert(QProgressDialog*);
     QString ConvertHtml();
     QChar   ConvertSessizChar(QChar c);
     QString ConvertWord(const QString& word, bool isRecursive);
     QString GetResult();
-    void    OpenDicts();
-    void    SetOriginalText(const QString& str);
-
-
-private:
+    QString ChangePostfixes(const QString& w);
+    QString ChangePrefixes(const QString& w);
     QChar   GetSpecialChar(QChar c);
     QString GetSpecialWord(const QString& w);
     QString GetWord(int i);
@@ -45,7 +44,6 @@ private:
 public:
     QString AL2AA;
     QString strResult;
-    QString strSource;
 
 private: //chars
     QChar eh;

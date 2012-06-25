@@ -1,14 +1,28 @@
 #include "c2lconversion.h"
 
 
-C2LConversion::C2LConversion()
+C2LConversion::C2LConversion(QObject* parent)
+    : Convertor(parent)
 {
 }
 
 
-
-QString C2LConversion::Convert(QString str)
+Qt::LayoutDirection C2LConversion::getSourceLayoutDirection()
 {
+    return Qt::LeftToRight;
+}
+
+
+Qt::LayoutDirection C2LConversion::getDestinationLayoutDirection()
+{
+    return Qt::LeftToRight;
+}
+
+
+QString C2LConversion::convert(QProgressDialog* progressDialog)
+{
+    //TODO: Update this method.
+    QString str = strSource;
     str.replace("А", "A");
     str.replace("а", "a");
     str.replace("Б", "B");
@@ -75,3 +89,4 @@ QString C2LConversion::Convert(QString str)
     str.replace("з", "z");
     return str;
 }
+

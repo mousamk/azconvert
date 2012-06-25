@@ -3,21 +3,23 @@
 
 #include <QObject>
 #include <QProgressDialog>
+#include "convertor.h"
 
-class A2LConversion : public QObject
+
+class A2LConversion : public Convertor
 {
 public:
-    A2LConversion();
+    A2LConversion(QObject* parent);
+    QString convert(QProgressDialog*);
+    void    openDicts();
+    Qt::LayoutDirection getSourceLayoutDirection();
+    Qt::LayoutDirection getDestinationLayoutDirection();
+    void setOriginalText(const QString &text);
 
-
-public:
-    QString Convert(QProgressDialog*);
+    
+private:
     QString GetResult();
     QChar   GetSecondSesli(const QString&);
-    void    OpenDicts();
-    void    SetOriginalText(const QString&);
-
-private:
     void ChangeAlternativeForms();
     QString ChangePostfixes(const QString&);
     QString CheckPostfix(const QString&, const QString&, const QString&);
@@ -49,7 +51,6 @@ private:
 public:
     QString AA2AL;
     QString strResult;
-    QString strSource;
 };
 
 #endif // A2LCONVERSION_H

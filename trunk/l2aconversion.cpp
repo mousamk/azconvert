@@ -7,19 +7,38 @@
 #include "settings.h"
 
 
-L2AConversion::L2AConversion()
-        :
-        eh('\x59', '\x02'),
-        ih('\x31', '\x01'),
-        Ih('\x30', '\x01'),
-        sh('\x5f', '\x01'),
-        ch('\xe7', '\x00'),
-        uh('\xfc', '\x00'),
-        oh('\xf6', '\x00'),
-        gh('\x1f', '\x01'),
-        vs('\x0c', '\x20')
+L2AConversion::L2AConversion(QObject* parent)
+    : Convertor(parent),
+      eh('\x59', '\x02'),
+      ih('\x31', '\x01'),
+      Ih('\x30', '\x01'),
+      sh('\x5f', '\x01'),
+      ch('\xe7', '\x00'),
+      uh('\xfc', '\x00'),
+      oh('\xf6', '\x00'),
+      gh('\x1f', '\x01'),
+      vs('\x0c', '\x20')
 { 
-    OpenDicts();
+    openDicts();
+}
+
+
+Qt::LayoutDirection L2AConversion::getSourceLayoutDirection()
+{
+    return Qt::LeftToRight;
+}
+
+
+Qt::LayoutDirection L2AConversion::getDestinationLayoutDirection()
+{
+    return Qt::RightToLeft;
+}
+
+
+void L2AConversion::setOriginalText(const QString &text)
+{
+    Convertor::setOriginalText(text);
+    this->strResult = "";
 }
 
 
@@ -627,7 +646,7 @@ void L2AConversion::PreprocessText()
 }
 
 
-QString L2AConversion::Convert(QProgressDialog* prg)
+QString L2AConversion::convert(QProgressDialog* prg)
 {
     //Load wiki mode:
 	bool wikiMode = Settings::GetInstance(this->parent())->GetWikiMode();
@@ -1179,7 +1198,7 @@ bool L2AConversion::IsSonrayaYapisan(QChar c)
           || c == 'j' || c == oh || c == 'u' || c == uh);
 }
 
-void L2AConversion::OpenDicts()
+void L2AConversion::openDicts()
 {
 	//QString path = QDir::currentPath();
 	QString path = QCoreApplication::applicationDirPath();
@@ -1205,14 +1224,6 @@ void L2AConversion::OpenDicts()
     else
         return;
 }
-
-void L2AConversion::SetOriginalText(const QString& str)
-{
-    strSource = str;
-    strResult = "";
-}
-
-
 
 
 
