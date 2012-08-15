@@ -3,7 +3,6 @@
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
-#include <QVariant>
 
 #include "a2lconversion.h"
 #include "dbservice.h"
@@ -12,43 +11,29 @@
 A2LConversion::A2LConversion(QObject* parent)
     : Convertor(parent)
 {
-    openDicts();
+    //openDicts();
     loadChars();
+    loadWords();
 }
 
 
-/*void A2LConversion::getTablesPostfix()
+QString A2LConversion::getTablesPostfix()
 {
     return "_a2l";
-}*/
+}
 
 
-void A2LConversion::loadChars()
+QStringList A2LConversion::getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record)
 {
-    //TODO: Update this code for this mode of conversion!
-    QSqlRecord record;
-    QSqlQuery query;
-    DbService::getInstance()->getCharacters("_l2a", record, query);
-    int size = query.size();
-    if (size <= 0)      //If size could not be determined
-        size = 100;
-    numOfChars = size;
-    chars = new QString*[numOfChars];
-    int i=0;
-    while(query.next())
-    {
-        //TODO: Guard larger than 100 rows!
-        chars[i] = new QString[7];
-        chars[i][0] = query.value(record.indexOf("source")).toString();
-        chars[i][1] = query.value(record.indexOf("start")).toString();
-        chars[i][2] = query.value(record.indexOf("mid")).toString();
-        chars[i][3] = query.value(record.indexOf("end")).toString();
-        chars[i][4] = query.value(record.indexOf("start_voc")).toString();
-        chars[i][5] = query.value(record.indexOf("mid_voc")).toString();
-        chars[i][6] = query.value(record.indexOf("end_voc")).toString();
-        
-        i++;
-    }
+    QStringList tuple;
+    tuple << query.value(record.indexOf("start")).toString()
+          << query.value(record.indexOf("mid")).toString()
+          << query.value(record.indexOf("end")).toString()
+          << query.value(record.indexOf("start_voc")).toString()
+          << query.value(record.indexOf("mid_voc")).toString()
+          << query.value(record.indexOf("end_voc")).toString();
+
+    return tuple;
 }
 
 
@@ -592,7 +577,7 @@ QChar A2LConversion::ConvertSessizChar(QChar c)
 }
 
 
-QString A2LConversion::ConvertWord(const QString& wo, int bf, bool beforeVs)
+QString A2LConversion::ConvertWord(const QString& wo, int bf, bool /*beforeVs*/)
 {
     QString word(wo);
 
@@ -1053,7 +1038,7 @@ bool A2LConversion::IsLatinSesli(QChar c)
             c == 'o' || c == 'e' || c == QChar('\xf6', '\x00') || c == QChar('\xfc', '\x00'));
 }
 
-bool A2LConversion::IsNonConvertableWord(const QString& w)
+bool A2LConversion::IsNonConvertableWord(const QString& /*w*/)
 {
     return false;
 }
@@ -1139,7 +1124,7 @@ bool A2LConversion::IsSessizYV(const QString& w, int ind)
     return true;
 }
 
-void A2LConversion::openDicts()
+/*void A2LConversion::openDicts()
 {
 	QString path = QCoreApplication::applicationDirPath();
     path = path + QDir::separator() + "dicts" + QDir::separator();
@@ -1162,7 +1147,7 @@ void A2LConversion::openDicts()
     }
     else
         return;
-}
+}*/
 
 void A2LConversion::RaiseUpFirstLetters()
 {

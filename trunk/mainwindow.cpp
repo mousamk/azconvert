@@ -130,7 +130,8 @@ void MainWindow::SetModeDirection()
 
 void MainWindow::on_action_Reload_dictionaries_triggered()
 {
-    convertor->openDicts();
+    //TODO: Do the proper action in the new dictionary system.
+    //convertor->openDicts();
 }
 
 void MainWindow::on_btnNew_clicked()

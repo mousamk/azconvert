@@ -11,7 +11,7 @@ class A2LConversion : public Convertor
 public:
     A2LConversion(QObject* parent);
     QString convert(QProgressDialog*);
-    void    openDicts();
+    //void    openDicts();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
     void setOriginalText(const QString &text);
@@ -49,8 +49,15 @@ private:
     
     
 protected:
-    //void getTablesPostfix();
-    void loadChars();
+    QString getTablesPostfix();
+
+    /*!
+     * @brief Fetches the record for a character and returns all parts in a string list.
+     * @param query The query to get the fields from.
+     * @param record The record to get the fields' indexes from.
+     * @returns The list of fields for a character record.
+     */
+    QStringList getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record);
 
 
 public:

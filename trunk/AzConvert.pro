@@ -34,7 +34,8 @@ HEADERS += mainwindow.h \
     update.h \
     util.h \
     dbservice.h \
-    convertor.h
+    convertor.h \
+    wordpair.h
 
 FORMS += mainwindow.ui \
     aboutdialog.ui \
@@ -44,6 +45,10 @@ FORMS += mainwindow.ui \
 RESOURCES += azc_res.qrc
 
 RC_FILE = AzConvert.rc
+
+
+DEFINES += DEBUG_BUILD
+
 
 # only for unix:
 #unix {

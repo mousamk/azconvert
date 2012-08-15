@@ -13,6 +13,9 @@
 #include <QSqlQuery>
 
 
+template <class Key, class T>
+class QHash;
+
 /*!
  * @class DbService
  * @brief The DbService class used to provide database service for other classes.
@@ -26,6 +29,7 @@ public:
     static bool createInstance(QObject* parent);
     static DbService* getInstance();
     void getCharacters(QString tablePostfix, QSqlRecord& record, QSqlQuery& query);
+    void getWords(QString tablePostfix, QHash<QString,QString>& words);
     
     
 private:

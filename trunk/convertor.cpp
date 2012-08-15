@@ -1,3 +1,4 @@
+#include <QVariant>
 #include "convertor.h"
 #include "dbservice.h"
 
@@ -10,14 +11,25 @@ Convertor::Convertor(QObject *parent)
 
 Convertor::~Convertor()
 {
-    //Clear array:
-    for (int i=0; i<numOfChars; i++)
-        delete[] chars[i];
-    delete[] chars;
 }
 
 
-/*void Convertor::loadChars()
+void Convertor::loadChars()
 {
-    DbService::getInstance()->loadCharacters(chars, "characters" + getTablesPostfix());
-}*/
+    QSqlRecord record;
+    QSqlQuery query;
+    DbService::getInstance()->getCharacters(getTablesPostfix(), record, query);
+    while(query.next())
+    {
+        QChar character = query.value(record.indexOf("source")).toString().at(0);
+        QStringList tuple = getCharacterTuple(query, record);
+
+        chars.insert(character, tuple);
+    }
+}
+
+
+void Convertor::loadWords()
+{
+    DbService::getInstance()->getWords(getTablesPostfix(), words);
+}

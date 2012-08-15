@@ -2,8 +2,8 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QCoreApplication>
-#include <QVariant>
 #include <QDebug>
+#include <QHash>
 
 #include "l2aconversion.h"
 #include "settings.h"
@@ -22,49 +22,29 @@ L2AConversion::L2AConversion(QObject* parent)
       gh('\x1f', '\x01'),
       vs('\x0c', '\x20')
 { 
-    openDicts();
+    //openDicts();
     loadChars();
+    loadWords();
 }
 
 
-/*void L2AConversion::getTablesPostfix()
+QString L2AConversion::getTablesPostfix()
 {
     return "_l2a";
-}*/
+}
 
 
-void L2AConversion::loadChars()
+QStringList L2AConversion::getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record)
 {
-    QSqlRecord record;
-    QSqlQuery query;
-    DbService::getInstance()->getCharacters("_l2a", record, query);
-    int size = query.size();
-    if (size <= 0)      //If size could not be determined
-        size = 100;
-    numOfChars = size;
-    chars = new QString*[numOfChars];
-    int i=0;
-    while(query.next())
-    {
-        //TODO: Guard larger than 100 rows!
-        chars[i] = new QString[7];
-        chars[i][0] = query.value(record.indexOf("source")).toString();
-        chars[i][1] = query.value(record.indexOf("start")).toString();
-        chars[i][2] = query.value(record.indexOf("mid")).toString();
-        chars[i][3] = query.value(record.indexOf("end")).toString();
-        chars[i][4] = query.value(record.indexOf("start_voc")).toString();
-        chars[i][5] = query.value(record.indexOf("mid_voc")).toString();
-        chars[i][6] = query.value(record.indexOf("end_voc")).toString();
-        
-        i++;
-    }
-    numOfChars = i;
-    
-    while(i < 100)
-    {
-        chars[i] = NULL;
-        i++;
-    }
+    QStringList tuple;
+    tuple << query.value(record.indexOf("start")).toString()
+          << query.value(record.indexOf("mid")).toString()
+          << query.value(record.indexOf("end")).toString()
+          << query.value(record.indexOf("start_voc")).toString()
+          << query.value(record.indexOf("mid_voc")).toString()
+          << query.value(record.indexOf("end_voc")).toString();
+
+    return tuple;
 }
 
 
@@ -841,84 +821,6 @@ QString L2AConversion::ConvertHtml()
 }
 
 
-QChar L2AConversion::ConvertSessizChar(QChar c)
-{
-    if (c == 'b')
-        return QChar('\x28', '\x06');
-
-    else if (c == 'c')
-        return QChar('\x2c', '\x06');
-
-    else if (c == 'd')
-        return QChar('\x2f', '\x06');
-
-    else if (c == 'f')
-        return QChar('\x41', '\x06');
-
-    else if (c == 'g')
-        return QChar('\xaf', '\x06');
-
-    else if (c == 'h')
-        return QChar('\x47', '\x06');
-
-    else if (c == 'j')
-        return QChar('\x98', '\x06');
-
-    else if (c == 'k')
-        return QChar('\xa9', '\x06');
-
-    else if (c == 'l')
-        return QChar('\x44', '\x06');
-
-    else if (c == 'm')
-        return QChar('\x45', '\x06');
-
-    else if (c == 'n')
-        return QChar('\x46', '\x06');
-
-    else if (c == 'p')
-        return QChar('\x7e', '\x06');
-
-    else if (c == 'q')
-        return QChar('\x42', '\x06');
-
-    else if (c == 'r')
-        return QChar('\x31', '\x06');
-
-    else if (c == 's')
-        return QChar('\x33', '\x06');
-
-    else if (c == 't')
-        return QChar('\x2a', '\x06');
-
-    else if (c == 'v')
-        return QChar('\x48', '\x06');
-
-    else if (c == 'x')
-        return QChar('\x2e', '\x06');
-
-    else if (c == 'y')
-        return QChar('\xcc', '\x06');
-
-    else if (c == 'z')
-        return QChar('\x32', '\x06');
-
-    else if (c == '\'')
-        return QChar('\x39', '\x06');
-
-    else if (c == ch)
-        return QChar('\x86', '\x06');
-
-    else if (c == gh)
-        return QChar('\x3a', '\x06');
-
-    else if (c == sh)
-        return QChar('\x34', '\x06');
-
-    else
-        return 'a';
-}
-
 QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
 {
     QString word(wo);
@@ -972,10 +874,10 @@ QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
         for (int i = 0; i < length; i++)
         {
             //Choose letter position mode:
-            int modeIndex = 0;
-            if (0 == i) modeIndex = 1;
-            else if (length-1 == i) modeIndex = 3;
-            else modeIndex = 2;
+            int modeIndex;
+            if (0 == i) modeIndex = 0;
+            else if (length-1 == i) modeIndex = 2;
+            else modeIndex = 1;
             //TODO: Consider 'voc' modes too
             
             QChar c = word[i];
@@ -994,17 +896,20 @@ void L2AConversion::getCharEquivalent(const QChar &ch, int columnIndex, QString 
     qDebug() << "char: " << ch;
     //TODO: Why arabic scripts are comming to this function?!
     //Lookup the character:
-    for(int i=0; i<numOfChars; i++)
+    /*for(int i=0; i<numOfChars; i++)
     {
         if (chars[i][0].at(0) == ch)
         {
             equivalent = chars[i][columnIndex];
             return;
         }
-    }
-    
-    //Now that no equivalent is found, return the same source:
-    equivalent = QString(ch);
+    }*/
+
+    if (chars.contains(ch))
+        equivalent = chars.value(ch).at(columnIndex);
+    else
+        //Now that no equivalent is found, return the same source:
+        equivalent = QString(ch);
 }
 
 
@@ -1025,15 +930,12 @@ QChar L2AConversion::GetSpecialChar(QChar c)
     return ' ';
 }
 
-QString L2AConversion::GetSpecialWord(const QString& w)
-{
-    return "";
-}
 
 QString L2AConversion::GetWord(int i, QChar delim)
 {
 
 }
+
 
 QString L2AConversion::GetWord(int i)
 {
@@ -1094,29 +996,15 @@ QString L2AConversion::GetWord(int i)
     return word;
 }
 
+
 QString L2AConversion::GetWordFromDictionary(const QString& w)
 {
-    QString word(w);
-    word = "[" + word + "]";
-    if (!AL2AA.contains(word))
-    {
+    if (words.contains(w))
+        return words.value(w);
+    else
         return "";
-    }
-    int index = AL2AA.indexOf(word);
-    while (AL2AA[index] != '=')
-    {
-        index++;
-    }
-    index++;
-    int num2 = index;
-    QString str = "";
-    while (((num2 < AL2AA.length()) && (AL2AA[num2] != '\r')) && (AL2AA[num2] != '\n'))
-    {
-        str = str + QString(AL2AA[num2]);
-        num2++;
-    }
-    return str;
 }
+
 
 bool L2AConversion::IsBackVowel(QChar c)
 {
@@ -1182,7 +1070,7 @@ bool L2AConversion::IsSonrayaYapisan(QChar c)
           || c == 'j' || c == oh || c == 'u' || c == uh);
 }
 
-void L2AConversion::openDicts()
+/*void L2AConversion::openDicts()
 {
 	//QString path = QDir::currentPath();
 	QString path = QCoreApplication::applicationDirPath();
@@ -1207,7 +1095,7 @@ void L2AConversion::openDicts()
     }
     else
         return;
-}
+}*/
 
 
 

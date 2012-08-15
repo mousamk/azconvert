@@ -11,7 +11,7 @@ class L2AConversion : public Convertor
 public:
     L2AConversion(QObject* parent);
     QString convert(QProgressDialog*);
-    void    openDicts();
+    //void    openDicts();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
     void setOriginalText(const QString &text);
@@ -20,13 +20,11 @@ public:
 private:
     QString CheckPostfix(const QString& w, const QString& pf, int sp);
     QString ConvertHtml();
-    QChar   ConvertSessizChar(QChar c);
     QString ConvertWord(const QString& word, bool isRecursive);
     QString GetResult();
     QString ChangePostfixes(const QString& w);
     QString ChangePrefixes(const QString& w);
     QChar   GetSpecialChar(QChar c);
-    QString GetSpecialWord(const QString& w);
     QString GetWord(int i);
     QString GetWord(int i, QChar delim);
     QString GetWordFromDictionary(const QString& w);
@@ -39,12 +37,19 @@ private:
     bool    IsSonrayaYapisan(QChar c);
     bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
     void    PreprocessText();
-    void getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
+    void    getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
     
     
 protected:
-    //void getTablesPostfix();
-    void loadChars();
+    QString getTablesPostfix();
+
+    /*!
+     * @brief Fetches the record for a character and returns all parts in a string list.
+     * @param query The query to get the fields from.
+     * @param record The record to get the fields' indexes from.
+     * @returns The list of fields for a character record.
+     */
+    QStringList getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record);
 
 
 public:

@@ -9,10 +9,16 @@
 #define CONVERTOR_H
 
 #include <QObject>
-#include <QList>
+#include <QHash>
+#include <QStringList>
 
 
 class QProgressDialog;
+
+template <class Key, class T>
+class QHash;
+class QSqlQuery;
+class QSqlRecord;
 
 /*!
  * @class Convertor
@@ -48,7 +54,7 @@ public:
      * @brief Reloads the dictionaries.
      */
     //TODO: A better name or mechanism.
-    virtual void openDicts() = 0;
+    //virtual void openDicts() = 0;
     
     /*!
      * @brief Sets the original text to be used later in converting.
@@ -73,13 +79,26 @@ protected:
     /*!
      * @brief Loads character table used for base transliteration
      */
-    virtual void loadChars() = 0;
+    void loadChars();
+
+    /*!
+     *
+     */
+    void loadWords();
     
     /*!
      * @brief Gets the convertor's postfix for database tables
-     * @return The postfix of the convertor in db tables
+     * @returns The postfix of the convertor in db tables
      */
-    //virtual QString getTablesPostfix() = 0;
+    virtual QString getTablesPostfix() = 0;
+
+    /*!
+     * @brief Fetches the record for a character and returns all parts in a string list.
+     * @param query The query to get the fields from.
+     * @param record The record to get the fields' indexes from.
+     * @returns The list of fields for a character record.
+     */
+    virtual QStringList getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record) = 0;
     
     
 protected:
@@ -87,11 +106,14 @@ protected:
     QString strSource;
     
     /// @brief The transliteration table of characeters
-    QString** chars;
+    QHash<QChar, QStringList> chars;
     
     /// @brief Number of level 1 arrays (i.e. number of different characters
     ///  in the array above
-    int numOfChars;
+    //int numOfChars;
+
+    /// @brief Table of words and their equivalents used for conversion
+    QHash<QString, QString> words;
 };
 
 #endif // CONVERTOR_H
