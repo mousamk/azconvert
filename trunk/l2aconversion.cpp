@@ -42,7 +42,10 @@ QStringList L2AConversion::getCharacterTuple(const QSqlQuery& query, const QSqlR
           << query.value(record.indexOf("end")).toString()
           << query.value(record.indexOf("start_voc")).toString()
           << query.value(record.indexOf("mid_voc")).toString()
-          << query.value(record.indexOf("end_voc")).toString();
+          << query.value(record.indexOf("end_voc")).toString()
+          << query.value(record.indexOf("front_or_back")).toString()
+          << query.value(record.indexOf("vowel")).toString()
+          << query.value(record.indexOf("sticking")).toString();
 
     return tuple;
 }
@@ -548,7 +551,7 @@ QString L2AConversion::ChangePostfixes(const QString& word)
 
 
     //"m" & "n":
-    if (w.length() > 1 && IsSesli(w[w.length() - 2]) &&
+    if (w.length() > 1 && IsVowel(w[w.length() - 2]) &&
         ((str = CheckPostfix(w, "m", 4)) != (w) ||
         (str = CheckPostfix(w, "n", 4)) != (w)))
         return str;
@@ -606,7 +609,7 @@ QString L2AConversion::CheckPostfix(const QString& w, const QString& pff, int sp
             break;
 
         case 2:
-            if (IsSonrayaYapisan(w[(length - num2) - 1]))
+            if (isSticking(w[(length - num2) - 1]))
                 str = str + vs;
             break;
 
@@ -895,15 +898,6 @@ void L2AConversion::getCharEquivalent(const QChar &ch, int columnIndex, QString 
 {
     qDebug() << "char: " << ch;
     //TODO: Why arabic scripts are comming to this function?!
-    //Lookup the character:
-    /*for(int i=0; i<numOfChars; i++)
-    {
-        if (chars[i][0].at(0) == ch)
-        {
-            equivalent = chars[i][columnIndex];
-            return;
-        }
-    }*/
 
     if (chars.contains(ch))
         equivalent = chars.value(ch).at(columnIndex);
@@ -1008,24 +1002,27 @@ QString L2AConversion::GetWordFromDictionary(const QString& w)
 
 bool L2AConversion::IsBackVowel(QChar c)
 {
-    return (c == 'a' || c == 'u' || c == 'o' || c == ih);
+    bool back = chars.contains(c) ? chars.value(c).at(6) == "2" : false;
+    qDebug() << c << " is a back vowel: " << back;
+
+    return back;
 }
+
 
 bool L2AConversion::IsCharAInWordChar(QChar c)
 {
-    return !(c == ' ' || c == '\n'|| c == '\t'|| c == '\r'||
-             c == '?' || c == '.' || c == '!' || c == '(' ||
-             c == ')' || c == '[' || c == ']' || c == '{' ||
-             c == '}' || c == '"' || c == '-' || c == '=' ||
-             c == ',' || c == ':' || c == ';' || c == '<' ||
-             c == '>' || c == '|' ||
-             c == QChar('\x1c', '\x20') || c == QChar('\x1d', '\x20'));
+    return chars.contains(c) || c.isDigit();
 }
+
 
 bool L2AConversion::IsFrontVowel(QChar c)
 {
-    return (c == eh || c == 'e' || c == uh || c == oh || c == 'i');
+    bool front = chars.contains(c) ? chars.value(c).at(6) == "1" : false;
+    qDebug() << c << " is a front vowel: " << front;
+
+    return front;
 }
+
 
 bool L2AConversion::IsNonConvertableWord(const QString& w)
 {
@@ -1048,62 +1045,31 @@ bool L2AConversion::IsNonConvertableWord(const QString& w)
          || w.toUpper() == ("PROPERTIES"));
 }
 
-bool L2AConversion::IsSesli(QChar c)
+
+bool L2AConversion::IsVowel(QChar c)
 {
-    return (c == 'a' || c == eh || c == uh || c == 'o'
-         || c == oh || c == 'u' || c == 'e' || c == 'i');
+    bool vowel = chars.contains(c) ? chars.value(c).at(7) == "1" : false;
+    qDebug() << c << " is a vowel: " << vowel;
+
+    return vowel;
 }
 
-bool L2AConversion::IsSessiz(QChar c)
+
+bool L2AConversion::isConsonant(QChar c)
 {
-    return (c == 'z' || c == 'b' || c == 'c' || c == 'd'
-         || c == 'f' || c == 'g' || c == 'h' || c == 'j'
-         || c == 'k' || c == 'l' || c == 'm' || c == 'n'
-         || c == 'p' || c == 'q' || c == 'r' || c == 's'
-         || c == 't' || c == 'v' || c == 'x' || c == 'y'
-         || c == sh || c == ch || c == gh);
+    bool consonant = chars.contains(c) ? chars.value(c).at(7) == "0" : false;
+    qDebug() << c << " is a consonant: " << consonant;
+
+    return consonant;
 }
 
-bool L2AConversion::IsSonrayaYapisan(QChar c)
+
+bool L2AConversion::isSticking(QChar c)
 {
-    return !(c == 'd' || c == 'o' || c == 'z' || c == 'r'
-          || c == 'j' || c == oh || c == 'u' || c == uh);
+    bool sticking = true;
+    if (chars.contains(c)) sticking = chars.value(c).at(8) != "0";
+    qDebug() << c << " is sticking to the next character: " << sticking;
+
+    return sticking;
 }
-
-/*void L2AConversion::openDicts()
-{
-	//QString path = QDir::currentPath();
-	QString path = QCoreApplication::applicationDirPath();
-    path = path + QDir::separator() + "dicts" + QDir::separator();
-    QFile file(path + "dict_AzL2AzA.dat");
-    //QMessageBox::warning(NULL, "", QDir::currentPath());
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        AL2AA = QString::fromUtf8(file.readAll());
-    }
-    else
-    {
-        QMessageBox::warning(NULL, tr("Dictionary"), tr("File not found!\nWorking in non dictionary mode!", "Error"));
-        AL2AA = "";
-        return;
-    }
-
-    QFile file2(path + "dict_AzL2AzA_user.dat");
-    if (file2.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        AL2AA += QString::fromUtf8(file2.readAll());
-    }
-    else
-        return;
-}*/
-
-
-
-
-
-
-
-
-
-
 

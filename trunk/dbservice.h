@@ -16,6 +16,7 @@
 template <class Key, class T>
 class QHash;
 
+
 /*!
  * @class DbService
  * @brief The DbService class used to provide database service for other classes.

@@ -32,9 +32,9 @@ private:
     bool    IsCharAInWordChar(QChar c);
     bool    IsFrontVowel(QChar c);
     bool    IsNonConvertableWord(const QString& w);
-    bool    IsSesli(QChar c);
-    bool    IsSessiz(QChar c);
-    bool    IsSonrayaYapisan(QChar c);
+    bool    IsVowel(QChar c);
+    bool    isConsonant(QChar c);
+    bool    isSticking(QChar c);
     bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
     void    PreprocessText();
     void    getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
@@ -53,8 +53,8 @@ protected:
 
 
 public:
-    QString AL2AA;
     QString strResult;
+
 
 private: //chars
     QChar eh;
