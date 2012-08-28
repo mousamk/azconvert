@@ -14,6 +14,8 @@ A2LConversion::A2LConversion(QObject* parent)
     //openDicts();
     loadChars();
     loadWords();
+    //loadPrefixes();
+    //loadPostfixes();
 }
 
 

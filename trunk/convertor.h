@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QMap>
 #include <QStringList>
 
 
@@ -82,9 +83,19 @@ protected:
     void loadChars();
 
     /*!
-     *
+     * @brief Loads words table used in transliteration
      */
     void loadWords();
+
+    /*!
+     * @brief Loads prefixes table used in transliteration
+     */
+    void loadPrefixes();
+
+    /*!
+     * @brief Loads postfixes table used in transliteration
+     */
+    void loadPostfixes();
     
     /*!
      * @brief Gets the convertor's postfix for database tables
@@ -108,12 +119,14 @@ protected:
     /// @brief The transliteration table of characeters
     QHash<QChar, QStringList> chars;
     
-    /// @brief Number of level 1 arrays (i.e. number of different characters
-    ///  in the array above
-    //int numOfChars;
-
     /// @brief Table of words and their equivalents used for conversion
     QHash<QString, QString> words;
+
+    /// @brief Table of prefixes and their related fields
+    QMap<int, QStringList> prefixes;
+
+    /// @brief Table of postfixes and their related fields
+    QMap<int, QStringList> postfixes;
 };
 
 #endif // CONVERTOR_H

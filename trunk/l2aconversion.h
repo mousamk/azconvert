@@ -18,16 +18,15 @@ public:
 
 
 private:
-    QString CheckPostfix(const QString& w, const QString& pf, int sp);
-    QString ConvertHtml();
+    //QString ConvertHtml();
     QString ConvertWord(const QString& word, bool isRecursive);
     QString GetResult();
-    QString ChangePostfixes(const QString& w);
-    QString ChangePrefixes(const QString& w);
+    void    separatePostfixes(const QString& word, QString& nakedWord, QString& wordPostfixes);
+    void    separatePrefixes(const QString& word, QString& nakedWord, QString& wordPrefixes);
     QChar   GetSpecialChar(QChar c);
     QString GetWord(int i);
-    QString GetWord(int i, QChar delim);
-    QString GetWordFromDictionary(const QString& w);
+    //QString GetWord(int i, QChar delim);
+    QString lookupWord(const QString& w);
     bool    IsBackVowel(QChar c);
     bool    IsCharAInWordChar(QChar c);
     bool    IsFrontVowel(QChar c);
@@ -58,14 +57,16 @@ public:
 
 private: //chars
     QChar eh;
-    QChar ih;
-    QChar gh;
-    QChar sh;
-    QChar ch;
-    QChar uh;
-    QChar oh;
-    QChar vs;   //Virtual space
+    //QChar ih;
+    //QChar gh;
+    //QChar sh;
+    //QChar ch;
     QChar Ih;
+    QChar uh;
+    //QChar oh;
+    QChar vs;   //Virtual space
+
+    QString vs_str;
 };
 
 #endif // L2ACONVERSION_H

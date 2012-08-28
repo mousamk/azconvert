@@ -35,13 +35,6 @@ DbService* DbService::getInstance()
 
 bool DbService::loadDb()
 {
-    /*QFile file("./test.test");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() << "success";
-        file.write("test!");
-    }*/
-    
     db = QSqlDatabase::addDatabase("QSQLITE", "TransliterationDb");
     QString dbFilePath = QCoreApplication::applicationDirPath() + QDir::separator();
 
@@ -55,6 +48,7 @@ bool DbService::loadDb()
     if (!db.open())
     {
         qDebug() << "Error opening db: " << db.lastError().text();
+        qDebug() << "db location: " << dbFilePath;
         return false;
     }
     
@@ -73,13 +67,50 @@ void DbService::getCharacters(QString tablePostfix, QSqlRecord& record, QSqlQuer
 void DbService::getWords(QString tablePostfix, QHash<QString, QString> &words)
 {
     //qDebug() << "going to load words";
-    QString queryStr = "SELECT* FROM words" + tablePostfix + ";";
+    QString queryStr = "SELECT * FROM words" + tablePostfix + ";";
     QSqlQuery query(queryStr, db);
     QSqlRecord record = query.record();
 
     while(query.next())
     {
-        //qDebug() << "A word is loaded.";
         words.insert(query.value(record.indexOf("source")).toString(), query.value(record.indexOf("equivalent")).toString());
+    }
+}
+
+
+void DbService::getPrefixes(QString tablePostfix, QMap<int, QStringList> &prefixes)
+{
+    loadPostOrPrefix("prefix", tablePostfix, prefixes);
+}
+
+
+void DbService::getPostfixes(QString tablePostfix, QMap<int, QStringList> &postfixes)
+{
+    loadPostOrPrefix("postfix", tablePostfix, postfixes);
+}
+
+
+void DbService::loadPostOrPrefix(QString postOrPrefix, QString tablePostfix, QMap<int, QStringList> &postOrPrefixes)
+{
+    QString queryStr = "SELECT * FROM " + postOrPrefix + tablePostfix + ";";
+    QSqlQuery query(queryStr, db);
+    QSqlRecord record = query.record();
+
+    int id;
+    //QString source;
+    QStringList list;
+    while(query.next())
+    {
+        list.clear();
+
+        id = query.value(record.indexOf("id")).toInt();
+        //source = query.value(record.indexOf("source")).toString();
+        list << query.value(record.indexOf("source")).toString()
+             << query.value(record.indexOf("equivalent")).toString()
+             << query.value(record.indexOf("type")).toString()
+             << query.value(record.indexOf("dict")).toString();
+        postOrPrefixes.insert(id, list);
+
+        qDebug() << "A" << postOrPrefix << "is loaded: " << id << ": " << list;
     }
 }

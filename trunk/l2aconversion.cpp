@@ -13,18 +13,20 @@
 L2AConversion::L2AConversion(QObject* parent)
     : Convertor(parent),
       eh('\x59', '\x02'),
-      ih('\x31', '\x01'),
+      //ih('\x31', '\x01'),
       Ih('\x30', '\x01'),
-      sh('\x5f', '\x01'),
-      ch('\xe7', '\x00'),
+      //sh('\x5f', '\x01'),
+      //ch('\xe7', '\x00'),
       uh('\xfc', '\x00'),
-      oh('\xf6', '\x00'),
-      gh('\x1f', '\x01'),
-      vs('\x0c', '\x20')
+      //oh('\xf6', '\x00'),
+      //gh('\x1f', '\x01'),
+      vs('\x0c', '\x20'),
+      vs_str(vs)
 { 
-    //openDicts();
     loadChars();
     loadWords();
+    loadPrefixes();
+    loadPostfixes();
 }
 
 
@@ -70,582 +72,109 @@ void L2AConversion::setOriginalText(const QString &text)
 }
 
 
-QString L2AConversion::ChangePostfixes(const QString& word)
+void L2AConversion::separatePostfixes(const QString& word, QString &nakedWord, QString &wordPostfixes)
 {
-    QString w(word);
-    QString str(word);
-
-    if ((str = CheckPostfix(w, "p"+QString(eh)+"r"+QString(eh)+"st", 2)) != (w) ||
-        (str = CheckPostfix(w, "baran", 2)) != (w) ||
-        (str = CheckPostfix(w, "s"+QString(uh)+"nas", 2)) != (w) ||
-        (str = CheckPostfix(w, "xana", 2)) != (w) ||
-        (str = CheckPostfix(w, "p"+QString(eh)+"rv"+QString(eh)+"r", 2)) != (w) ||
-        (str = CheckPostfix(w, "t"+QString(eh)+"l"+QString(eh)+"b", 2)) != (w) ||
-        (str = CheckPostfix(w, "f"+QString(uh)+"ru"+QString(sh), 2)) != (w) ||
-        (str = CheckPostfix(w, "dar", 3)) != (w) ||
-        (str = CheckPostfix(w, "xah", 2)) != (w) ||
-        (str = CheckPostfix(w, "b\u0259x\u015f", 2)) != w ||
-        (str = CheckPostfix(w, "sev"+QString(eh)+"r", 2)) != (w))
-        return str;
-
-
-    //"l?rimd?n":
-    if ((w.length() > 10) && w.endsWith("l"+QString(eh)+"rimd"+QString(eh)+"n", Qt::CaseSensitive))
-        w.insert((w.length() - 8) + 5, QString(vs));
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"rim"+QString(vs)+"d"+QString(eh)+"n", 2)) != (w))
-        return str;
-
-    //"larimdan":
-    if ((w.length() > 10) && w.endsWith("lar"+QString(ih)+"mdan", Qt::CaseSensitive))
-        w.insert((w.length() - 5) + 5, vs);
-    if ((str = CheckPostfix(w, "lar"+QString(ih)+"m"+QString(vs)+"dan", 2)) != (w))
-        return str;
-
-    //"l?rivd?n" & "larivdan":
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"rivd"+QString(eh)+"n", 2)) != (w) ||
-        (str = CheckPostfix(w, "lar"+QString(ih)+"vdan", 2)) != (w))
-        return str;
-
-    //"l?rind?n":
-    if ((w.length() > 10) && w.endsWith("l"+QString(eh)+"rind"+QString(eh)+"n", Qt::CaseSensitive))
-        w.insert((w.length() - 8) + 5, vs);
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"rin"+QString(vs)+"d"+QString(eh)+"n", 2)) != (w))
-        return str;
-
-    //"larindan":
-    if ((w.length() > 10) && w.endsWith("lar"+QString(ih)+"ndan", Qt::CaseSensitive))
-        w.insert((w.length() - 5) + 5, vs);
-    if ((str = CheckPostfix(w, "larin"+QString(vs)+"dan", 2)) != (w))
-        return str;
-
-    //"l?rimizd?n" & "larimizdan":
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"rimizd"+QString(eh)+"n", 2)) != (w) ||
-        (str = CheckPostfix(w, "lar"+QString(ih)+"m"+QString(ih)+"zdan", 2)) != (w))
-        return str;
-
-    //"l?rinizd?n" & "larinizdan":
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"rinizd"+QString(eh)+"n", 2)) != (w) ||
-        (str = CheckPostfix(w, "lar"+QString(ih)+"n"+QString(ih)+"zdan", 2)) != (w))
-        return str;
-
-
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"nir"+QString(eh)+"m", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nirs"+QString(eh)+"n", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nir", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nirik", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nirsiniz", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nirsiz", 2)) != (w) ||
-        (str = CheckPostfix(w, "lan"+QString(ih)+"ram", 2)) != (w) ||
-        (str = CheckPostfix(w, "lan"+QString(ih)+"rsan", 2)) != (w) ||
-        (str = CheckPostfix(w, "lan"+QString(ih)+"r", 2)) != (w) ||
-        (str = CheckPostfix(w, "lan"+QString(ih)+"r"+QString(ih)+"q", 2)) != (w) ||
-        (str = CheckPostfix(w, "lan"+QString(ih)+"rs"+QString(ih)+"n"+QString(ih)+"z", 2)) != (w) ||
-        (str = CheckPostfix(w, "lan"+QString(ih)+"rs"+QString(ih)+"z", 2)) != (w))
-        return str;
-
-
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"nmir"+QString(eh)+"m", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nmirs"+QString(eh)+"n", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nmir", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nmirik", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nmirsiniz", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(eh)+"nmirsiz", 2)) != (w) ||
-        (str = CheckPostfix(w, "lanm"+QString(ih)+"ram", 2)) != (w) ||
-        (str = CheckPostfix(w, "lanm"+QString(ih)+"rsan", 2)) != (w) ||
-        (str = CheckPostfix(w, "lanm"+QString(ih)+"r", 2)) != (w) ||
-        (str = CheckPostfix(w, "lanm"+QString(ih)+"r"+QString(ih)+"q", 2)) != (w) ||
-        (str = CheckPostfix(w, "lanm"+QString(ih)+"rs"+QString(ih)+"n"+QString(ih)+"z", 2)) != (w) ||
-        (str = CheckPostfix(w, "lanm"+QString(ih)+"rs"+QString(ih)+"z", 2)) != (w))
-        return str;
-
-
-    if ((str = CheckPostfix(w, "ir"+QString(eh)+"m", 1)) != (w) ||
-        (str = CheckPostfix(w, "irs"+QString(eh)+"n", 1)) != (w) ||
-        (str = CheckPostfix(w, "irik", 1)) != (w) ||
-        (str = CheckPostfix(w, "irsiniz", 1)) != (w) ||
-        (str = CheckPostfix(w, "irsiz", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"ram", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rsan", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"r"+QString(ih)+"q", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rs"+QString(ih)+"n"+QString(ih)+"z", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rs"+QString(ih)+"z", 1)) != (w))
-        return str;
-
-
-    if ((str = CheckPostfix(w, "mir"+QString(eh)+"m", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirs"+QString(eh)+"n", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirik", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirsiniz", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirsiz", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"ram", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rsan", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"r"+QString(ih)+"q", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rs"+QString(ih)+"n"+QString(ih)+"z", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rs"+QString(ih)+"z", 1)) != (w))
-        return str;
-
-
-    if ((str = CheckPostfix(w, "irdim", 1)) != (w) ||
-        (str = CheckPostfix(w, "irdin", 1)) != (w) ||
-        (str = CheckPostfix(w, "irdi", 1)) != (w) ||
-        (str = CheckPostfix(w, "irdik", 1)) != (w) ||
-        (str = CheckPostfix(w, "irdiniz", 1)) != (w) ||
-        (str = CheckPostfix(w, "irdiz", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rd"+QString(ih)+"m", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rd"+QString(ih)+"n", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rd"+QString(ih), 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rd"+QString(ih)+"q", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rd"+QString(ih)+"n"+QString(ih)+"z", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"rd"+QString(ih)+"z", 1)) != (w))
-        return str;
-
-
-    if ((str = CheckPostfix(w, "mirdim", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirdin", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirdi", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirdik", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirdiniz", 1)) != (w) ||
-        (str = CheckPostfix(w, "mirdiz", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rd"+QString(ih)+"m", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rd"+QString(ih)+"n", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rd"+QString(ih), 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rd"+QString(ih)+"q", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rd"+QString(ih)+"n"+QString(ih)+"z", 1)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"rd"+QString(ih)+"z", 1)) != (w))
-        return str;
-
-
-    //eh in dict:
-    if ((str = CheckPostfix(w, QString(eh), 1)) != (w) && (GetWordFromDictionary(w.mid(0, w.length() - 1)) != ""))
-        return str;
-
-    //"i" in dict:
-    if ((str = CheckPostfix(w, "i", 1)) != (w) && (GetWordFromDictionary(w.mid(0, w.length() - 1)) != ""))
-        return str;
-
-    //"a" in dict:
-    if ((str = CheckPostfix(w, "a", 1)) != (w) && (GetWordFromDictionary(w.mid(0, w.length() - 1)) != ""))
-        return str;
-
-    //QString(ih) in dict:
-    if ((str = CheckPostfix(w, QString(ih), 1)) != (w) && (GetWordFromDictionary(w.mid(0, w.length() - 1)) != ""))
-        return str;
-
-
-    //"li/4":
-    if ((str = CheckPostfix(w, "li", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(ih), 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(uh), 2)) != (w) ||
-        (str = CheckPostfix(w, "lu", 2)) != (w))
-        return str;
-
-
-    //"l?" & "la":
-    if ((str = CheckPostfix(w, "l"+QString(eh), 3)) != (w) ||
-        (str = CheckPostfix(w, "la", 3)) != (w))
-        return str;
-
-
-	//"�i/4":
-    if ((str = CheckPostfix(w, "�i", 2)) != (w) ||
-        (str = CheckPostfix(w, "�"+QString(ih), 2)) != (w) ||
-        (str = CheckPostfix(w, "�u", 2)) != (w) ||
-        (str = CheckPostfix(w, "�"+QString(uh), 2)) != (w))
-        return str;
-
-
-    //"da"+QString(sh):
-    if ((str = CheckPostfix(w, "da"+QString(sh), 3)) != (w))
-        return str;
-
-
-    //"l"+QString(eh)+"r" & "lar":
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"r", 2)) != (w) ||
-        (str = CheckPostfix(w, "lar", 2)) != (w))
-        return str;
-
-
-    //"l"+QString(eh)+"ri" & "lari":
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"ri", 2)) != (w) ||
-        (str = CheckPostfix(w, "lar"+QString(ih), 2)) != (w))
-        return str;
-
-
-    //"ligi/4":
-    if ((str = CheckPostfix(w, "ligi", 2)) != (w) ||
-        (str = CheckPostfix(w, "lu"+QString(gh)+"u", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(ih)+QString(gh)+QString(ih), 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(uh)+"g"+QString(uh), 2)) != (w))
-        return str;
-
-
-    //"ligin?/4":
-    if ((str = CheckPostfix(w, "ligin"+QString(eh), 2)) != (w) ||
-        (str = CheckPostfix(w, "lu"+QString(gh)+"una", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(ih)+QString(gh)+QString(ih)+"na", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(uh)+"g"+QString(uh)+"n"+QString(eh), 2)) != (w))
-        return str;
-
-
-    //"ligini/4":
-    if ((str = CheckPostfix(w, "ligini", 2)) != (w) ||
-        (str = CheckPostfix(w, "lu"+QString(gh)+"unu", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(ih)+QString(gh)+QString(ih)+"n"+QString(ih), 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(uh)+"g"+QString(uh)+"n"+QString(uh), 2)) != (w))
-        return str;
-
-
-    //"l?r?" & "lara":
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"r"+QString(eh), 2)) != (w) ||
-        (str = CheckPostfix(w, "lara", 2)) != (w))
-        return str;
-
-
-    //"d?ki" & "daki":
-    if ((str = CheckPostfix(w, "d"+QString(eh)+"ki", 2)) != (w) ||
-        (str = CheckPostfix(w, "dak"+QString(ih), 2)) != (w))
-        return str;
-
-
-	//<<<Issue remains in php:
-    //"?l?s" & "?las":
-    if (w.length() > 3 &&
-        ((IsFrontVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
-        (IsBackVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
-            return str;
-    if (w.length() > 4 &&
-        ((IsFrontVowel(w[w.length() - 5]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
-         (IsBackVowel(w[w.length() - 5]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
-            return str;
-    if (w.length() > 5 &&
-        ((IsFrontVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "l"+QString(eh)+QString(sh), 2)) != w) ||
-         (IsBackVowel(w[w.length() - 6]) && (str = CheckPostfix(w, "la"+QString(sh), 2)) != (w))))
-            return str;
-	//>>>
-
-
-    //"r?k" & "raq":
-    if ((str = CheckPostfix(w, "r"+QString(eh)+"k", 2)) != (w) ||
-        (str = CheckPostfix(w, "raq", 2)) != (w))
-        return str;
-
-
-    //"zad?":
-    if ((str = CheckPostfix(w, "zad"+QString(eh), 2)) != (w))
-        return str;
-
-
-    //"l?n?" & "lana":
-    if ((str = CheckPostfix(w, "l"+QString(eh)+"n"+QString(eh), 2)) != (w) ||
-        (str = CheckPostfix(w, "lana", 2)) != (w))
-        return str;
-
-
-	//<<<Issue: ignored left condition
-    //"?sini/8":
-    if (w.length() > 4 &&
-        ((w[w.length() - 5] == eh && (str = CheckPostfix(w, "sini", 3)) != (w)) ||
-        (w[w.length() - 5] == 'a' && (str = CheckPostfix(w, "s"+QString(ih)+"n"+QString(ih), 1)) != (w)) ||
-        (w[w.length() - 5] == 'u' && (str = CheckPostfix(w, "sunu", 1)) != (w)) ||
-        (w[w.length() - 5] == 'i' && (str = CheckPostfix(w, "sini", 2)) != (w)) ||
-        (w[w.length() - 5] == ih && (str = CheckPostfix(w, "s"+QString(ih)+"n"+QString(ih), 2)) != (w)) ||
-        (w[w.length() - 5] == uh && (str = CheckPostfix(w, "s"+QString(uh)+"n"+QString(uh), 1)) != (w)) ||
-        (w[w.length() - 5] == oh && (str = CheckPostfix(w, "s"+QString(uh)+"n"+QString(uh), 1)) != (w)) ||
-        (w[w.length() - 5] == 'o' && (str = CheckPostfix(w, "sunu", 1)) != (w))))
-        return str;
-	//>>>
-
-
-	//<<<Issue: ignored left condition
-    //"?sin/8":
-    if (w.length() > 3 &&
-        ((w[w.length() - 4] == eh && (str = CheckPostfix(w, "sin", 3)) != (w)) ||
-        (w[w.length() - 4] == 'a' && (str = CheckPostfix(w, "s"+QString(ih)+"n", 1)) != (w)) ||
-        (w[w.length() - 4] == 'u' && (str = CheckPostfix(w, "sun", 1)) != (w)) ||
-        (w[w.length() - 4] == 'i' && (str = CheckPostfix(w, "sin", 2)) != (w)) ||
-        (w[w.length() - 4] == ih && (str = CheckPostfix(w, "s"+QString(ih)+"n", 2)) != (w)) ||
-        (w[w.length() - 4] == uh && (str = CheckPostfix(w, "s"+QString(uh)+"n", 1)) != (w)) ||
-        (w[w.length() - 4] == oh && (str = CheckPostfix(w, "s"+QString(uh)+"n", 1)) != (w)) ||
-        (w[w.length() - 4] == 'o' && (str = CheckPostfix(w, "sun", 1)) != (w))))
-        return str;
-	//>>>
-
-
-    //"ini/4":
-    if ((str = CheckPostfix(w, "ini", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"n"+QString(ih), 1)) != (w) ||
-        (str = CheckPostfix(w, "unu", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(uh)+"n"+QString(uh), 1)) != (w))
-        return str;
-
-
-	//<<<Issue: ignored left condition
-    //"?si/8":
-    if (w.length() > 2 &&
-        ((w[w.length() - 3] == eh && (str = CheckPostfix(w, "si", 3)) != (w)) ||
-        (w[w.length() - 3] == 'a' && (str = CheckPostfix(w, "s"+QString(ih), 1)) != (w)) ||
-        (w[w.length() - 3] == 'u' && (str = CheckPostfix(w, "su", 1)) != (w)) ||
-        (w[w.length() - 3] == 'i' && (str = CheckPostfix(w, "si", 2)) != (w)) ||
-        (w[w.length() - 3] == ih && (str = CheckPostfix(w, "s"+QString(ih), 2)) != (w)) ||
-        (w[w.length() - 3] == uh && (str = CheckPostfix(w, "s"+QString(uh), 1)) != (w)) ||
-        (w[w.length() - 3] == oh && (str = CheckPostfix(w, "s"+QString(uh), 1)) != (w)) ||
-        (w[w.length() - 3] == 'o' && (str = CheckPostfix(w, "su", 1)) != (w))))
-        return str;
-
-
-    //Milki z?mirl?r:
-    if ((str = CheckPostfix(w, "im", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"m", 1)) != (w) ||
-        (str = CheckPostfix(w, "um", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(uh)+"m", 1)) != (w) ||
-
-        (w.length() > 3 && w[w.length() - 3] != 'n' && (str = CheckPostfix(w, "in", 1)) != (w)) ||
-        (w.length() > 3 && w[w.length() - 3] != 'n' && (str = CheckPostfix(w, QString(ih)+"n", 1)) != (w)) ||
-        (w.length() > 3 && w[w.length() - 3] != 'n' && (str = CheckPostfix(w, "un", 1)) != (w)) ||
-        (w.length() > 3 && w[w.length() - 3] != 'n' && (str = CheckPostfix(w, QString(uh)+"n", 1)) != (w)) ||
-
-        (str = CheckPostfix(w, "imiz", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"m"+QString(ih)+"z", 1)) != (w) ||
-        (str = CheckPostfix(w, "umuz", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(uh)+"m"+QString(uh)+"z", 1)) != (w) ||
-
-        (str = CheckPostfix(w, "iniz", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih)+"n"+QString(ih)+"z", 1)) != (w) ||
-        (str = CheckPostfix(w, "unuz", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(uh)+"n"+QString(uh)+"z", 1)) != (w))
-        return str;
-
-
-    //"?nin/8":
-    if (w.length() > 3 &&
-        ((w[w.length() - 4] == eh && (str = CheckPostfix(w, "nin", 3)) != (w)) ||
-        (w[w.length() - 4] == 'a' && (str = CheckPostfix(w, "n"+QString(ih)+"n", 1)) != (w)) ||
-        (w[w.length() - 4] == 'u' && (str = CheckPostfix(w, "nun", 1)) != (w)) ||
-        (w[w.length() - 4] == 'i' && (str = CheckPostfix(w, "nin", 2)) != (w)) ||
-        (w[w.length() - 4] == ih && (str = CheckPostfix(w, "n"+QString(ih)+"n", 2)) != (w)) ||
-        (w[w.length() - 4] == uh && (str = CheckPostfix(w, "n"+QString(uh)+"n", 1)) != (w)) ||
-        (w[w.length() - 4] == oh && (str = CheckPostfix(w, "n"+QString(uh)+"n", 1)) != (w)) ||
-        (w[w.length() - 4] == 'o' && (str = CheckPostfix(w, "nun", 1)) != (w))))
-        return str;
-
-
-    //"?yib/8":
-    if (w.length() > 3 &&
-        ((w[w.length() - 4] == eh && (str = CheckPostfix(w, "yib", 3)) != (w)) ||
-        (w[w.length() - 4] == 'a' && (str = CheckPostfix(w, "y"+QString(ih)+"b", 1)) != (w)) ||
-        (w[w.length() - 4] == 'u' && (str = CheckPostfix(w, "yub", 1)) != (w)) ||
-        (w[w.length() - 4] == 'i' && (str = CheckPostfix(w, "yib", 1)) != (w)) ||
-        (w[w.length() - 4] == ih && (str = CheckPostfix(w, "y"+QString(ih)+"b", 1)) != (w)) ||
-        (w[w.length() - 4] == uh && (str = CheckPostfix(w, "y"+QString(uh)+"b", 1)) != (w)) ||
-        (w[w.length() - 4] == oh && (str = CheckPostfix(w, "y"+QString(uh)+"b", 1)) != (w)) ||
-        (w[w.length() - 4] == 'o' && (str = CheckPostfix(w, "yub", 1)) != (w))))
-        return str;
-
-
-    //"?miyib/8":
-    if (w.length() > 5 &&
-        ((w[w.length() - 6] == eh && (str = CheckPostfix(w, "m"+QString(eh)+"yib", 3)) != (w)) ||
-        (w[w.length() - 6] == 'a' && (str = CheckPostfix(w, "may"+QString(ih)+"b", 1)) != (w)) ||
-        (w[w.length() - 6] == 'u' && (str = CheckPostfix(w, "muyub", 1)) != (w)) ||
-        (w[w.length() - 6] == 'i' && (str = CheckPostfix(w, "miyib", 1)) != (w)) ||
-        (w[w.length() - 6] == ih && (str = CheckPostfix(w, "m"+QString(ih)+"y"+QString(ih)+"b", 1)) != (w)) ||
-        (w[w.length() - 6] == uh && (str = CheckPostfix(w, "m"+QString(uh)+"y"+QString(uh)+"b", 1)) != (w)) ||
-        (w[w.length() - 6] == oh && (str = CheckPostfix(w, "m"+QString(uh)+"y"+QString(uh)+"b", 1)) != (w)) ||
-        (w[w.length() - 6] == 'o' && (str = CheckPostfix(w, "muyub", 1)) != (w))))
-        return str;
-
-
-	//<<<Continue from here...
-    //"dir/4":
-    if ((str = CheckPostfix(w, "dir", 2)) != (w) ||
-        (str = CheckPostfix(w, "d"+QString(ih)+"r", 2)) != (w) ||
-        (str = CheckPostfix(w, "dur", 2)) != (w) ||
-        (str = CheckPostfix(w, "d"+QString(uh)+"r", 2)) != (w))
-        return str;
-    //"di/4":
-    if ((str = CheckPostfix(w, "di", 3)) != (w) ||
-        (str = CheckPostfix(w, "d"+QString(ih), 3)) != (w) ||
-        (str = CheckPostfix(w, "du", 3)) != (w) ||
-        (str = CheckPostfix(w, "d"+QString(uh), 3)) != (w))
-        return str;
-
-
-    //"siz/4":
-    if ((str = CheckPostfix(w, "siz", 2)) != (w) ||
-        (str = CheckPostfix(w, "s"+QString(ih)+"z", 2)) != (w) ||
-        (str = CheckPostfix(w, "suz", 2)) != (w) ||
-        (str = CheckPostfix(w, "s"+QString(uh)+"z", 2)) != (w))
-        return str;
-
-
-    //"miz/4":
-    if ((str = CheckPostfix(w, "miz", 3)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(ih)+"z", 3)) != (w) ||
-        (str = CheckPostfix(w, "muz", 3)) != (w) ||
-        (str = CheckPostfix(w, "m"+QString(uh)+"z", 3)) != (w))
-        return str;
-
-
-    //"niz/4":
-    if ((str = CheckPostfix(w, "niz", 3)) != (w) ||
-        (str = CheckPostfix(w, "n"+QString(ih)+"z", 3)) != (w) ||
-        (str = CheckPostfix(w, "nuz", 3)) != (w) ||
-        (str = CheckPostfix(w, "n"+QString(uh)+"z", 3)) != (w))
-        return str;
-
-
-    //"?y?" & "?ya":
-    if (w.length() > 2 &&
-        (IsFrontVowel(w[w.length() - 3]) && (str = CheckPostfix(w, "y"+QString(eh), 3)) != (w) ||
-         IsBackVowel (w[w.length() - 3]) && (str = CheckPostfix(w, "ya", 1)) != (w)))
-        return str;
-
-
-    //"c?" & "ca":
-    if ((str = CheckPostfix(w, "c"+QString(eh), 3)) != (w) ||
-        (str = CheckPostfix(w, "ca", 3)) != (w))
-        return str;
-
-
-    //"c?k" & "caq":
-    if ((w.length() > 3 && IsFrontVowel(w[w.length() - 4]) && (str = CheckPostfix(w, "c"+QString(eh)+"k", 2)) != (w)) ||
-        (w.length() > 3 && IsBackVowel (w[w.length() - 4]) && (str = CheckPostfix(w, "caq", 2)) != (w)))
-        return str;
-
-
-    //"lik" & "liq":
-    if ((str = CheckPostfix(w, "lik", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(ih)+"q", 2)) != (w))
-        return str;
-
-
-    //"liki" & ""ligi:
-    if ((str = CheckPostfix(w, "liki", 2)) != (w) ||
-        (str = CheckPostfix(w, "liyi", 2)) != (w) ||
-        (str = CheckPostfix(w, "l"+QString(ih)+QString(gh)+QString(ih), 2)) != (w))
-        return str;
-
-
-    //"d?n" & "dan":
-    if ((str = CheckPostfix(w, "d"+QString(eh)+"n", 2)) != (w) ||
-        (str = CheckPostfix(w, "dan", 2)) != (w))
-        return str;
-
-
-    //"m?k" & "maq":
-    if ((str = CheckPostfix(w, "m"+QString(eh)+"k", 4)) != (w) ||
-        (str = CheckPostfix(w, "maq", 4)) != (w))
-        return str;
-
-
-    //"d?" & "da":
-    if ((str = CheckPostfix(w, "d"+QString(eh), 3)) != (w) ||
-        (str = CheckPostfix(w, "da", 1)) != (w))
-        return str;
-
-
-    //"s?" & "sa":
-    if ((str = CheckPostfix(w, "s"+QString(eh), 3)) != (w) ||
-        (str = CheckPostfix(w, "sa", 1)) != (w))
-        return str;
-
-
-    //"m" & "n":
-    if (w.length() > 1 && IsVowel(w[w.length() - 2]) &&
-        ((str = CheckPostfix(w, "m", 4)) != (w) ||
-        (str = CheckPostfix(w, "n", 4)) != (w)))
-        return str;
-
-
-    //"i/6": (must be the last postfix checked!)
-    if ((str = CheckPostfix(w, "i", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(ih), 1)) != (w) ||
-        (str = CheckPostfix(w, "u", 1)) != (w) ||
-        (str = CheckPostfix(w, QString(uh), 1)) != (w) ||
-        (str = CheckPostfix(w, "a", 1)) != (w) ||
-        (str = CheckPostfix(w, eh, 1)) != (w))
-        return str;
-
-
-
-    return str;
+    nakedWord = word;
+    wordPostfixes = "";
+    if (word.isEmpty())
+        return;
+
+    QString postfix;
+    QStringList list;
+    bool hasVs = false;
+    bool removeLast = false;
+    QMapIterator<int, QStringList> it(postfixes);
+    while(it.hasNext())
+    {
+        it.next();
+        list = it.value();
+        postfix = list.at(0);
+        hasVs = removeLast = false;
+
+        if (nakedWord.length() > postfix.length() + 2 &&
+                nakedWord.endsWith(postfix) &&
+                     (list.at(3) == "0" ||
+                          (list.at(3)=="1" && !lookupWord(nakedWord.left(nakedWord.length()-postfix.length())).isEmpty()
+                          )
+                     )
+           )
+        {
+            switch (list.at(2).toInt())
+            {
+                case 1:
+                    //Nothing to do!
+                    break;
+
+                case 2:
+                    if (isSticking(nakedWord[nakedWord.length() - postfix.length() - 1]))
+                        hasVs = true;
+                    break;
+
+                case 3:
+                    if (nakedWord[(nakedWord.length() - postfix.length()) - 1] == eh)
+                        hasVs = true;
+                    break;
+
+                case 4:
+                    if (nakedWord[(nakedWord.length() - postfix.length()) - 1] == eh)
+                        removeLast = true;
+                    break;
+            }
+
+            wordPostfixes = (hasVs ? vs_str : "") + list.at(1) + wordPostfixes;
+            nakedWord = nakedWord.left(nakedWord.length()-postfix.length());
+            if (removeLast)
+                nakedWord = nakedWord.left(nakedWord.length()-1);
+
+            //Check if the remaining word is in dictionary:
+            if (!lookupWord(nakedWord).isEmpty())
+                return;
+            else
+            {
+                it.toFront();
+                continue;
+            }
+        }
+    }
 }
 
 
-QString L2AConversion::ChangePrefixes(const QString& w)
-        {
-            if (w.isNull() || w.isEmpty())
-                return "";
-
-            QString str(w);
-            if ((w.length() > 5) && w.mid(0, 4) == ("yeni"))
-                return (QString("")+QChar('\xcc', '\x06')+QChar('\x26', '\x06')+QChar('\x46', '\x06')+QChar('\xcc', '\x06')+QString(vs) + ConvertWord(w.mid(4, w.length() - 4), true));
-            if ((w.length() > 5) && w.mid(0, 4) == ("anti"))
-                return (QString("")+QChar('\x22', '\x06')+QChar('\x46', '\x06')+QChar('\x2a', '\x06')+QChar('\xcc', '\x06')+QString(vs) + ConvertWord(w.mid(4, w.length() - 4), true));
-            if ((w.length() > 5) && w.mid(0, 4) == ("q"+QString(eh)+"r"+QString(eh)))
-                return (QString("")+QChar('\x42', '\x06')+QChar('\x31', '\x06')+QChar('\x47', '\x06')+QString(vs) + ConvertWord(w.mid(4, w.length() - 4), true));
-            if ((w.length() > 5) && w.mid(0, 4) == ("t"+QString(eh)+"z"+QString(eh)))
-                str = QString("")+QChar('\x2a', '\x06')+QChar('\x32', '\x06')+QChar('\x47', '\x06')+QString(vs) + ConvertWord(w.mid(4, w.length() - 4), true);
-            return str;
-        }
-
-
-
-QString L2AConversion::CheckPostfix(const QString& w, const QString& pff, int sp)
+void L2AConversion::separatePrefixes(const QString& word, QString& nakedWord, QString& wordPrefixes)
 {
-    QString pf(pff);
-    QString str(w);
-    int length = w.length();
-    int num2 = pf.length();
-    if ((length <= (num2 + 2)) || w.mid(length - num2, num2) != (pf))
-        return str;
+    nakedWord = word;
+    wordPrefixes = "";
+    if (word.isEmpty())
+        return;
 
-
-    str = ConvertWord(w.mid(0, length - num2), true);
-    switch (sp)
+    QString prefix;
+    QStringList list;
+    QMapIterator<int, QStringList> it(prefixes);
+    while(it.hasNext())
     {
-        case 1:
-            //Nothing to do!
-            break;
+        it.next();
+        list = it.value();
+        prefix = list.at(0);
 
-        case 2:
-            if (isSticking(w[(length - num2) - 1]))
-                str = str + vs;
-            break;
+        if (nakedWord.length() > prefix.length() + 2 && nakedWord.startsWith(prefix))
+        {
+            bool hasVs = isSticking(prefix.at(prefix.length()-1));
 
-        case 3:
-            if (w[(length - num2) - 1] == eh)
-                str = str + vs;
-            break;
+            //TODO: Instead of line below, check the list.at(2) and do the right work.
+            wordPrefixes += list.at(1) + (hasVs ? vs_str : "");
+            nakedWord = nakedWord.right(nakedWord.length()-prefix.length());
 
-        case 4:
-            if (w[(length - num2) - 1] == eh)
-                str = str.mid(0, str.length() - 1);
-            break;
+            //Check if the remaining word is in dictionary:
+            if (!lookupWord(nakedWord).isEmpty())
+            {
+                return;
+            }
+            else
+            {
+                it.toFront();
+                continue;
+            }
+        }
     }
-    QChar c = pf[0];
-    if (c == uh || c == 'u')
-    {
-        str = str + QChar('\x48', '\x06');
-        pf = pf.mid(1, --num2);
-    }
-    else if (c == 'i' || c == ih)
-    {
-        str = str + QChar('\xcc', '\x06');
-        pf = pf.mid(1, --num2);
-    }
-    else if (c == eh)
-    {
-        str = str + QChar('\x47', '\x06');
-        pf = pf.mid(1, --num2);
-    }
-    else if (c == 'a')
-    {
-        str = str + QChar('\x27', '\x06');
-        pf = pf.mid(1, --num2);
-    }
-
-    return (str + ConvertWord(pf, false));
 }
 
 
@@ -779,7 +308,7 @@ bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
 }
 
 
-QString L2AConversion::ConvertHtml()
+/*QString L2AConversion::ConvertHtml()
 {
     //TODO: PreprocessText();
     //TODO: Complete and debug this function
@@ -821,7 +350,7 @@ QString L2AConversion::ConvertHtml()
             i++;
         }
     }
-}
+}*/
 
 
 QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
@@ -837,9 +366,40 @@ QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
     word = word.replace(Ih, 'i', Qt::CaseSensitive);
     word = word.toLower();
     QString str("");
-    str = GetWordFromDictionary(word);
+    str = lookupWord(word);
     if (str == "")
     {
+        if (isRecursive)
+        {
+            //Separate and convert prefixes:
+            QString wordWithoutPrefixes;
+            QString wordPrefixes;
+            separatePrefixes(word, wordWithoutPrefixes, wordPrefixes);
+
+            //Check remaning in dictionary:
+            QString wordDict = lookupWord(wordWithoutPrefixes);
+            if (!wordDict.isEmpty())
+            {
+                str = wordPrefixes + wordDict;
+                return str;
+            }
+
+            //Separate and convert postfixes:
+            QString wordWithoutPostfixes;
+            QString wordPostfixes;
+            separatePostfixes(wordWithoutPrefixes, wordWithoutPostfixes, wordPostfixes);
+
+            //Check remaining in dictionary:
+            wordDict = lookupWord(wordWithoutPostfixes);
+            if (!wordDict.isEmpty())
+            {
+                str = wordPrefixes + wordDict + wordPostfixes;
+                return str;
+            }
+
+            //Stick them together and form the final word:
+            word = wordPrefixes + wordWithoutPostfixes + wordPostfixes;
+        }
         if (word.length() > 2 &&
             (word.mid(0, 2) == ("sp") ||
             word.mid(0, 2) == ("st") ||
@@ -857,11 +417,6 @@ QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
             int num2 = word.indexOf(QString(uh)+"y"+QString(uh));
             word = word.mid(0, num2 + 1) + "g" + word.mid(num2 + 2, word.length() - (num2 + 2));
         }
-        if (isRecursive)
-        {
-            word = ChangePostfixes(word);
-            word = ChangePrefixes(word);
-        }
         if (word.contains("iyy"))
         {
             int num3 = word.indexOf("iyy");
@@ -872,6 +427,7 @@ QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
             int num4 = word.indexOf("iy");
             word = word.mid(0, num4) + word.mid(num4 + 1, word.length() - (num4 + 1));
         }
+
         str = "";
         int length = word.length();
         for (int i = 0; i < length; i++)
@@ -925,10 +481,9 @@ QChar L2AConversion::GetSpecialChar(QChar c)
 }
 
 
-QString L2AConversion::GetWord(int i, QChar delim)
+/*QString L2AConversion::GetWord(int i, QChar delim)
 {
-
-}
+}*/
 
 
 QString L2AConversion::GetWord(int i)
@@ -991,12 +546,17 @@ QString L2AConversion::GetWord(int i)
 }
 
 
-QString L2AConversion::GetWordFromDictionary(const QString& w)
+QString L2AConversion::lookupWord(const QString& w)
 {
+    QString res;
     if (words.contains(w))
-        return words.value(w);
+        res = words.value(w);
     else
-        return "";
+        res = "";
+
+    qDebug() << "Looking up: " << w << "result: " << res;
+
+    return res;
 }
 
 

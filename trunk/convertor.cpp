@@ -33,3 +33,15 @@ void Convertor::loadWords()
 {
     DbService::getInstance()->getWords(getTablesPostfix(), words);
 }
+
+
+void Convertor::loadPrefixes()
+{
+    DbService::getInstance()->getPrefixes(getTablesPostfix(), prefixes);
+}
+
+
+void Convertor::loadPostfixes()
+{
+    DbService::getInstance()->getPostfixes(getTablesPostfix(), postfixes);
+}

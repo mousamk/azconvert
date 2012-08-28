@@ -9,6 +9,8 @@ C2LConversion::C2LConversion(QObject* parent)
 {
     loadChars();
     //loadWords();      //Not needed in this direction.
+    //loadPrefixes();
+    //loadPostfixes();
 }
 
 
