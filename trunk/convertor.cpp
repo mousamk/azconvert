@@ -16,6 +16,8 @@ Convertor::~Convertor()
 
 void Convertor::loadChars()
 {
+    chars.clear();
+
     QSqlRecord record;
     QSqlQuery query;
     DbService::getInstance()->getCharacters(getTablesPostfix(), record, query);
@@ -31,17 +33,20 @@ void Convertor::loadChars()
 
 void Convertor::loadWords()
 {
+    words.clear();
     DbService::getInstance()->getWords(getTablesPostfix(), words);
 }
 
 
 void Convertor::loadPrefixes()
 {
+    prefixes.clear();
     DbService::getInstance()->getPrefixes(getTablesPostfix(), prefixes);
 }
 
 
 void Convertor::loadPostfixes()
 {
+    postfixes.clear();
     DbService::getInstance()->getPostfixes(getTablesPostfix(), postfixes);
 }

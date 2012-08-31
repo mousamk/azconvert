@@ -47,12 +47,31 @@ public:
      * @param postfixes The reference where the postfixes loaded will be saved in
      */
     void getPostfixes(QString tablePostfix, QMap<int,QStringList>& postfixes);
+
+    /*!
+     * @brief Adds a word to database.
+     * @param tablePostfix Postfix of the table to add word to it.
+     * @param word The word to be added.
+     * @param equal Equivalent of the word to be added.
+     * @return Returns whether it's been successfuly added or not.
+     */
+    bool addWord(QString tablePostfix, QString word, QString equal);
+
+    /*!
+     * @brief Updates a word's equivalent in database.
+     * @param tablePostfix Postfix of the table to update word in it.
+     * @param word The word, it's equivalent to be updated.
+     * @param equal Equivalent of the word to be updated.
+     * @return Returns whether it's been successfuly updated or not.
+     */
+    bool updateWord(QString tablePostfix, QString word, QString equal);
     
     
 private:
     explicit DbService(QObject *parent);
     bool loadDb();
     void loadPostOrPrefix(QString postOrPrefix, QString tablePostfix, QMap<int,QStringList>& postOrPrefixes);
+    int  getFreeId(QString table);
     
     
 private:

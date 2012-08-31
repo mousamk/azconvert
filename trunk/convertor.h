@@ -52,10 +52,9 @@ public:
     virtual QString convert(QProgressDialog* progressDialog) = 0;
     
     /*!
-     * @brief Reloads the dictionaries.
+     * @brief Reloads the database resource.
      */
-    //TODO: A better name or mechanism.
-    //virtual void openDicts() = 0;
+    virtual void reloadResources() = 0;
     
     /*!
      * @brief Sets the original text to be used later in converting.
@@ -74,6 +73,24 @@ public:
      * @return The layout direction for the destination script
      */
     virtual Qt::LayoutDirection getDestinationLayoutDirection() = 0;
+
+    /*!
+     * @brief Returns the words collection.
+     * @return The words collection
+     */
+    QHash<QString,QString> getWords() {return words;}
+
+    /*!
+     * @brief Gets the convertor's postfix for database tables
+     * @returns The postfix of the convertor in db tables
+     */
+    virtual QString getTablesPostfix() = 0;
+
+    /*!
+     * @brief Returns whether words can be added to this conversion mode or not.
+     * @return Whether words can be added to this conversion or not.
+     */
+    virtual bool canAddWords() = 0;
     
     
 protected:
@@ -96,12 +113,6 @@ protected:
      * @brief Loads postfixes table used in transliteration
      */
     void loadPostfixes();
-    
-    /*!
-     * @brief Gets the convertor's postfix for database tables
-     * @returns The postfix of the convertor in db tables
-     */
-    virtual QString getTablesPostfix() = 0;
 
     /*!
      * @brief Fetches the record for a character and returns all parts in a string list.

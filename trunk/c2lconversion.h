@@ -12,14 +12,14 @@ class C2LConversion : public Convertor
 public:
     C2LConversion(QObject* parent);
     QString convert(QProgressDialog* progressDialog);
-    //void openDicts() {}
+    void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
+    QString getTablesPostfix();
+    bool canAddWords();
     
     
 protected:
-    QString getTablesPostfix();
-
     /*!
      * @brief Fetches the record for a character and returns all parts in a string list.
      * @param query The query to get the fields from.

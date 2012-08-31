@@ -8,12 +8,13 @@
 #include "l2aconversion.h"
 #include "settings.h"
 #include "dbservice.h"
+#include "util.h"
 
 
 L2AConversion::L2AConversion(QObject* parent)
     : Convertor(parent),
       eh('\x59', '\x02'),
-      //ih('\x31', '\x01'),
+      ih('\x31', '\x01'),
       Ih('\x30', '\x01'),
       //sh('\x5f', '\x01'),
       //ch('\xe7', '\x00'),
@@ -23,6 +24,12 @@ L2AConversion::L2AConversion(QObject* parent)
       vs('\x0c', '\x20'),
       vs_str(vs)
 { 
+    reloadResources();
+}
+
+
+void L2AConversion::reloadResources()
+{
     loadChars();
     loadWords();
     loadPrefixes();
@@ -33,6 +40,12 @@ L2AConversion::L2AConversion(QObject* parent)
 QString L2AConversion::getTablesPostfix()
 {
     return "_l2a";
+}
+
+
+bool L2AConversion::canAddWords()
+{
+    return true;
 }
 
 
@@ -146,6 +159,8 @@ void L2AConversion::separatePrefixes(const QString& word, QString& nakedWord, QS
     if (word.isEmpty())
         return;
 
+    bool hasVs = false;
+    bool removeLast = false;
     QString prefix;
     QStringList list;
     QMapIterator<int, QStringList> it(prefixes);
@@ -157,17 +172,38 @@ void L2AConversion::separatePrefixes(const QString& word, QString& nakedWord, QS
 
         if (nakedWord.length() > prefix.length() + 2 && nakedWord.startsWith(prefix))
         {
-            bool hasVs = isSticking(prefix.at(prefix.length()-1));
+            switch (list.at(2).toInt())
+            {
+                case 1:
+                    //Nothing to do!
+                    break;
+
+                case 2:
+                    if (isSticking(prefix[prefix.length() - 1]))
+                        hasVs = true;
+                    break;
+
+                case 3:
+                    if (prefix[prefix.length() - 1] == eh)
+                        hasVs = true;
+                    break;
+
+                case 4:
+                    if (prefix[prefix.length() - 1] == eh)
+                        removeLast = true;
+                    break;
+            }
 
             //TODO: Instead of line below, check the list.at(2) and do the right work.
-            wordPrefixes += list.at(1) + (hasVs ? vs_str : "");
+            wordPrefixes += list.at(1);
+            if (removeLast)
+                wordPrefixes = wordPrefixes.left(wordPrefixes.length()-1);
+            wordPrefixes += (hasVs ? vs_str : "");
             nakedWord = nakedWord.right(nakedWord.length()-prefix.length());
 
             //Check if the remaining word is in dictionary:
             if (!lookupWord(nakedWord).isEmpty())
-            {
                 return;
-            }
             else
             {
                 it.toFront();
@@ -180,7 +216,7 @@ void L2AConversion::separatePrefixes(const QString& word, QString& nakedWord, QS
 
 void L2AConversion::PreprocessText()
 {
-    //Changing "dr." to "dr "
+    /*//Changing "dr." to "dr "
     while (strSource.contains("dr.", Qt::CaseSensitive))
     {
         int index = strSource.indexOf("dr.");
@@ -199,19 +235,19 @@ void L2AConversion::PreprocessText()
     {
         int num3 = strSource.indexOf("DR.");
         strSource = strSource.mid(0, num3 + 2) + " " + strSource.mid(num3 + 3, strSource.length() - (num3 + 3));
-    }
+    }*/
 }
 
 
 QString L2AConversion::convert(QProgressDialog* prg)
 {
     //Load wiki mode:
-	bool wikiMode = Settings::GetInstance(this->parent())->GetWikiMode();
+    //bool wikiMode = Settings::GetInstance(this->parent())->GetWikiMode();
 
     //These variables are used in wiki mode:
-    int doubleBracket=0;
-    bool openBracketSeen = false;
-    bool closeBracketSeen = false;
+    //int doubleBracket=0;
+    //bool openBracketSeen = false;
+    //bool closeBracketSeen = false;
 
     PreprocessText();
 
@@ -237,16 +273,16 @@ QString L2AConversion::convert(QProgressDialog* prg)
 
 
         //In 'Wiki' mode, don't convert the texts between double brackets
-        if (!wikiMode || (doubleBracket == 0 || !IsThereColonBeforeDoubleCloseBrackets(i)))
-            strResult += ConvertWord(word, true);
-        else
-            strResult += word;
+        //if (!wikiMode || (doubleBracket == 0 || !IsThereColonBeforeDoubleCloseBrackets(i)))
+            strResult += convertWord(word, true);
+        //else
+        //    strResult += word;
 
 
         while ((i < length) && !IsCharAInWordChar(strSource[i]))
         {
             QChar curChar = strSource[i];
-            //Wikimode:
+            /*//Wikimode:
             //*********** Counting double brackets used in wiki format: ************
             if (curChar == '[')
             {
@@ -274,7 +310,7 @@ QString L2AConversion::convert(QProgressDialog* prg)
             }
             else
                 closeBracketSeen = false;
-            //******************* End counting double brakcets: *********************
+            //******************* End counting double brakcets: *********************/
 
 
             //Converting characters:
@@ -286,7 +322,8 @@ QString L2AConversion::convert(QProgressDialog* prg)
             i++;
         }
     }
-    return GetResult();
+
+    return strResult;
 }
 
 
@@ -353,7 +390,7 @@ bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
 }*/
 
 
-QString L2AConversion::ConvertWord(const QString& wo, bool isRecursive)
+QString L2AConversion::convertWord(const QString& wo, bool isRecursive)
 {
     QString word(wo);
     if (word.isEmpty())
@@ -571,7 +608,9 @@ bool L2AConversion::IsBackVowel(QChar c)
 
 bool L2AConversion::IsCharAInWordChar(QChar c)
 {
-    return chars.contains(c) || c.isDigit();
+    QChar cLower;
+    CHAR_TO_LOWER(c, cLower);
+    return chars.contains(cLower) || c.isDigit();
 }
 
 

@@ -7,6 +7,12 @@
 C2LConversion::C2LConversion(QObject* parent)
     : Convertor(parent)
 {
+    reloadResources();
+}
+
+
+void C2LConversion::reloadResources()
+{
     loadChars();
     //loadWords();      //Not needed in this direction.
     //loadPrefixes();
@@ -29,6 +35,12 @@ Qt::LayoutDirection C2LConversion::getDestinationLayoutDirection()
 QString C2LConversion::getTablesPostfix()
 {
     return "_c2l";
+}
+
+
+bool C2LConversion::canAddWords()
+{
+    return false;
 }
 
 

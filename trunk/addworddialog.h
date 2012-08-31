@@ -21,7 +21,6 @@ protected:
 private:
     Ui::AddWordDialog m_ui;
     MainWindow* mainWindow;
-    bool isL2A;
 
 private slots:
     void on_btnAdd_clicked();

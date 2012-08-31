@@ -23,6 +23,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void newVersionAvailable(QString version);
+    Convertor* getConvertor();
     
     
 protected:

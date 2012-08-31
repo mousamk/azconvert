@@ -1,8 +1,12 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QDir>
+#include <QHash>
 
 #include "addworddialog.h"
+#include "convertor.h"
+#include "util.h"
+#include "dbservice.h"
 
 
 
@@ -20,25 +24,17 @@ AddWordDialog::AddWordDialog(MainWindow* main, QString word, QWidget* parent) :
 
     //Preprocessing the word:
     word = word.trimmed();
-    word = word.replace("I", "\u0131");
-    word = word.toLower();
+    WORD_TO_LOWER(word, word);
 
     //Setting the word to the text box:
     m_ui.txtWord->setText(word);
 
-    isL2A = mainWindow->cMode == LatinToArabic;
+    //Setting text box layouts:
+    Convertor* convertor = mainWindow->getConvertor();
+    m_ui.txtWord->setLayoutDirection(convertor->getSourceLayoutDirection());
+    m_ui.txtEqual->setLayoutDirection(convertor->getDestinationLayoutDirection());
 
-    if (isL2A)
-    {
-        m_ui.txtWord->setLayoutDirection(Qt::LeftToRight);
-        m_ui.txtEqual->setLayoutDirection(Qt::RightToLeft);
-    }
-    else
-    {
-        m_ui.txtWord->setLayoutDirection(Qt::RightToLeft);
-        m_ui.txtEqual->setLayoutDirection(Qt::LeftToRight);
-    }
-
+    //focus and select word:
     m_ui.txtWord->setFocus();
     m_ui.txtWord->selectAll();
 }
@@ -58,154 +54,58 @@ void AddWordDialog::changeEvent(QEvent *e)
 
 void AddWordDialog::on_btnAdd_clicked()
 {
-    //Path:
-    QString path = QApplication::applicationDirPath();
-    path = path + QDir::separator() + "dicts" + QDir::separator();
+    //TODO: Validate word
 
+    QString word = m_ui.txtWord->text();
+    QString lWord;
+    WORD_TO_LOWER(word, lWord);
+    QString equal = m_ui.txtEqual->text();
 
-    QString str;
-    if (isL2A)
-        m_ui.txtEqual->setText(Standardize(m_ui.txtEqual->text()));
-    else
-        m_ui.txtWord->setText(Standardize(m_ui.txtWord->text()));
+    Convertor* convertor = mainWindow->getConvertor();
+    QHash<QString,QString> words = convertor->getWords();
+    bool success = true;
 
-    QString fileName("");
-    if (m_ui.rdbUser->isChecked())
+    //Check if it already exists:
+    if (words.contains(lWord))
     {
-        if (isL2A)
-            fileName = path + "dict_AzL2AzA_user.dat";
-        else
-            fileName = path + "dict_AzA2AzL_user.dat";
-    }
-    else if (m_ui.rdbSystem->isChecked())
-    {
-        if (isL2A)
-            fileName = path + "dict_AzL2AzA.dat";
-        else
-            fileName = path + "dict_AzA2AzL.dat";
-    }
+        QString oldEqual = words.value(lWord);
 
-    QFile file(fileName);
-    bool fatal = false;
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        str = QString::fromUtf8(file.readAll());
-        file.close();
-    }
-    else if (file.error() == QFile::OpenError)
-    {
-        //QMessageBox::warning(mainWindow, tr("File"), tr("Error opening file"), tr("OK"));
-
-        //The file doesn't exist, so create it:
-        if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+        //Check if it already exists with the same equivalent:
+        if (oldEqual.compare(equal) == 0)
         {
-            file.write(QString("").toUtf8());
-            file.close();
+            QMessageBox::information(this, tr("Already exists"), tr("The same word with the same equivalent already exists in database."));
+            this->accept();
         }
         else
         {
-            QMessageBox::warning(mainWindow, tr("File"), tr("Error writing file"), tr("OK"));
-            fatal = true;
-        }
-    }
-
-    if (!fatal)
-    {
-        QString newExp = "[" + m_ui.txtWord->text().trimmed() + "]";
-        if (!str.contains(newExp, Qt::CaseSensitive))
-        {
-            QString str5 = "=" + m_ui.txtEqual->text().trimmed() + "\r\n";
-            QString str6 = "=" + m_ui.txtEqual->text().trimmed() + "\n";
-            if (str.contains(str5) || str.contains(str6))
+            //Ask if user wants to update the equivalent:
+            int res = QMessageBox::question(this, tr("Another equivalent"), tr("The word with another equivalent (<b>%1</b>) already exists in database. Do you want to change it?").arg(oldEqual), QMessageBox::Yes, QMessageBox::No);
+            if(QMessageBox::Yes == res)
             {
-                int index;
-                if (str.contains(str5))
-                    index = str.indexOf(str5);
-                else
-                    index = str.indexOf(str6);
-                while(str[index] != ']')
-                    index--;
-                index++;
-
-                QString str7 = "[" + m_ui.txtWord->text().trimmed() + "]";
-                str.insert(index, str7);
-
-                if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+                if(success = DbService::getInstance()->updateWord(convertor->getTablesPostfix(), word, equal))
                 {
-                    file.write(str.toUtf8());
-                    file.close();
-                }
-                else
-                {
-                    QMessageBox::warning(mainWindow, tr("File"), tr("Error writing file"), tr("OK"));
-                    fatal = true;
+                    words[lWord] = equal;
+                    this->accept();
                 }
             }
             else
             {
-                QString str8("");
-                if (!str.endsWith("\n"))
-                    str8 = "\n";
-                str8 += "[" + m_ui.txtWord->text().trimmed() + "]\t\t=" + m_ui.txtEqual->text().trimmed() + "\n";
-                if (file.open(QIODevice::Append | QIODevice::Text))
-                {
-                    file.write(str8.toUtf8());
-                    file.close();
-                }
-                else
-                {
-                    QMessageBox::warning(mainWindow, tr("File"), tr("Error writing file"), tr("OK"));
-                    fatal = true;
-                }
+                this->accept();
             }
-
-            this->accept();
         }
-        else
+    }
+    else
+    {
+        //Add to db:
+        if (success = DbService::getInstance()->addWord(convertor->getTablesPostfix(), word, equal))
         {
-            int length = str.indexOf(newExp);
-            while (str[length] != '=')
-                length++;
-            length++;
-            int num2 = length;
-            QString str4("");
-            while (num2 < str.length() && str[num2] != '\r' && (str[num2] != '\n'))
-            {
-                str4 = str4 + QString(str[num2]);
-                num2++;
-            }
-            if (str4 == m_ui.txtEqual->text().trimmed())
-            {
-                //MessageBox.Show("The word and the equivalent already exists in the dictionary!");
-                QMessageBox::information(mainWindow, tr("Word"), tr("The word and the equivalent already exists in the dictionary!"), tr("OK"));
-            }
-            else //if (MessageBox.Show("The word already exists in the dictionary, but the available equivalent doesn't match with your word!\nDo you want to update that? Otherwise the existing word will be saved.", "What to do?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.No)
-            {
-                if (QMessageBox::Yes == QMessageBox::question(mainWindow, tr("Replace"), tr("The word already exists in the dictionary, but the available equivalent doesn't match with your word!\nDo you want to update that? Otherwise the existing word will be saved."), QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
-                {
-                    while (num2 < str.length() && (str[num2] == '\r' || str[num2] == '\n'))
-                        num2--;
-
-                    str = str.mid(0, length) + m_ui.txtEqual->text().trimmed() + str.mid(++num2);
-                    if (!str.endsWith("\n"))
-                        str += "\r\n";
-
-                    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
-                    {
-                        file.write(str.toUtf8());
-                        file.close();
-                    }
-                    else
-                    {
-                        QMessageBox::warning(mainWindow, tr("File"), tr("Error writing file"), tr("OK"));
-                        fatal = true;
-                    }
-                }
-            }
-
+            words.insert(word, equal);
             this->accept();
         }
     }
+
+    if (!success)
+        QMessageBox::warning(this, tr("Not successful"), tr("An error happened and the operation was unsuccessful!"));
 }
 
 

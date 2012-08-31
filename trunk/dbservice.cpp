@@ -111,6 +111,69 @@ void DbService::loadPostOrPrefix(QString postOrPrefix, QString tablePostfix, QMa
              << query.value(record.indexOf("dict")).toString();
         postOrPrefixes.insert(id, list);
 
-        qDebug() << "A" << postOrPrefix << "is loaded: " << id << ": " << list;
+        //qDebug() << "A" << postOrPrefix << "is loaded: " << id << ": " << list;
     }
+}
+
+
+bool DbService::addWord(QString tablePostfix, QString word, QString equal)
+{
+    int id = getFreeId("words" + tablePostfix);
+    bool res = false;
+    if (-1 != id)
+    {
+        QString queryStr = "INSERT INTO words" + tablePostfix + " "
+                "(id, source, equivalent, user_added, user_edited, submitted) "
+                "VALUES(%1, '%2', '%3', 1, 0, 0);";
+        queryStr = queryStr.arg(id).arg(word).arg(equal);
+        QSqlQuery query(db);
+        query.prepare(queryStr);
+
+        //qDebug() << "query: " << queryStr;
+
+        //Execute query:
+        res = query.exec();
+        if(!res)
+            qDebug() << "An error happened: " << query.lastError().text();
+        return res;
+    }
+
+    return res;
+}
+
+
+bool DbService::updateWord(QString tablePostfix, QString word, QString equal)
+{
+    QString queryStr = "UPDATE words" + tablePostfix + " "
+            "SET equivalent='%1', "
+            "user_edited=1, "
+            "submitted=0 "
+            "WHERE source='%2';";
+    queryStr = queryStr.arg(equal, word);
+    QSqlQuery query(db);
+    query.prepare(queryStr);
+
+    //qDebug() << "query: " << queryStr;
+
+    //Execute query:
+    bool res = query.exec();
+    if(!res)
+        qDebug() << "Error happened: " << query.lastError().text();
+
+    return query.exec();
+}
+
+
+int DbService::getFreeId(QString table)
+{
+    QString queryStr = "SELECT id FROM " + table + " ORDER BY id DESC LIMIT 1;";
+    qDebug() << "query: " << queryStr;
+    QSqlQuery query(queryStr, db);
+    QSqlRecord record = query.record();
+
+    int res = 0;
+    if(query.next())
+        res = query.value(record.indexOf("id")).toInt();
+
+    return res > 0 ? res+1 : -1;
 }

@@ -11,7 +11,12 @@
 A2LConversion::A2LConversion(QObject* parent)
     : Convertor(parent)
 {
-    //openDicts();
+    reloadResources();
+}
+
+
+void A2LConversion::reloadResources()
+{
     loadChars();
     loadWords();
     //loadPrefixes();
@@ -22,6 +27,12 @@ A2LConversion::A2LConversion(QObject* parent)
 QString A2LConversion::getTablesPostfix()
 {
     return "_a2l";
+}
+
+
+bool A2LConversion::canAddWords()
+{
+    return true;
 }
 
 

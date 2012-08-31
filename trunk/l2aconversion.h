@@ -11,15 +11,17 @@ class L2AConversion : public Convertor
 public:
     L2AConversion(QObject* parent);
     QString convert(QProgressDialog*);
-    //void    openDicts();
+    void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
     void setOriginalText(const QString &text);
+    QString getTablesPostfix();
+    bool canAddWords();
 
 
 private:
     //QString ConvertHtml();
-    QString ConvertWord(const QString& word, bool isRecursive);
+    QString convertWord(const QString& word, bool isRecursive);
     QString GetResult();
     void    separatePostfixes(const QString& word, QString& nakedWord, QString& wordPostfixes);
     void    separatePrefixes(const QString& word, QString& nakedWord, QString& wordPrefixes);
@@ -40,8 +42,6 @@ private:
     
     
 protected:
-    QString getTablesPostfix();
-
     /*!
      * @brief Fetches the record for a character and returns all parts in a string list.
      * @param query The query to get the fields from.
@@ -57,7 +57,7 @@ public:
 
 private: //chars
     QChar eh;
-    //QChar ih;
+    QChar ih;
     //QChar gh;
     //QChar sh;
     //QChar ch;

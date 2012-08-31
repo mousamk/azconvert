@@ -115,6 +115,7 @@ void MainWindow::on_action_Cyrillic_to_Latin_triggered()
     ui->action_Arabic_to_Latin->setChecked(false);
     ui->action_Latin_to_Arabic->setChecked(false);
     ui->action_Cyrillic_to_Latin->setChecked(true);
+
     ui->action_Add_word_to_dictionary->setEnabled(false);
 
     SetModeDirection();
@@ -131,7 +132,7 @@ void MainWindow::SetModeDirection()
 void MainWindow::on_action_Reload_dictionaries_triggered()
 {
     //TODO: Do the proper action in the new dictionary system.
-    //convertor->openDicts();
+    convertor->reloadResources();
 }
 
 void MainWindow::on_btnNew_clicked()
@@ -265,6 +266,12 @@ void MainWindow::newVersionAvailable(QString version)
 {
 	QString url = Settings::GetInstance(this)->getApplicationHomepage();
 	showFlashInfo("&nbsp; <a href=\"" + url + "\">New Versian " + version + " is Available!</a>");
+}
+
+
+Convertor* MainWindow::getConvertor()
+{
+    return convertor;
 }
 
 

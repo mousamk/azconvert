@@ -11,10 +11,12 @@ class A2LConversion : public Convertor
 public:
     A2LConversion(QObject* parent);
     QString convert(QProgressDialog*);
-    //void    openDicts();
+    void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
     void setOriginalText(const QString &text);
+    QString getTablesPostfix();
+    bool canAddWords();
 
     
 private:
@@ -49,8 +51,6 @@ private:
     
     
 protected:
-    QString getTablesPostfix();
-
     /*!
      * @brief Fetches the record for a character and returns all parts in a string list.
      * @param query The query to get the fields from.
