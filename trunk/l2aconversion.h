@@ -21,24 +21,25 @@ public:
 
 private:
     //QString ConvertHtml();
-    QString convertWord(const QString& word, bool isRecursive);
-    QString GetResult();
+    QString convertWord(const QString& w);
+    QString getResult();
     void    separatePostfixes(const QString& word, QString& nakedWord, QString& wordPostfixes);
     void    separatePrefixes(const QString& word, QString& nakedWord, QString& wordPrefixes);
-    QChar   GetSpecialChar(QChar c);
-    QString GetWord(int i);
-    //QString GetWord(int i, QChar delim);
+    QString getSpecialChar(QChar c, int index);
+    QString getWord(int i);
     QString lookupWord(const QString& w);
-    bool    IsBackVowel(QChar c);
-    bool    IsCharAInWordChar(QChar c);
-    bool    IsFrontVowel(QChar c);
-    bool    IsNonConvertableWord(const QString& w);
-    bool    IsVowel(QChar c);
-    bool    isConsonant(QChar c);
+    bool    isCharAInWordChar(QChar c);
+    //bool    isBackVowel(QChar c);
+    //bool    isFrontVowel(QChar c);
+    bool    isNonConvertableWord(const QString& w);
+    //bool    isVowel(QChar c);
+    //bool    isConsonant(QChar c);
     bool    isSticking(QChar c);
-    bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
-    void    PreprocessText();
+    //bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
+    void    preprocessText();
+    QString preprocessWord(QString word);
     void    getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
+    int     getCharacterCount(QChar character, int position);
     
     
 protected:
@@ -57,12 +58,12 @@ public:
 
 private: //chars
     QChar eh;
-    QChar ih;
+    //QChar ih;
     //QChar gh;
     //QChar sh;
     //QChar ch;
-    QChar Ih;
-    QChar uh;
+    //QChar Ih;
+    //QChar uh;
     //QChar oh;
     QChar vs;   //Virtual space
 

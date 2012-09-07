@@ -15,8 +15,10 @@ void C2LConversion::reloadResources()
 {
     loadChars();
     //loadWords();      //Not needed in this direction.
+    //loadSolidWords();
     //loadPrefixes();
     //loadPostfixes();
+    //loadSpecialChars();
 }
 
 

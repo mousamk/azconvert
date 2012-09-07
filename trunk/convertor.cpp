@@ -31,10 +31,24 @@ void Convertor::loadChars()
 }
 
 
+void Convertor::loadSpecialChars()
+{
+    specialChars.clear();
+    DbService::getInstance()->getSpecialChars(getTablesPostfix(), specialChars);
+}
+
+
 void Convertor::loadWords()
 {
     words.clear();
     DbService::getInstance()->getWords(getTablesPostfix(), words);
+}
+
+
+void Convertor::loadSolidWords()
+{
+    solidWords.clear();
+    DbService::getInstance()->getSolidWords(getTablesPostfix(), solidWords);
 }
 
 

@@ -12,6 +12,8 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 
+#include "specialcharacterrecord.h"
+
 
 template <class Key, class T>
 class QHash;
@@ -31,6 +33,22 @@ public:
     static DbService* getInstance();
     void getCharacters(QString tablePostfix, QSqlRecord& record, QSqlQuery& query);
     void getWords(QString tablePostfix, QHash<QString,QString>& words);
+
+    /*!
+     * @brief Loads the non-convertible words from db and stores it in the given
+     *        @p solidWords parameter.
+     * @param tablePostfix Postfix of the table to load non-convertible words from.
+     * @param solidWords The reference where the non-convertible words will be saved in.
+     */
+    void getSolidWords(QString tablePostfix, QList<QString>& solidWords);
+
+    /*!
+     * @brief Loads special character conversion table for the table with the
+     *        giver @tablePostfix and returns them in the @p specialChars parameter.
+     * @param tablePostfix Postfix of the table to load special characters from.
+     * @param specialChars The reference where the special characters will be saved in.
+     */
+    void getSpecialChars(QString tablePostfix, QMap<int,SpecialCharacterRecord>& specialChars);
 
     /*!
      * @brief Loads prefixes for the table given by @p tablePostfix and returns

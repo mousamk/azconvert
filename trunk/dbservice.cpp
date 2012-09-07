@@ -24,6 +24,8 @@ bool DbService::createInstance(QObject *parent)
         instance = new DbService(parent);
         return instance->loadDb();
     }
+
+    return true;
 }
 
 
@@ -74,6 +76,48 @@ void DbService::getWords(QString tablePostfix, QHash<QString, QString> &words)
     while(query.next())
     {
         words.insert(query.value(record.indexOf("source")).toString(), query.value(record.indexOf("equivalent")).toString());
+    }
+}
+
+
+void DbService::getSolidWords(QString tablePostfix, QList<QString> &solidWords)
+{
+    QString queryStr = "SELECT * FROM solid_words" + tablePostfix + ";";
+    QSqlQuery query(queryStr, db);
+    QSqlRecord record = query.record();
+
+    QString word;
+    while(query.next())
+    {
+        word = query.value(record.indexOf("source")).toString();
+        solidWords.append(word);
+
+        //qDebug() << "A non-convertible word is loaded: " << word;
+    }
+}
+
+
+void DbService::getSpecialChars(QString tablePostfix, QMap<int, SpecialCharacterRecord> &specialChars)
+{
+    QString queryStr = "SELECT * FROM special_characters" + tablePostfix + ";";
+    QSqlQuery query(queryStr, db);
+    QSqlRecord record = query.record();
+
+    QString source;
+    QString equivalent;
+    int position;
+    int id;
+    while(query.next())
+    {
+        id = query.value(record.indexOf("id")).toInt();
+        source = query.value(record.indexOf("source")).toString();
+        equivalent = query.value(record.indexOf("equivalent")).toString();
+        position = query.value(record.indexOf("position")).toInt();
+
+        SpecialCharacterRecord characterRecord(source, equivalent, SpecialCharacterSituation(position));
+        specialChars.insert(id, characterRecord);
+
+        qDebug() << "A special character is loaded: " << id << ":" << source << "," << equivalent << "," << position;
     }
 }
 
@@ -167,7 +211,7 @@ bool DbService::updateWord(QString tablePostfix, QString word, QString equal)
 int DbService::getFreeId(QString table)
 {
     QString queryStr = "SELECT id FROM " + table + " ORDER BY id DESC LIMIT 1;";
-    qDebug() << "query: " << queryStr;
+    //qDebug() << "query: " << queryStr;
     QSqlQuery query(queryStr, db);
     QSqlRecord record = query.record();
 

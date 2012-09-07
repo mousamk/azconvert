@@ -14,11 +14,11 @@
 L2AConversion::L2AConversion(QObject* parent)
     : Convertor(parent),
       eh('\x59', '\x02'),
-      ih('\x31', '\x01'),
-      Ih('\x30', '\x01'),
+      //ih('\x31', '\x01'),
+      //Ih('\x30', '\x01'),
       //sh('\x5f', '\x01'),
       //ch('\xe7', '\x00'),
-      uh('\xfc', '\x00'),
+      //uh('\xfc', '\x00'),
       //oh('\xf6', '\x00'),
       //gh('\x1f', '\x01'),
       vs('\x0c', '\x20'),
@@ -32,8 +32,10 @@ void L2AConversion::reloadResources()
 {
     loadChars();
     loadWords();
+    loadSolidWords();
     loadPrefixes();
     loadPostfixes();
+    loadSpecialChars();
 }
 
 
@@ -214,28 +216,31 @@ void L2AConversion::separatePrefixes(const QString& word, QString& nakedWord, QS
 }
 
 
-void L2AConversion::PreprocessText()
+void L2AConversion::preprocessText()
 {
-    /*//Changing "dr." to "dr "
-    while (strSource.contains("dr.", Qt::CaseSensitive))
-    {
-        int index = strSource.indexOf("dr.");
-        strSource = strSource.mid(0, index + 2) + " " + strSource.mid(index + 3, strSource.length() - (index + 3));
-    }
+    //Changing "dr." to "dr ":
+    strSource.replace("dr.", "dr", Qt::CaseInsensitive);
+}
 
-    //Changing "Dr." to "Dr "
-    while (strSource.contains("Dr.", Qt::CaseSensitive))
-    {
-        int num2 = strSource.indexOf("Dr.");
-        strSource = strSource.mid(0, num2 + 2) + " " + strSource.mid(num2 + 3, strSource.length() - (num2 + 3));
-    }
 
-    //Changing "DR." to "DR "
-    while (strSource.contains("DR.", Qt::CaseSensitive))
-    {
-        int num3 = strSource.indexOf("DR.");
-        strSource = strSource.mid(0, num3 + 2) + " " + strSource.mid(num3 + 3, strSource.length() - (num3 + 3));
-    }*/
+QString L2AConversion::preprocessWord(QString word)
+{
+    QString res = word;
+
+    //Add necessary 'i' to some words:
+    if (res.length() > 2 &&
+        (res.mid(0, 2) == ("sp") ||
+        res.mid(0, 2) == ("st") ||
+        res.mid(0, 2) == ("sp") ||
+        res.mid(0, 2) == ("st") ||
+        res.mid(0, 2) == ("sk")))
+        res = res.insert(0, "i");
+
+    res.replace("iyi", "igi");
+    res.replace("iyy", "iy");       //NOTE: Not sure of this!
+    res.replace("iy", "i");         //NOTE: Not sure of this!
+
+    return res;
 }
 
 
@@ -249,13 +254,13 @@ QString L2AConversion::convert(QProgressDialog* prg)
     //bool openBracketSeen = false;
     //bool closeBracketSeen = false;
 
-    PreprocessText();
+    preprocessText();
 
     int length = strSource.length();
     int i = 0;
     while (i < length)
     {
-        QString word = GetWord(i);
+        QString word = getWord(i);
         i += word.length();
 
         //Set progress:
@@ -274,16 +279,16 @@ QString L2AConversion::convert(QProgressDialog* prg)
 
         //In 'Wiki' mode, don't convert the texts between double brackets
         //if (!wikiMode || (doubleBracket == 0 || !IsThereColonBeforeDoubleCloseBrackets(i)))
-            strResult += convertWord(word, true);
+        strResult += convertWord(word);
         //else
         //    strResult += word;
 
 
-        while ((i < length) && !IsCharAInWordChar(strSource[i]))
+        while ((i < length) && !isCharAInWordChar(strSource[i]))
         {
             QChar curChar = strSource[i];
             /*//Wikimode:
-            //*********** Counting double brackets used in wiki format: ************
+            // *********** Counting double brackets used in wiki format: ************
             if (curChar == '[')
             {
                 if (openBracketSeen)
@@ -310,15 +315,12 @@ QString L2AConversion::convert(QProgressDialog* prg)
             }
             else
                 closeBracketSeen = false;
-            //******************* End counting double brakcets: *********************/
+            // ******************* End counting double brakcets: *********************/
 
 
             //Converting characters:
-            QChar ch = GetSpecialChar(curChar);
-            if (ch != ' ')
-                strResult = strResult + QString(ch);
-            else
-                strResult = strResult + QString(curChar);
+            QString ch = getSpecialChar(curChar, i);
+            strResult += ch.isEmpty() ? QString(curChar) : ch;
             i++;
         }
     }
@@ -328,7 +330,7 @@ QString L2AConversion::convert(QProgressDialog* prg)
 
 
 //This function is used in for 'Wiki' mode
-bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
+/*bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
 {
     int count = strSource.length();
     for (int i=index; i<count; i++)
@@ -342,7 +344,7 @@ bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
     }
 
     return false;
-}
+}*/
 
 
 /*QString L2AConversion::ConvertHtml()
@@ -390,80 +392,51 @@ bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
 }*/
 
 
-QString L2AConversion::convertWord(const QString& wo, bool isRecursive)
+QString L2AConversion::convertWord(const QString& w)
 {
-    QString word(wo);
-    if (word.isEmpty())
+    if (w.isEmpty())
         return "";
 
-    if (IsNonConvertableWord(word))
-        return word;
+    if (isNonConvertableWord(w))
+        return w;
 
 
-    word = word.replace(Ih, 'i', Qt::CaseSensitive);
-    word = word.toLower();
-    QString str("");
-    str = lookupWord(word);
-    if (str == "")
+    QString word;
+    WORD_TO_LOWER(w, word);
+    QString str = lookupWord(word);
+    if (str.isEmpty())
     {
-        if (isRecursive)
-        {
-            //Separate and convert prefixes:
-            QString wordWithoutPrefixes;
-            QString wordPrefixes;
-            separatePrefixes(word, wordWithoutPrefixes, wordPrefixes);
+        //Separate and convert prefixes:
+        QString wordWithoutPrefixes;
+        QString wordPrefixes;
+        separatePrefixes(word, wordWithoutPrefixes, wordPrefixes);
 
-            //Check remaning in dictionary:
-            QString wordDict = lookupWord(wordWithoutPrefixes);
-            if (!wordDict.isEmpty())
-            {
-                str = wordPrefixes + wordDict;
-                return str;
-            }
+        //Check remaning in dictionary:
+        QString wordDict = lookupWord(wordWithoutPrefixes);
+        if (!wordDict.isEmpty())
+        {
+            str = wordPrefixes + wordDict;
+            return str;
+        }
 
-            //Separate and convert postfixes:
-            QString wordWithoutPostfixes;
-            QString wordPostfixes;
-            separatePostfixes(wordWithoutPrefixes, wordWithoutPostfixes, wordPostfixes);
+        //Separate and convert postfixes:
+        QString wordWithoutPostfixes;
+        QString wordPostfixes;
+        separatePostfixes(wordWithoutPrefixes, wordWithoutPostfixes, wordPostfixes);
 
-            //Check remaining in dictionary:
-            wordDict = lookupWord(wordWithoutPostfixes);
-            if (!wordDict.isEmpty())
-            {
-                str = wordPrefixes + wordDict + wordPostfixes;
-                return str;
-            }
+        //Check remaining in dictionary:
+        wordDict = lookupWord(wordWithoutPostfixes);
+        if (!wordDict.isEmpty())
+        {
+            str = wordPrefixes + wordDict + wordPostfixes;
+            return str;
+        }
 
-            //Stick them together and form the final word:
-            word = wordPrefixes + wordWithoutPostfixes + wordPostfixes;
-        }
-        if (word.length() > 2 &&
-            (word.mid(0, 2) == ("sp") ||
-            word.mid(0, 2) == ("st") ||
-            word.mid(0, 2) == ("sp") ||
-            word.mid(0, 2) == ("st") ||
-            word.mid(0, 2) == ("sk")))
-            word = word.insert(0, "i");
-        if (word.contains("iyi"))
-        {
-            int index = word.indexOf("iyi");
-            word = word.mid(0, index + 1) + "g" + word.mid(index + 2, word.length() - (index + 2));
-        }
-        if (word.contains(QString(uh)+"y"+QString(uh)))
-        {
-            int num2 = word.indexOf(QString(uh)+"y"+QString(uh));
-            word = word.mid(0, num2 + 1) + "g" + word.mid(num2 + 2, word.length() - (num2 + 2));
-        }
-        if (word.contains("iyy"))
-        {
-            int num3 = word.indexOf("iyy");
-            word = word.mid(0, num3) + word.mid(num3 + 2, word.length() - (num3 + 2));
-        }
-        if (word.contains("iy"))
-        {
-            int num4 = word.indexOf("iy");
-            word = word.mid(0, num4) + word.mid(num4 + 1, word.length() - (num4 + 1));
-        }
+        //Stick them together and form the final word:
+        word = wordPrefixes + wordWithoutPostfixes + wordPostfixes;
+
+        //Preprocess word:
+        word = preprocessWord(word);
 
         str = "";
         int length = word.length();
@@ -489,48 +462,54 @@ QString L2AConversion::convertWord(const QString& wo, bool isRecursive)
 
 void L2AConversion::getCharEquivalent(const QChar &ch, int columnIndex, QString &equivalent)
 {
-    qDebug() << "char: " << ch;
-    //TODO: Why arabic scripts are comming to this function?!
-
-    if (chars.contains(ch))
-        equivalent = chars.value(ch).at(columnIndex);
-    else
-        //Now that no equivalent is found, return the same source:
-        equivalent = QString(ch);
+    equivalent = chars.contains(ch) ? chars.value(ch).at(columnIndex) : QString(ch);
 }
 
 
-QString L2AConversion::GetResult()
+QString L2AConversion::getResult()
 {
     return strResult;
 }
 
-QChar L2AConversion::GetSpecialChar(QChar c)
-{
-    if (c == ',')
-        return QChar('\x0c', '\x06');
-    else if (c ==  ';')
-        return QChar('\x1b', '\x06');
-    else if (c == '?')
-        return QChar('\x1f', '\x06');
 
-    return ' ';
+QString L2AConversion::getSpecialChar(QChar c, int index)
+{
+    QMap<int, SpecialCharacterRecord>::const_iterator i;
+    for(i = specialChars.constBegin(); i != specialChars.constEnd(); i++)
+    {
+        if(i.value().source == QString(c))
+        {
+            int position = i.value().position;
+            if (Neutral == position)
+                return i.value().equivalent;
+            else
+            {
+                int times = getCharacterCount(c, index);
+                if ((Opening == position && !IS_EVEN(times)) || (Closing == position && IS_EVEN(times)))
+                    return i.value().equivalent;
+            }
+        }
+    }
+
+    return "";
 }
 
 
-/*QString L2AConversion::GetWord(int i, QChar delim)
+int L2AConversion::getCharacterCount(QChar character, int position)
 {
-}*/
+    return strSource.left(position+1).count(character);
+}
 
 
-QString L2AConversion::GetWord(int i)
+QString L2AConversion::getWord(int i)
 {
     QString word = "";
     QChar c = strSource[i];
     int len = strSource.length();
 
+    //TODO: Find a better way to detect URLs.
     //Checking if the text ahead is URL:
-    bool isURL = false;
+    /*bool isURL = false;
     if (len - i > 4 && strSource.mid(i, 4).toLower() == ("www."))
     {
         int dot = 0;
@@ -565,10 +544,10 @@ QString L2AConversion::GetWord(int i)
         } while (c == '.' || IsCharAInWordChar(c));
 
         return word;
-    }
+    }*/
     //End of processing URL!
 
-    while (IsCharAInWordChar(c))
+    while (isCharAInWordChar(c))
     {
         word = word + QString(c);
         i++;
@@ -586,18 +565,23 @@ QString L2AConversion::GetWord(int i)
 QString L2AConversion::lookupWord(const QString& w)
 {
     QString res;
-    if (words.contains(w))
-        res = words.value(w);
-    else
-        res = "";
+    res = words.contains(w) ? words.value(w) : "";
 
-    qDebug() << "Looking up: " << w << "result: " << res;
+    //qDebug() << "Looking up: " << w << "result: " << res;
 
     return res;
 }
 
 
-bool L2AConversion::IsBackVowel(QChar c)
+bool L2AConversion::isCharAInWordChar(QChar c)
+{
+    QChar cLower;
+    CHAR_TO_LOWER(c, cLower);
+    return chars.contains(cLower) || c.isDigit();
+}
+
+
+/*bool L2AConversion::isBackVowel(QChar c)
 {
     bool back = chars.contains(c) ? chars.value(c).at(6) == "2" : false;
     qDebug() << c << " is a back vowel: " << back;
@@ -606,46 +590,24 @@ bool L2AConversion::IsBackVowel(QChar c)
 }
 
 
-bool L2AConversion::IsCharAInWordChar(QChar c)
-{
-    QChar cLower;
-    CHAR_TO_LOWER(c, cLower);
-    return chars.contains(cLower) || c.isDigit();
-}
-
-
-bool L2AConversion::IsFrontVowel(QChar c)
+bool L2AConversion::isFrontVowel(QChar c)
 {
     bool front = chars.contains(c) ? chars.value(c).at(6) == "1" : false;
     qDebug() << c << " is a front vowel: " << front;
 
     return front;
-}
+}*/
 
 
-bool L2AConversion::IsNonConvertableWord(const QString& w)
+bool L2AConversion::isNonConvertableWord(const QString& w)
 {
-    return (w.contains("w") || w.contains("W") || w == ("I")
-         || w == (Ih) || w.toUpper() == ("II") || w.toUpper() == (QString(Ih)+QString(Ih))
-         || w.toUpper() == ("III") || w.toUpper() == (QString(Ih)+QString(Ih)+QString(Ih)) || w.toUpper() == ("IV")
-         || w.toUpper() == (QString(Ih)+"V") || w.toUpper() == ("V") || w.toUpper() == ("VI")
-         || w.toUpper() == ("V"+QString(Ih)) || w.toUpper() == ("VII") || w.toUpper() == ("V"+QString(Ih)+QString(Ih))
-         || w.toUpper() == ("VIII") || w.toUpper() == ("V"+QString(Ih)+QString(Ih)+QString(Ih)) || w.toUpper() == ("IX")
-         || w.toUpper() == (QString(Ih)+"X") || w.toUpper() == ("X") || w.toUpper() == ("XX")
-         || w.toUpper() == ("XXI") || w.toUpper() == ("XX"+QString(Ih)) || w.toUpper() == ("XI")
-         || w.toUpper() == ("X"+QString(Ih)) || w.toUpper() == ("XII") || w.toUpper() == ("X"+QString(Ih)+QString(Ih))
-         || w.toUpper() == ("XIII") || w.toUpper() == ("X"+QString(Ih)+QString(Ih)+QString(Ih)) || w.toUpper() == ("XIV")
-         || w.toUpper() == ("X"+QString(Ih)+"V") || w.toUpper() == ("XV") || w.toUpper() == ("XVI")
-         || w.toUpper() == ("XV"+QString(Ih)) || w.toUpper() == ("XVII") || w.toUpper() == ("XV"+QString(Ih)+QString(Ih))
-         || w.toUpper() == ("XVIII") || w.toUpper() == ("XV"+QString(Ih)+QString(Ih)+QString(Ih)) || w.toUpper() == ("XIX")
-         || w.toUpper() == ("X"+QString(Ih)+"X") || w.toUpper() == ("C++") || w.toUpper() == ("NOTEPAD")
-         || w.toUpper() == ("C#") || w.toUpper() == ("NET") || w.toUpper() == ("XP")
-         || w.toUpper() == ("BASIC") || w.toUpper() == ("FILE") || w.toUpper() == ("EDIT")
-         || w.toUpper() == ("PROPERTIES"));
+    QString lw;
+    WORD_TO_LOWER(w, lw);
+    return lw.contains("w") || solidWords.contains(lw);
 }
 
 
-bool L2AConversion::IsVowel(QChar c)
+/*bool L2AConversion::isVowel(QChar c)
 {
     bool vowel = chars.contains(c) ? chars.value(c).at(7) == "1" : false;
     qDebug() << c << " is a vowel: " << vowel;
@@ -660,7 +622,7 @@ bool L2AConversion::isConsonant(QChar c)
     qDebug() << c << " is a consonant: " << consonant;
 
     return consonant;
-}
+}*/
 
 
 bool L2AConversion::isSticking(QChar c)

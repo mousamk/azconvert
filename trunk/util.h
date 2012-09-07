@@ -17,9 +17,10 @@
 
 #define DELETE_AND_NULL(p) if (NULL != p) {delete p; p = NULL;}
 
+#define IS_EVEN(p) (p%2==0)
 
-#define CHAR_TO_LOWER(c, lc) if (c == 'I') lc = CHAR_iH; else lc = c.toLower()
-#define WORD_TO_LOWER(w, lw) lw = w; lw.replace('I', CHAR_iH); lw = lw.toLower()
+#define CHAR_TO_LOWER(c, lc) if (c == 'I') lc = CHAR_iH; else if (c == CHAR_IH) lc = 'i'; else lc = c.toLower()
+#define WORD_TO_LOWER(w, lw) lw = w; lw.replace('I', CHAR_iH); lw.replace(CHAR_IH, 'i'); lw = lw.toLower()
 
 
 /*!

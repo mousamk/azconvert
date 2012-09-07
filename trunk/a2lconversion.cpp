@@ -19,8 +19,10 @@ void A2LConversion::reloadResources()
 {
     loadChars();
     loadWords();
+    //loadSolidWords();
     //loadPrefixes();
     //loadPostfixes();
+    loadSpecialChars();
 }
 
 

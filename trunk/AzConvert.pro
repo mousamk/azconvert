@@ -35,7 +35,8 @@ HEADERS += mainwindow.h \
     util.h \
     dbservice.h \
     convertor.h \
-    wordpair.h
+    wordpair.h \
+    specialcharacterrecord.h
 
 FORMS += mainwindow.ui \
     aboutdialog.ui \

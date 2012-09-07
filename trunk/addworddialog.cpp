@@ -82,7 +82,8 @@ void AddWordDialog::on_btnAdd_clicked()
             int res = QMessageBox::question(this, tr("Another equivalent"), tr("The word with another equivalent (<b>%1</b>) already exists in database. Do you want to change it?").arg(oldEqual), QMessageBox::Yes, QMessageBox::No);
             if(QMessageBox::Yes == res)
             {
-                if(success = DbService::getInstance()->updateWord(convertor->getTablesPostfix(), word, equal))
+                success = DbService::getInstance()->updateWord(convertor->getTablesPostfix(), word, equal);
+                if(success)
                 {
                     words[lWord] = equal;
                     this->accept();
@@ -97,7 +98,8 @@ void AddWordDialog::on_btnAdd_clicked()
     else
     {
         //Add to db:
-        if (success = DbService::getInstance()->addWord(convertor->getTablesPostfix(), word, equal))
+        success = DbService::getInstance()->addWord(convertor->getTablesPostfix(), word, equal);
+        if (success)
         {
             words.insert(word, equal);
             this->accept();

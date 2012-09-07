@@ -12,6 +12,9 @@
 #include <QHash>
 #include <QMap>
 #include <QStringList>
+#include <QList>
+
+#include "specialcharacterrecord.h"
 
 
 class QProgressDialog;
@@ -100,9 +103,19 @@ protected:
     void loadChars();
 
     /*!
+     * @brief Loads special character conversion table for transliteration
+     */
+    void loadSpecialChars();
+
+    /*!
      * @brief Loads words table used in transliteration
      */
     void loadWords();
+
+    /*!
+     * @brief Loads solid words table
+     */
+    void loadSolidWords();
 
     /*!
      * @brief Loads prefixes table used in transliteration
@@ -129,9 +142,15 @@ protected:
     
     /// @brief The transliteration table of characeters
     QHash<QChar, QStringList> chars;
+
+    /// @brief The transliteration table of special characters
+    QMap<int, SpecialCharacterRecord> specialChars;
     
     /// @brief Table of words and their equivalents used for conversion
     QHash<QString, QString> words;
+
+    /// @brief List of non-convertible words
+    QList<QString> solidWords;
 
     /// @brief Table of prefixes and their related fields
     QMap<int, QStringList> prefixes;
