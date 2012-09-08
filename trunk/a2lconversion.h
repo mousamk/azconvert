@@ -11,6 +11,7 @@ class A2LConversion : public Convertor
 public:
     A2LConversion(QObject* parent);
     QString convert(QProgressDialog*);
+    QString convert(QString text);
     void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
@@ -20,6 +21,7 @@ public:
 
     
 private:
+    QString convert(QProgressDialog*, QString text);
     QString GetResult();
     QChar   GetSecondSesli(const QString&);
     void ChangeAlternativeForms();

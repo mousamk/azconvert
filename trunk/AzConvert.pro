@@ -21,7 +21,15 @@ SOURCES += main.cpp \
     settings.cpp \
     update.cpp \
     dbservice.cpp \
-    convertor.cpp
+    convertor.cpp \
+    regex.cpp \
+    regexurl.cpp \
+    regexemail.cpp \
+    regexwikitemplate.cpp \
+    regexwikiinterwiki.cpp \
+    regexwikipicture.cpp \
+    regexhtmltag.cpp \
+    regexwikilink.cpp
 
 HEADERS += mainwindow.h \
     l2aconversion.h \
@@ -36,7 +44,16 @@ HEADERS += mainwindow.h \
     dbservice.h \
     convertor.h \
     wordpair.h \
-    specialcharacterrecord.h
+    specialcharacterrecord.h \
+    config.h \
+    regex.h \
+    regexurl.h \
+    regexemail.h \
+    regexwikitemplate.h \
+    regexwikiinterwiki.h \
+    regexwikipicture.h \
+    regexhtmltag.h \
+    regexwikilink.h
 
 FORMS += mainwindow.ui \
     aboutdialog.ui \

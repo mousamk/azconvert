@@ -4,11 +4,20 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QHash>
+#include <QRegExp>
 
 #include "l2aconversion.h"
 #include "settings.h"
 #include "dbservice.h"
 #include "util.h"
+#include "config.h"
+#include "regexurl.h"
+#include "regexemail.h"
+#include "regexwikitemplate.h"
+#include "regexwikiinterwiki.h"
+#include "regexwikipicture.h"
+#include "regexhtmltag.h"
+#include "regexwikilink.h"
 
 
 L2AConversion::L2AConversion(QObject* parent)
@@ -220,6 +229,129 @@ void L2AConversion::preprocessText()
 {
     //Changing "dr." to "dr ":
     strSource.replace("dr.", "dr", Qt::CaseInsensitive);
+
+    //Escape every '\', '{' and '}' characters using `:
+    strSource.replace("`", "``");
+    strSource.replace("{", "`{");
+    strSource.replace("}", "`}");
+
+    //List of regex processors:
+    QList<Regex*> regexProcessors;
+    regexProcessors.append(new RegexUrl(strSource, this));
+    regexProcessors.append(new RegexEmail(strSource, this));
+    regexProcessors.append(new RegexWikiTemplate(strSource, this));
+    regexProcessors.append(new RegexWikiInterwiki(strSource, this));
+    regexProcessors.append(new RegexWikiLink(strSource, this));
+    regexProcessors.append(new RegexWikiPicture(strSource, this));      //NOTE: Needs completion
+    regexProcessors.append(new RegexHtmlTag(strSource, this));
+    //add others...
+
+    //Run each one of the regex processors and collect its results:
+    Regex::reset();
+    bool change = true;
+    while(change)
+    {
+        change = false;
+        for(int i=0; i<regexProcessors.count(); i++)
+        {
+            if (regexProcessors.at(i)->run())
+                change = true;
+            replaces.unite(regexProcessors.at(i)->getResults());
+        }
+    }
+
+    //Find urls:
+    //QString wikiNoConvert   = "(?:\\`\\{\\`\\{" + QString(WIKI_NO_CONVERT_TAG) + "\\s*\\|.*\\`\\}\\`\\})";         //TODO: Beware of this in non-wiki mode.
+    /*QString wikiTemplate    = "(?:\\`\\{\\`\\{[^\\`]*\\`\\}\\`\\})";       //TODO: Beware of this in non-wiki mode.    //TODO: This generalizes the wikiNoConvert. So in this situation, it's not needed!   //TODO: Beware when a ` character is in the middle!
+    QString wikiInterwiki   = "(?:\\[\\[[a-zA-Z\\-]+\\:[^\\]]*\\]\\])";           //TODO: Beware of this in non-wiki mode.
+    QString wikiPicture     = "(?:\\Şəkil:[^\\|]*\\|)";           //TODO: Beware of this in non-wiki mode. //TODO: Beware of the last necessary | character. It maybe sometimes missing!
+    QString htmlTag         = "(?:\\<[^\\>]*\\>)";       //TODO: Beware of this in non-html mode.
+
+    QString allRegexStr = urlRegexStr + "|" + emailRegexStr + "|" + wikiNoConvert + "|" + htmlTag
+            + "|" + wikiInterwiki + "|" + wikiPicture + "|" + wikiTemplate;
+    QRegExp regExp(allRegexStr, Qt::CaseInsensitive);
+    int index = 0;
+    QString match;
+    QString holder;
+    int count=0;
+    bool change = true;
+    while(change)
+    {
+        index = 0;
+        change = false;
+        while((index = regExp.indexIn(strSource, index)) != -1)
+        {
+            match = regExp.cap();
+            qDebug() << "found a match: " << match << " at position: " << index;
+
+            //Replace the url with a numbered place holder:
+            replaces.insert(count, match);
+            holder = "{" + QString::number(count) + "}";
+            strSource.replace(index, match.length(), holder);
+            count++;
+            index += holder.length();
+            change = true;
+        }
+    }
+
+    //Find wiki links:
+    QString wikiLinkSimple  = "(?:\\[\\[([^\\|\\]]+)(?:\\|([^\\]]+))?\\]\\])";       //TODO: Beware of this in non-wiki mode.
+    QRegExp customRegExp(wikiLinkSimple, Qt::CaseInsensitive);
+    index = 0;
+    QString link, link1, link2, equivalent, fullEqual;
+    //qDebug() << "source now: " <<strSource;
+    while((index = customRegExp.indexIn(strSource, index)) != -1)
+    {
+        match = customRegExp.cap();
+        link1 = customRegExp.cap(1);
+        link2 = customRegExp.cap(2);
+        link = link2.isEmpty() ? link1 : link2;
+        equivalent = convert(NULL, link);
+        fullEqual = "[[" + link1 + "|" + equivalent + "]]";
+
+        //qDebug() << "found a simple link: " << match << link1 << "|" << link2 << equivalent << fullEqual << "at index:" << index;
+
+        replaces.insert(count, fullEqual);
+        holder = "{" + QString::number(count) + "}";
+        strSource.replace(index, match.length(), holder);
+        count++;
+        index += holder.length();
+    }*/
+}
+
+
+void L2AConversion::postprocessText()
+{
+    //Replace back the place holder:
+    QString holder1,holder2;
+    QMap<int,QString>::const_iterator i;
+    bool change = true;
+    while(change)
+    {
+        change = false;
+        for(i=replaces.constBegin(); i!=replaces.constEnd(); i++)
+        {
+            int index = i.key();
+            holder1 = "{" + convertWordSimple(QString::number(index)) + "}";
+            holder2 = "{" + QString::number(index) + "}";
+            //qDebug() << "checking for holder: " << holder1 << holder2;
+            if(strResult.contains(holder1))
+            {
+                strResult.replace(holder1, i.value());
+                change = true;
+            }
+            else if(strResult.contains(holder2))
+            {
+                strResult.replace(holder2, i.value());
+                change = true;
+            }
+        }
+    }
+
+    //Remove escape characters:
+    strResult.replace("`{", "{");
+    strResult.replace("`}", "}");
+    strResult.replace("``", "`");
 }
 
 
@@ -244,152 +376,69 @@ QString L2AConversion::preprocessWord(QString word)
 }
 
 
+QString L2AConversion::convert(QString text)
+{
+    return convert(NULL, text);
+}
+
+
 QString L2AConversion::convert(QProgressDialog* prg)
 {
     //Load wiki mode:
     //bool wikiMode = Settings::GetInstance(this->parent())->GetWikiMode();
 
-    //These variables are used in wiki mode:
-    //int doubleBracket=0;
-    //bool openBracketSeen = false;
-    //bool closeBracketSeen = false;
-
+    //Pre process text:
     preprocessText();
 
-    int length = strSource.length();
-    int i = 0;
-    while (i < length)
-    {
-        QString word = getWord(i);
-        i += word.length();
+    //Convert the preprocessed text:
+    strResult = convert(prg, strSource);
 
-        //Set progress:
-        if (i <= length)
-            prg->setValue(i);
-        else
-            prg->setValue(length);
-
-        //DoEvents:
-        QCoreApplication::processEvents();
-
-        //Handle cancelation:
-        if (prg->wasCanceled())
-            break;
-
-
-        //In 'Wiki' mode, don't convert the texts between double brackets
-        //if (!wikiMode || (doubleBracket == 0 || !IsThereColonBeforeDoubleCloseBrackets(i)))
-        strResult += convertWord(word);
-        //else
-        //    strResult += word;
-
-
-        while ((i < length) && !isCharAInWordChar(strSource[i]))
-        {
-            QChar curChar = strSource[i];
-            /*//Wikimode:
-            // *********** Counting double brackets used in wiki format: ************
-            if (curChar == '[')
-            {
-                if (openBracketSeen)
-                {
-                    openBracketSeen = false;
-                    doubleBracket++;
-                }
-                else
-                    openBracketSeen = true;
-            }
-            else
-                openBracketSeen = false;
-
-            if (curChar == ']')
-            {
-                if (closeBracketSeen)
-                {
-                    closeBracketSeen = false;
-                    if (doubleBracket > 0)
-                        doubleBracket--;
-                }
-                else
-                    closeBracketSeen = true;
-            }
-            else
-                closeBracketSeen = false;
-            // ******************* End counting double brakcets: *********************/
-
-
-            //Converting characters:
-            QString ch = getSpecialChar(curChar, i);
-            strResult += ch.isEmpty() ? QString(curChar) : ch;
-            i++;
-        }
-    }
+    //Post process result:
+    postprocessText();
 
     return strResult;
 }
 
 
-//This function is used in for 'Wiki' mode
-/*bool L2AConversion::IsThereColonBeforeDoubleCloseBrackets(int index)
+QString L2AConversion::convert(QProgressDialog* prg, QString text)
 {
-    int count = strSource.length();
-    for (int i=index; i<count; i++)
+    QString res;
+    int length = text.length();
+    int i = 0;
+    while (i < length)
     {
-        if (strSource[i] == ']' && i>0 && strSource[i-1] == ']')
-            return false;
-        else if (strSource[i] == '|')
-            return false;
-        else if (strSource[i] == ':')
-            return true;
-    }
-
-    return false;
-}*/
-
-
-/*QString L2AConversion::ConvertHtml()
-{
-    //TODO: PreprocessText();
-    //TODO: Complete and debug this function
-
-    int len = strSource.length();
-    int i=0;
-    int ob = 0;     //Open '<'s
-    while(i < len)
-    {
-        if (strSource[i] == '<')
-        {
-            ob++;
-            strResult += strSource[i++];
-            continue;
-        }
-        else if (strSource[i] == '>')
-        {
-            ob--;
-            strResult += strSource[i++];
-            continue;
-        }
-        else if (ob != 0)
-        {
-            strResult += strSource[i++];
-            continue;
-        }
-
-
-        QString word = GetWord(i);
+        QString word = getWord(i, text);
         i += word.length();
-        strResult = strResult + ConvertWord(word, true);
-        while ((i < len) && !IsCharAInWordChar(strSource[i]))
+
+        if (NULL != prg)
         {
-            QChar ch = GetSpecialChar(strSource[i]);
-            if (ch != ' ')
-                strResult += QString(ch);
-            else
-                strResult += QString(strSource[i]);
+            //Set progress:
+            int min = i <= length ? i : length;
+            prg->setValue(min);
+
+            //DoEvents:
+            QCoreApplication::processEvents();
+
+            //Handle cancelation:
+            if (prg->wasCanceled())
+                break;
+        }
+
+        res += convertWord(word);
+
+        while ((i < length) && !isCharAInWordChar(text[i]))
+        {
+            QChar curChar = text[i];
+
+            //Converting characters:
+            QString ch = getSpecialChar(curChar, i);
+            res += ch.isEmpty() ? QString(curChar) : ch;
             i++;
         }
     }
-}*/
+
+    return res;
+}
 
 
 QString L2AConversion::convertWord(const QString& w)
@@ -438,24 +487,33 @@ QString L2AConversion::convertWord(const QString& w)
         //Preprocess word:
         word = preprocessWord(word);
 
-        str = "";
-        int length = word.length();
-        for (int i = 0; i < length; i++)
-        {
-            //Choose letter position mode:
-            int modeIndex;
-            if (0 == i) modeIndex = 0;
-            else if (length-1 == i) modeIndex = 2;
-            else modeIndex = 1;
-            //TODO: Consider 'voc' modes too
-            
-            QChar c = word[i];
-            QString eq;
-            getCharEquivalent(c, modeIndex, eq);
-            str += eq;
-        }
+        //Use simple transliteration to convert the rest:
+        str = convertWordSimple(word);
     }
     
+    return str;
+}
+
+
+QString L2AConversion::convertWordSimple(const QString &word)
+{
+    QString str = "";
+    int length = word.length();
+    for (int i = 0; i < length; i++)
+    {
+        //Choose letter position mode:
+        int modeIndex;
+        if (0 == i) modeIndex = 0;
+        else if (length-1 == i) modeIndex = 2;
+        else modeIndex = 1;
+        //TODO: Consider 'voc' modes too
+
+        QChar c = word[i];
+        QString eq;
+        getCharEquivalent(c, modeIndex, eq);
+        str += eq;
+    }
+
     return str;
 }
 
@@ -501,51 +559,14 @@ int L2AConversion::getCharacterCount(QChar character, int position)
 }
 
 
-QString L2AConversion::getWord(int i)
+QString L2AConversion::getWord(int i, QString source)
 {
+    if (source.isNull())
+        source = strSource;
+
     QString word = "";
-    QChar c = strSource[i];
-    int len = strSource.length();
-
-    //TODO: Find a better way to detect URLs.
-    //Checking if the text ahead is URL:
-    /*bool isURL = false;
-    if (len - i > 4 && strSource.mid(i, 4).toLower() == ("www."))
-    {
-        int dot = 0;
-        int j = i;
-        c = strSource[j];
-        while (c == '.' || IsCharAInWordChar(c) || j < len)
-        {
-            if (c == '.')
-                dot++;
-            j++;
-            if (j >= len) break;
-            c = strSource[j];
-        }
-        if (dot > 1)
-            isURL = true;
-    }
-    if (isURL)
-    {
-        c = strSource[i];
-        int dot = 0;
-        do
-        {
-            if (c == '.' && (i >= len - 1 || strSource[i + 1] == ' '))
-                break;
-
-            if (c == '.')
-                dot++;
-            word += QString(c);
-            i++;
-            if (i >= len) break;
-            c = strSource[i];
-        } while (c == '.' || IsCharAInWordChar(c));
-
-        return word;
-    }*/
-    //End of processing URL!
+    QChar c = source[i];
+    int len = source.length();
 
     while (isCharAInWordChar(c))
     {
@@ -555,7 +576,7 @@ QString L2AConversion::getWord(int i)
         if (i >= len)
             break;
 
-        c = strSource[i];
+        c = source[i];
     }
 
     return word;
@@ -577,7 +598,9 @@ bool L2AConversion::isCharAInWordChar(QChar c)
 {
     QChar cLower;
     CHAR_TO_LOWER(c, cLower);
-    return chars.contains(cLower) || c.isDigit();
+    return chars.contains(cLower)               //It's in the characters table
+            || c.isDigit()                      //It's a digit
+            || 'w' == cLower;                   //It has 'w'. This is necessary because this letter is not in characters table
 }
 
 
@@ -629,7 +652,7 @@ bool L2AConversion::isSticking(QChar c)
 {
     bool sticking = true;
     if (chars.contains(c)) sticking = chars.value(c).at(8) != "0";
-    qDebug() << c << " is sticking to the next character: " << sticking;
+    //qDebug() << c << " is sticking to the next character: " << sticking;
 
     return sticking;
 }

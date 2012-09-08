@@ -474,10 +474,15 @@ bool A2LConversion::ContainsBackVowel(const QString& w)
     return false;
 }
 
-QString A2LConversion::convert(QProgressDialog* prg)
+QString A2LConversion::convert(QString text)
+{
+    return convert(NULL, text);
+}
+
+QString A2LConversion::convert(QProgressDialog* prg, QString text)
 {
     ChangeAlternativeForms();
-    int length = strSource.length();
+    int length = text.length();
     int i = 0;
     while (i < length)
     {
@@ -485,32 +490,39 @@ QString A2LConversion::convert(QProgressDialog* prg)
         i += word.length();
         QString w = ConvertWord(word, 0, false);
 
-        if (i <= length)
-            prg->setValue(i);
-        else
-            prg->setValue(length);
+        if (NULL != prg)
+        {
+            //Set progress:
+            int min = i <= length ? i : length;
+            prg->setValue(min);
 
-        //DoEvents:
-        QCoreApplication::processEvents();
+            //DoEvents:
+            QCoreApplication::processEvents();
 
-        //Handle cancelation:
-        if (prg->wasCanceled())
-            break;
+            //Handle cancelation:
+            if (prg->wasCanceled())
+                break;
+        }
 
         w = IslahEt(w);
         strResult = strResult + w;
-        while ((i < length) && !IsCharAInWordChar(strSource[i]))
+        while ((i < length) && !IsCharAInWordChar(text[i]))
         {
-            QChar ch = GetSpecialChar(strSource[i]);
+            QChar ch = GetSpecialChar(text[i]);
             if (ch != ' ')
                 strResult = strResult + QChar(ch);
             else
-                strResult = strResult + QChar(strSource[i]);
+                strResult = strResult + QChar(text[i]);
             i++;
         }
     }
     RaiseUpFirstLetters();
     return GetResult();
+}
+
+QString A2LConversion::convert(QProgressDialog* prg)
+{
+    return convert(prg, strSource);
 }
 
 QChar A2LConversion::ConvertSessizChar(QChar c)

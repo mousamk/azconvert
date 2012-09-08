@@ -11,6 +11,7 @@ class L2AConversion : public Convertor
 public:
     L2AConversion(QObject* parent);
     QString convert(QProgressDialog*);
+    QString convert(QString text);
     void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
@@ -20,13 +21,14 @@ public:
 
 
 private:
-    //QString ConvertHtml();
+    QString convert(QProgressDialog*, QString text);
     QString convertWord(const QString& w);
+    QString convertWordSimple(const QString& word);
     QString getResult();
     void    separatePostfixes(const QString& word, QString& nakedWord, QString& wordPostfixes);
     void    separatePrefixes(const QString& word, QString& nakedWord, QString& wordPrefixes);
     QString getSpecialChar(QChar c, int index);
-    QString getWord(int i);
+    QString getWord(int i, QString source = QString());
     QString lookupWord(const QString& w);
     bool    isCharAInWordChar(QChar c);
     //bool    isBackVowel(QChar c);
@@ -37,6 +39,7 @@ private:
     bool    isSticking(QChar c);
     //bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
     void    preprocessText();
+    void    postprocessText();
     QString preprocessWord(QString word);
     void    getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
     int     getCharacterCount(QChar character, int position);
@@ -68,6 +71,8 @@ private: //chars
     QChar vs;   //Virtual space
 
     QString vs_str;
+
+    QMap<int, QString> replaces;
 };
 
 #endif // L2ACONVERSION_H

@@ -117,7 +117,7 @@ void DbService::getSpecialChars(QString tablePostfix, QMap<int, SpecialCharacter
         SpecialCharacterRecord characterRecord(source, equivalent, SpecialCharacterSituation(position));
         specialChars.insert(id, characterRecord);
 
-        qDebug() << "A special character is loaded: " << id << ":" << source << "," << equivalent << "," << position;
+        //qDebug() << "A special character is loaded: " << id << ":" << source << "," << equivalent << "," << position;
     }
 }
 

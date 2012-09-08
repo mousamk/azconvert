@@ -53,6 +53,13 @@ public:
      */
     //TODO: Eliminate the parameter and setup a better synchronization system.
     virtual QString convert(QProgressDialog* progressDialog) = 0;
+
+    /*!
+     * @brief Converts a text without considering progress dialog.
+     * @param text The text to be converted.
+     * @return The converted result
+     */
+    virtual QString convert(QString text) = 0;
     
     /*!
      * @brief Reloads the database resource.

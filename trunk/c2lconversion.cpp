@@ -55,10 +55,10 @@ QStringList C2LConversion::getCharacterTuple(const QSqlQuery& query, const QSqlR
 }
 
 
-QString C2LConversion::convert(QProgressDialog* /*progressDialog*/)
+QString C2LConversion::convert(QString text)
 {
     //TODO: Update this method.
-    QString str = strSource;
+    QString str = text;
     str.replace("А", "A");
     str.replace("а", "a");
     str.replace("Б", "B");
@@ -123,6 +123,13 @@ QString C2LConversion::convert(QProgressDialog* /*progressDialog*/)
     str.replace("ј", "y");
     str.replace("З", "Z");
     str.replace("з", "z");
+
     return str;
+}
+
+
+QString C2LConversion::convert(QProgressDialog* /*progressDialog*/)
+{
+    return convert(strSource);
 }
 
