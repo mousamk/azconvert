@@ -66,8 +66,9 @@ public:
     
     /*!
      * @brief Reloads the database resource.
+     * @param force Indicates whether the reloading must be done ignoring conditions or not
      */
-    void reloadResources();
+    void reloadResources(bool force = false);
     
     /*!
      * @brief Sets the original text to be used later in converting.

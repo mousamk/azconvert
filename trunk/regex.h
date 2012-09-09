@@ -40,8 +40,8 @@ public:
     bool run();
 
     /*!
-     * @brief Gets the results and returns them.
-     * @returns Returns the results
+     * @brief Gets the results.
+     * @returns The results
      */
     const QMap<int, QString>& getResults();
 
@@ -49,6 +49,12 @@ public:
      * @brief Resets the holder number
      */
     static void reset();
+
+    /*!
+     * @brief Returns the holder number
+     * @return The holder number
+     */
+    static int getHolderNumber();
 
 
 protected:

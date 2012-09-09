@@ -83,6 +83,7 @@ void A2LConversion::ChangeAlternativeForms()
     strSource = strSource.replace("\u0640", "");    //Ignore '-'
 }
 
+
 QString A2LConversion::ChangePostfixes(const QString& w)
 {
     if (w.isNull() || w.isEmpty())

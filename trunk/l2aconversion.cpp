@@ -40,17 +40,6 @@ L2AConversion::L2AConversion(QObject* parent)
 }
 
 
-/*void L2AConversion::reloadResources()
-{
-    loadChars();
-    loadWords();
-    loadSolidWords();
-    loadPrefixes();
-    loadPostfixes();
-    loadSpecialChars();
-}*/
-
-
 QString L2AConversion::getTablesPostfix()
 {
     return "_l2a";
@@ -211,7 +200,6 @@ void L2AConversion::separatePrefixes(const QString& word, QString& nakedWord, QS
                     break;
             }
 
-            //TODO: Instead of line below, check the list.at(2) and do the right work.
             wordPrefixes += list.at(1);
             if (removeLast)
                 wordPrefixes = wordPrefixes.left(wordPrefixes.length()-1);
@@ -253,10 +241,10 @@ void L2AConversion::preprocessText(bool wikiMode)
     if (wikiMode) regexProcessors.append(new RegexWikiLink(strSource, new L2AConversion(this)));
     if (wikiMode) regexProcessors.append(new RegexWikiPicture(strSource, new L2AConversion(this)));
     regexProcessors.append(new RegexHtmlTag(strSource));
-    //add others...
+
 
     //Run each one of the regex processors and collect its results:
-    Regex::reset();
+    if (Regex::getHolderNumber() > 2000000000) Regex::reset();      //Just to be sure in. Here this cannot happen, but in php mode, it may!
     bool change = true;
     while(change)
     {
@@ -275,8 +263,6 @@ void L2AConversion::preprocessText(bool wikiMode)
         delete regexProcessors.at(i);
         regexProcessors.removeLast();
     }
-
-    //QString wikiNoConvert   = "(?:\\`\\{\\`\\{" + QString(WIKI_NO_CONVERT_TAG) + "\\s*\\|.*\\`\\}\\`\\})";         //TODO: Beware of this in non-wiki mode.
 }
 
 
@@ -555,8 +541,6 @@ QString L2AConversion::lookupWord(const QString& w)
     QString res;
     res = words.contains(w) ? words.value(w) : "";
 
-    //qDebug() << "Looking up: " << w << "result: " << res;
-
     return res;
 }
 
@@ -571,24 +555,6 @@ bool L2AConversion::isCharAInWordChar(QChar c)
 }
 
 
-/*bool L2AConversion::isBackVowel(QChar c)
-{
-    bool back = chars.contains(c) ? chars.value(c).at(6) == "2" : false;
-    qDebug() << c << " is a back vowel: " << back;
-
-    return back;
-}
-
-
-bool L2AConversion::isFrontVowel(QChar c)
-{
-    bool front = chars.contains(c) ? chars.value(c).at(6) == "1" : false;
-    qDebug() << c << " is a front vowel: " << front;
-
-    return front;
-}*/
-
-
 bool L2AConversion::isNonConvertableWord(const QString& w)
 {
     QString lw;
@@ -597,29 +563,10 @@ bool L2AConversion::isNonConvertableWord(const QString& w)
 }
 
 
-/*bool L2AConversion::isVowel(QChar c)
-{
-    bool vowel = chars.contains(c) ? chars.value(c).at(7) == "1" : false;
-    qDebug() << c << " is a vowel: " << vowel;
-
-    return vowel;
-}
-
-
-bool L2AConversion::isConsonant(QChar c)
-{
-    bool consonant = chars.contains(c) ? chars.value(c).at(7) == "0" : false;
-    qDebug() << c << " is a consonant: " << consonant;
-
-    return consonant;
-}*/
-
-
 bool L2AConversion::isSticking(QChar c)
 {
     bool sticking = true;
     if (chars.contains(c)) sticking = chars.value(c).at(8) != "0";
-    //qDebug() << c << " is sticking to the next character: " << sticking;
 
     return sticking;
 }

@@ -25,10 +25,10 @@ Convertor::~Convertor()
 }
 
 
-void Convertor::reloadResources()
+void Convertor::reloadResources(bool force)
 {
     QString postfix = getTablesPostfix();
-    if (loadedMode != postfix)
+    if (force || loadedMode != postfix)
     {
         loadChars();
         loadWords();

@@ -72,7 +72,7 @@ void MainWindow::on_action_ConvertText_triggered()
     progress->show();
 
     //TODO: Get the proper wiki mode:
-    bool wikiMode = true;
+    bool wikiMode = Settings::GetInstance(this)->GetWikiMode();
     convertor->setOriginalText(ui->txtSource->toPlainText());
     ui->txtResult->document()->setPlainText(convertor->convert(progress, wikiMode));
     
@@ -133,9 +133,9 @@ void MainWindow::SetModeDirection()
 
 void MainWindow::on_action_Reload_dictionaries_triggered()
 {
-    //TODO: Do the proper action in the new dictionary system.
-    convertor->reloadResources();
+    convertor->reloadResources(true);
 }
+
 
 void MainWindow::on_btnNew_clicked()
 {
@@ -143,17 +143,20 @@ void MainWindow::on_btnNew_clicked()
     ui->txtSource->setFocus();
 }
 
+
 void MainWindow::on_btnPaste_clicked()
 {
     QClipboard* clip = QApplication::clipboard();
     ui->txtSource->document()->setPlainText(clip->text(QClipboard::Clipboard));
 }
 
+
 void MainWindow::on_btnCopy_clicked()
 {
     QClipboard* clip = QApplication::clipboard();
     clip->setText(ui->txtResult->document()->toPlainText());
 }
+
 
 void MainWindow::on_btnOpen_clicked()
 {
@@ -166,6 +169,7 @@ void MainWindow::on_btnOpen_clicked()
     }
 }
 
+
 void MainWindow::on_btnSave_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this);
@@ -177,16 +181,19 @@ void MainWindow::on_btnSave_clicked()
     }
 }
 
+
 void MainWindow::on_actionClear_All_triggered()
 {
     ui->txtResult->clear();
     ui->txtSource->clear();
 }
 
+
 void MainWindow::on_actionAbout_Qt_triggered()
 {
     QApplication::aboutQt();
 }
+
 
 void MainWindow::on_action_About_triggered()
 {
@@ -196,10 +203,12 @@ void MainWindow::on_action_About_triggered()
     dlg->show();
 }
 
+
 void MainWindow::on_btnClear_clicked()
 {
     ui->txtResult->clear();
 }
+
 
 void MainWindow::on_action_Add_word_to_dictionary_triggered()
 {
@@ -210,11 +219,13 @@ void MainWindow::on_action_Add_word_to_dictionary_triggered()
     dlg->show();
 }
 
+
 void MainWindow::on_actionCalendar_converter_triggered()
 {
     CalendarSwitchDialog* dlg = new CalendarSwitchDialog(this);
     dlg->show();
 }
+
 
 void MainWindow::on_actionWikipediaMode_triggered()
 {
@@ -222,12 +233,12 @@ void MainWindow::on_actionWikipediaMode_triggered()
 	Settings::GetInstance(this)->SetWikiMode(check);
 
     //Show information:
-    if (check)
+    /*if (check)
     {
         QMessageBox::information(this, tr("Wikipedia mode"), tr("This mode is for transliterating Azerbaijani wikipedia's articles."
                                                                 "\nIn this mode, AzConvert automatically knows WikiMedia's formats and considers them in tranliteration."
                                                                 "\n\nIt's not perfect yet and still is in development."), tr("Ok"));
-    }
+    }*/
 }
 
 

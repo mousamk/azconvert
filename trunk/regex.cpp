@@ -18,6 +18,8 @@ Regex::~Regex()
 
 bool Regex::run()
 {
+    placesHeld.clear();
+
     int index = 0;
     QString match;
     QString holder;
@@ -53,4 +55,10 @@ const QMap<int, QString>& Regex::getResults()
 void Regex::reset()
 {
     holderNumber = 1;
+}
+
+
+int Regex::getHolderNumber()
+{
+    return holderNumber;
 }
