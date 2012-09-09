@@ -5,8 +5,8 @@
 //Initialize static member variable:
 int Regex::holderNumber = 1;
 
-Regex::Regex(QString &source, Convertor* convertor)
-    : source(source), convertor(convertor)
+Regex::Regex(QString &source)
+    : source(source)
 {
 }
 

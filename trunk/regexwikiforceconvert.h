@@ -1,26 +1,29 @@
 /*!
- * @file regexemail.h
- * @brief This file contains declaration of RegexEmail class.
+ * @file regexwikiforceconvert.h
+ * @brief This file contains declaration of RegexWikiForceConvert class.
  * @author Mousa Moradi
  */
 
-#ifndef REGEXEMAIL_H
-#define REGEXEMAIL_H
+#ifndef REGEXWIKIFORCECONVERT_H
+#define REGEXWIKIFORCECONVERT_H
 
 #include "regex.h"
 
+class Convertor;
+
 
 /*!
- * @brief The Email checker Regex class.
+ * @brief The Wiki force convert template checker Regex class.
  */
-class RegexEmail : public Regex
+class RegexWikiForceConvert : public Regex
 {
 public:
     /*!
      * @brief Class constructor
      * @param source The source text to work on it
      */
-    RegexEmail(QString& source);
+    RegexWikiForceConvert(QString& source);
+
 
 protected:
     /*!
@@ -30,4 +33,4 @@ protected:
     QString getMatchEquivalent();
 };
 
-#endif // REGEXEMAIL_H
+#endif // REGEXWIKIFORCECONVERT_H

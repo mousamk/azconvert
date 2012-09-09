@@ -11,9 +11,9 @@ class C2LConversion : public Convertor
 {
 public:
     C2LConversion(QObject* parent);
-    QString convert(QProgressDialog* progressDialog);
-    QString convert(QString text);
-    void    reloadResources();
+    QString convert(QProgressDialog* progressDialog, bool wikiMode);
+    QString convert(QString text, bool wikiMode);
+    //void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
     QString getTablesPostfix();

@@ -29,7 +29,10 @@ SOURCES += main.cpp \
     regexwikiinterwiki.cpp \
     regexwikipicture.cpp \
     regexhtmltag.cpp \
-    regexwikilink.cpp
+    regexwikilink.cpp \
+    regexwikinoconvert.cpp \
+    regexwikiforceconvert.cpp \
+    regexwikinowiki.cpp
 
 HEADERS += mainwindow.h \
     l2aconversion.h \
@@ -53,7 +56,10 @@ HEADERS += mainwindow.h \
     regexwikiinterwiki.h \
     regexwikipicture.h \
     regexhtmltag.h \
-    regexwikilink.h
+    regexwikilink.h \
+    regexwikinoconvert.h \
+    regexwikiforceconvert.h \
+    regexwikinowiki.h
 
 FORMS += mainwindow.ui \
     aboutdialog.ui \

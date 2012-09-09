@@ -20,7 +20,7 @@ public:
      * @brief Class constructor
      * @param source The source text to work on it
      */
-    RegexWikiTemplate(QString& source, Convertor* convertor);
+    RegexWikiTemplate(QString& source);
 
 
 protected:

@@ -49,28 +49,37 @@ public:
     /*!
      * @brief Converts the previously set original text and returns the result.
      * @param progressDialog The progressDialog to update it while converting
+     * @param wikiMode Indicates whether the text be treated as wiki format and
+     *        the required consideration be done or not
      * @return The converted result
      */
-    //TODO: Eliminate the parameter and setup a better synchronization system.
-    virtual QString convert(QProgressDialog* progressDialog) = 0;
+    virtual QString convert(QProgressDialog* progressDialog, bool wikiMode) = 0;
 
     /*!
      * @brief Converts a text without considering progress dialog.
      * @param text The text to be converted.
+     * @param wikiMode Indicates whether the text be treated as wiki format and
+     *        the required consideration be done or not
      * @return The converted result
      */
-    virtual QString convert(QString text) = 0;
+    virtual QString convert(QString text, bool wikiMode) = 0;
     
     /*!
      * @brief Reloads the database resource.
      */
-    virtual void reloadResources() = 0;
+    void reloadResources();
     
     /*!
      * @brief Sets the original text to be used later in converting.
      * @param text The orginial text to be converted later
      */
-    virtual void setOriginalText(const QString& text) {strSource = text;}
+    void setOriginalText(const QString& text);
+
+    /*!
+     * @brief Gets the converted result
+     * @return Returns the converted result
+     */
+    QString getConvertedResult();
     
     /*!
      * @brief Returns layout direction of the source script to be used in window.
@@ -88,7 +97,7 @@ public:
      * @brief Returns the words collection.
      * @return The words collection
      */
-    QHash<QString,QString> getWords() {return words;}
+    QHash<QString,QString>& getWords();
 
     /*!
      * @brief Gets the convertor's postfix for database tables
@@ -104,34 +113,22 @@ public:
     
     
 protected:
-    /*!
-     * @brief Loads character table used for base transliteration
-     */
+    //! @brief Loads character table used for base transliteration
     void loadChars();
 
-    /*!
-     * @brief Loads special character conversion table for transliteration
-     */
+    //! @brief Loads special character conversion table for transliteration
     void loadSpecialChars();
 
-    /*!
-     * @brief Loads words table used in transliteration
-     */
+    //! @brief Loads words table used in transliteration
     void loadWords();
 
-    /*!
-     * @brief Loads solid words table
-     */
+    //! @brief Loads solid words table
     void loadSolidWords();
 
-    /*!
-     * @brief Loads prefixes table used in transliteration
-     */
+    //! @brief Loads prefixes table used in transliteration
     void loadPrefixes();
 
-    /*!
-     * @brief Loads postfixes table used in transliteration
-     */
+    //! @brief Loads postfixes table used in transliteration
     void loadPostfixes();
 
     /*!
@@ -144,26 +141,32 @@ protected:
     
     
 protected:
-    /// @brief The original source text to be converted
+    //! @brief The original source text to be converted
     QString strSource;
-    
-    /// @brief The transliteration table of characeters
-    QHash<QChar, QStringList> chars;
 
-    /// @brief The transliteration table of special characters
-    QMap<int, SpecialCharacterRecord> specialChars;
-    
-    /// @brief Table of words and their equivalents used for conversion
-    QHash<QString, QString> words;
+    //! @brief The converted text
+    QString strResult;
 
-    /// @brief List of non-convertible words
-    QList<QString> solidWords;
+    //! @brief The transliteration table of characeters
+    static QHash<QChar, QStringList> chars;
 
-    /// @brief Table of prefixes and their related fields
-    QMap<int, QStringList> prefixes;
+    //! @brief The transliteration table of special characters
+    static QMap<int, SpecialCharacterRecord> specialChars;
 
-    /// @brief Table of postfixes and their related fields
-    QMap<int, QStringList> postfixes;
+    //! @brief Table of words and their equivalents used for conversion
+    static QHash<QString, QString> words;
+
+    //! @brief List of non-convertible words
+    static QList<QString> solidWords;
+
+    //! @brief Table of prefixes and their related fields
+    static QMap<int, QStringList> prefixes;
+
+    //! @brief Table of postfixes and their related fields
+    static QMap<int, QStringList> postfixes;
+
+    //! @brief The loaded mode's table postfix will be saved in this when db data are loaded:
+    static QString loadedMode;
 };
 
 #endif // CONVERTOR_H

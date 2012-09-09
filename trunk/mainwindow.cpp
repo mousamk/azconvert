@@ -71,8 +71,10 @@ void MainWindow::on_action_ConvertText_triggered()
     progress->setWindowModality(Qt::WindowModal);
     progress->show();
 
+    //TODO: Get the proper wiki mode:
+    bool wikiMode = true;
     convertor->setOriginalText(ui->txtSource->toPlainText());
-    ui->txtResult->document()->setPlainText(convertor->convert(progress));
+    ui->txtResult->document()->setPlainText(convertor->convert(progress, wikiMode));
     
     progress->close();
     setCursor(Qt::ArrowCursor);

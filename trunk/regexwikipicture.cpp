@@ -5,16 +5,30 @@
 
 
 RegexWikiPicture::RegexWikiPicture(QString &source, Convertor* convertor)
-    : Regex(source, convertor)
+    : Regex(source), convertor(convertor)
 {
     //QString pattern = "\\Şəkil:[^\\|]*\\|";         //TODO: Complete this one
     QString pattern =
-            "\\[\\[\\s*Şəkil\\s*\\:"
-            "(?:([^\\]]*)\\|)*"
-            "(?:([^\\]\\|]*))"
-            "\\]\\]"
+            "(?:"
+                "\\[\\[\\s*(?:Şəkil|File)\\s*\\:"
+                "(?:([^\\]]*)\\|)*"
+                "(?:([^\\]\\|]*))"
+                "\\]\\]"
+            ")|"
+            "(?:"
+                "\\n+(?:Şəkil|File)\\s*:"
+                "(?:([^\\n]*)\\|)*"
+                "(?:([^\\n\\|]*))"
+                "(?=\\n)"
+            ")"
             ;
     regexp.setPattern(pattern);
+}
+
+
+RegexWikiPicture::~RegexWikiPicture()
+{
+    delete convertor;
 }
 
 
@@ -24,8 +38,16 @@ QString RegexWikiPicture::getMatchEquivalent()
     QStringList list = regexp.capturedTexts();
     if (list.count() > 2)
     {
-        QString last = list.at(list.count()-1);
-        qDebug() << "PICTURE last:" << last;
+        QString prelast = list.at(1);
+        QString last = list.at(2);
+        //qDebug() << "last&prelast" << last << prelast;
+        if(prelast.isEmpty() && last.isEmpty() && list.count()>4)
+        {
+            prelast = list.at(3);
+            last = list.at(4);
+            //qDebug() << "2nd last&prelast" << last << prelast;
+        }
+        //qDebug() << "PICTURE last:" << last;
         qDebug() << "PICTURE found:" << regexp.capturedTexts();
 
         //Check if the last part is not a special field:
@@ -38,7 +60,13 @@ QString RegexWikiPicture::getMatchEquivalent()
                         "(?:\\s*x\\s*[0-9]+\\s*px\\s*)|"
                         "(?:\\s*[0-9]+\\s*x\\s*[0-9]+\\s*px\\s*)|"
                         "(?:\\s*upright\\s*)|"
-                        "(?:\\s*upright\\s*[0-9]*(?:\\.[0-9]+)?\\s*)|"
+                        "(?:\\s*upright\\s*[0-9]*(?:\\.[0-9]+)?\\s*)"
+                    ")|"
+                    "(?:"
+                        "(?:right)|"
+                        "(?:left)|"
+                        "(?:center)|"
+                        "(?:none)"
                     ")|"
                     "(?:"
                         "\\s*(?:"
@@ -51,7 +79,7 @@ QString RegexWikiPicture::getMatchEquivalent()
                             "(?:top)|"
                             "(?:bottom)"
                         ")\\s*"
-                    ")\\|"
+                    ")|"
                     "(?:\\s*border\\s*)|"
                     "(?:"
                         "\\s*thumb(?:nail)?\\s*(?:\\=\\s*[^\\]\\|]*)?"
@@ -70,13 +98,18 @@ QString RegexWikiPicture::getMatchEquivalent()
         QString equivalent;
         if (transliterate)
         {
-            equivalent = "[[Şəkil:" + regexp.cap(1) + "|" + convertor->convert(regexp.cap(2) + "]]");
+            equivalent = "Şəkil:" + prelast + "|" + convertor->convert(last, true);
+            if (list.at(0).startsWith("[["))
+                equivalent = "[[" + equivalent + "]]";
+            if(list.at(0).startsWith("\n"))
+                equivalent = "\n" + equivalent;
+            if(list.at(0).endsWith("\n"))
+                equivalent += "\n";
             return equivalent;
         }
         else
             return regexp.cap();
     }
 
-    //No conversion is needed:
     return regexp.cap();
 }

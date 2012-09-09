@@ -1,8 +1,8 @@
 #include "regexemail.h"
 
 
-RegexEmail::RegexEmail(QString &source, Convertor *convertor)
-    : Regex(source, convertor)
+RegexEmail::RegexEmail(QString &source)
+    : Regex(source)
 {
     QString pattern = "[a-zA-Z0-9_][a-zA-Z0-9_\\.]*"
                       "\\@"

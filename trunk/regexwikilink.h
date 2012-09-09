@@ -9,6 +9,8 @@
 
 #include "regex.h"
 
+class Convertor;
+
 
 /*!
  * @brief The Wiki link checker Regex class.
@@ -22,6 +24,9 @@ public:
      */
     RegexWikiLink(QString& source, Convertor* convertor);
 
+    //! @brief Class destructor
+    ~RegexWikiLink();
+
 
 protected:
     /*!
@@ -29,6 +34,11 @@ protected:
      * @return The equivalent for the matched substrings. It may be the same as first matched one.
      */
     QString getMatchEquivalent();
+
+
+private:
+    //! @brief Convertor used to convert pieces
+    Convertor* convertor;
 };
 
 #endif // REGEXWIKILINK_H

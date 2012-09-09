@@ -3,8 +3,8 @@
 #include "regexwikiinterwiki.h"
 
 
-RegexWikiInterwiki::RegexWikiInterwiki(QString &source, Convertor* convertor)
-    : Regex(source, convertor)
+RegexWikiInterwiki::RegexWikiInterwiki(QString &source)
+    : Regex(source)
 {
     QString pattern = "\\[\\[[a-zA-Z\\-]+\\:[^\\]\\|]*\\]\\]";      //TODO: Check the new pipe added
     regexp.setPattern(pattern);

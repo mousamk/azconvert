@@ -11,7 +11,7 @@ C2LConversion::C2LConversion(QObject* parent)
 }
 
 
-void C2LConversion::reloadResources()
+/*void C2LConversion::reloadResources()
 {
     loadChars();
     //loadWords();      //Not needed in this direction.
@@ -19,7 +19,7 @@ void C2LConversion::reloadResources()
     //loadPrefixes();
     //loadPostfixes();
     //loadSpecialChars();
-}
+}*/
 
 
 Qt::LayoutDirection C2LConversion::getSourceLayoutDirection()
@@ -55,7 +55,7 @@ QStringList C2LConversion::getCharacterTuple(const QSqlQuery& query, const QSqlR
 }
 
 
-QString C2LConversion::convert(QString text)
+QString C2LConversion::convert(QString text, bool /*wikiMode*/)
 {
     //TODO: Update this method.
     QString str = text;
@@ -128,8 +128,9 @@ QString C2LConversion::convert(QString text)
 }
 
 
-QString C2LConversion::convert(QProgressDialog* /*progressDialog*/)
+QString C2LConversion::convert(QProgressDialog* /*progressDialog*/, bool wikiMode)
 {
-    return convert(strSource);
+    strResult = convert(strSource, wikiMode);
+    return strResult;
 }
 

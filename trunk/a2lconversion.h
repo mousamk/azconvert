@@ -10,9 +10,9 @@ class A2LConversion : public Convertor
 {
 public:
     A2LConversion(QObject* parent);
-    QString convert(QProgressDialog*);
-    QString convert(QString text);
-    void    reloadResources();
+    QString convert(QProgressDialog*, bool wikiMode);
+    QString convert(QString text, bool wikiMode);
+    //void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
     void setOriginalText(const QString &text);

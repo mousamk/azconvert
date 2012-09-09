@@ -1,11 +1,11 @@
 /*!
- * @file regexwikipicture.h
- * @brief This file contains declaration of RegexWikiPicture class.
+ * @file regexwikinowiki.h
+ * @brief This file contains declaration of RegexWikiNoWiki class.
  * @author Mousa Moradi
  */
 
-#ifndef REGEXWIKIPICTURE_H
-#define REGEXWIKIPICTURE_H
+#ifndef REGEXWIKINOWIKI_H
+#define REGEXWIKINOWIKI_H
 
 #include "regex.h"
 
@@ -13,9 +13,9 @@ class Convertor;
 
 
 /*!
- * @brief The Wiki picture checker Regex class.
+ * @brief The Wiki NoConvert template checker Regex class.
  */
-class RegexWikiPicture : public Regex
+class RegexWikiNoWiki : public Regex
 {
 public:
     /*!
@@ -23,10 +23,10 @@ public:
      * @param source The source text to work on it
      * @param convertor The convertor engine which may be used to convert some pieces
      */
-    RegexWikiPicture(QString& source, Convertor* convertor);
+    RegexWikiNoWiki(QString& source, Convertor* convertor);
 
     //! @brief Class destructor
-    ~RegexWikiPicture();
+    ~RegexWikiNoWiki();
 
 
 protected:
@@ -42,4 +42,4 @@ private:
     Convertor* convertor;
 };
 
-#endif // REGEXWIKIPICTURE_H
+#endif // REGEXWIKINOWIKI_H

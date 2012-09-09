@@ -3,8 +3,8 @@
 #include "regexurl.h"
 
 
-RegexUrl::RegexUrl(QString &source, Convertor* convertor)
-    : Regex(source, convertor)
+RegexUrl::RegexUrl(QString &source)
+    : Regex(source)
 {
     QString pattern = "(?:[a-zA-Z\\+]+\\:\\/\\/)?"
                       "(?:"

@@ -1,6 +1,17 @@
 #include <QVariant>
+#include <QDebug>
 #include "convertor.h"
 #include "dbservice.h"
+
+
+//Allocate memory for static member variables:
+QHash<QChar, QStringList> Convertor::chars;
+QMap<int, SpecialCharacterRecord> Convertor::specialChars;
+QHash<QString, QString> Convertor::words;
+QList<QString> Convertor::solidWords;
+QMap<int, QStringList> Convertor::prefixes;
+QMap<int, QStringList> Convertor::postfixes;
+QString Convertor::loadedMode;
 
 
 Convertor::Convertor(QObject *parent)
@@ -11,6 +22,43 @@ Convertor::Convertor(QObject *parent)
 
 Convertor::~Convertor()
 {
+}
+
+
+void Convertor::reloadResources()
+{
+    QString postfix = getTablesPostfix();
+    if (loadedMode != postfix)
+    {
+        loadChars();
+        loadWords();
+        loadSolidWords();
+        loadPrefixes();
+        loadPostfixes();
+        loadSpecialChars();
+
+        loadedMode = postfix;
+
+        qDebug() << "Loaded for this mode:" << postfix;
+    }
+}
+
+
+void Convertor::setOriginalText(const QString &text)
+{
+    strSource = text;
+}
+
+
+QString Convertor::getConvertedResult()
+{
+    return strResult;
+}
+
+
+QHash<QString,QString>& Convertor::getWords()
+{
+     return words;
 }
 
 

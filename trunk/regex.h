@@ -26,7 +26,7 @@ public:
      * @brief Class constructor.
      * @param source The source text to work on it
      */
-    Regex(QString& source, Convertor* convertor);
+    Regex(QString& source);
 
     /*!
      * @brief Class destructor.
@@ -73,9 +73,6 @@ protected:
 
     //! @brief The extracted (and converted) substrings will be saved in this
     QMap<int, QString> placesHeld;
-
-    //! @brief The convertor engine to be used when necessary
-    Convertor* convertor;
 };
 
 #endif // REGEX_H

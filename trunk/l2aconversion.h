@@ -10,9 +10,9 @@ class L2AConversion : public Convertor
 {
 public:
     L2AConversion(QObject* parent);
-    QString convert(QProgressDialog*);
-    QString convert(QString text);
-    void    reloadResources();
+    QString convert(QProgressDialog*, bool wikiMode);
+    QString convert(QString text, bool wikiMode);
+    //void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
     void setOriginalText(const QString &text);
@@ -22,23 +22,31 @@ public:
 
 private:
     QString convert(QProgressDialog*, QString text);
-    QString convertWord(const QString& w);
+
+    /*!
+     * @brief Converts the given word and returns the result
+     * @param w The word to be converted
+     * @param part Indicates whether it's a (right) part of another word, or
+     *        is a standalone word.
+     * @return The converted result
+     */
+    QString convertWord(const QString& w, bool part);
+
+    /*!
+     * @brief Converts a word with basic transliteration algorithm.
+     * @param word The word to be converted
+     * @return The converted result
+     */
     QString convertWordSimple(const QString& word);
-    QString getResult();
-    void    separatePostfixes(const QString& word, QString& nakedWord, QString& wordPostfixes);
+    void    separatePostfixes(const QString& word, bool part, QString& nakedWord, QString& wordPostfixes);
     void    separatePrefixes(const QString& word, QString& nakedWord, QString& wordPrefixes);
     QString getSpecialChar(QChar c, int index);
     QString getWord(int i, QString source = QString());
     QString lookupWord(const QString& w);
     bool    isCharAInWordChar(QChar c);
-    //bool    isBackVowel(QChar c);
-    //bool    isFrontVowel(QChar c);
     bool    isNonConvertableWord(const QString& w);
-    //bool    isVowel(QChar c);
-    //bool    isConsonant(QChar c);
     bool    isSticking(QChar c);
-    //bool    IsThereColonBeforeDoubleCloseBrackets(int index);   //Is used in wiki mode
-    void    preprocessText();
+    void    preprocessText(bool wikiMode);
     void    postprocessText();
     QString preprocessWord(QString word);
     void    getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
@@ -55,23 +63,20 @@ protected:
     QStringList getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record);
 
 
-public:
-    QString strResult;
+private:
+    //! @brief The conversion result
+    //QString strResult;
 
-
-private: //chars
+    //! @brief The turned e character
     QChar eh;
-    //QChar ih;
-    //QChar gh;
-    //QChar sh;
-    //QChar ch;
-    //QChar Ih;
-    //QChar uh;
-    //QChar oh;
-    QChar vs;   //Virtual space
 
+    //! @brief The virtual space character
+    QChar vs;
+
+    //! @brief The virtual space string
     QString vs_str;
 
+    //! @brief Map of the placeholders to return them back
     QMap<int, QString> replaces;
 };
 

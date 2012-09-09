@@ -5,10 +5,16 @@
 
 
 RegexWikiLink::RegexWikiLink(QString &source, Convertor* convertor)
-    : Regex(source, convertor)
+    : Regex(source), convertor(convertor)
 {
     QString pattern = "\\[\\[([^\\|\\]\\:]+)(?:\\|([^\\]]+))?\\]\\]";
     regexp.setPattern(pattern);
+}
+
+
+RegexWikiLink::~RegexWikiLink()
+{
+    delete convertor;
 }
 
 
@@ -19,8 +25,11 @@ QString RegexWikiLink::getMatchEquivalent()
     QString link1 = regexp.cap(1);
     QString link2 = regexp.cap(2);
     QString link = link2.isEmpty() ? link1 : link2;
-    QString equivalent = convertor->convert(link);
-    QString fullEqual = "[[" + link1 + "|" + equivalent + "]]";
+    QString equivalent = convertor->convert(link, false);
+    QString fullEqual = "[[" + link1;
+    if (link1 != equivalent)
+        fullEqual += "|" + equivalent;
+    fullEqual += "]]";
 
     return fullEqual;
 }

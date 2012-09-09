@@ -1,8 +1,8 @@
 #include "regexhtmltag.h"
 
 
-RegexHtmlTag::RegexHtmlTag(QString &source, Convertor* convertor)
-    : Regex(source, convertor)
+RegexHtmlTag::RegexHtmlTag(QString &source)
+    : Regex(source)
 {
     QString pattern = "\\<[^\\>]*\\>";
     regexp.setPattern(pattern);

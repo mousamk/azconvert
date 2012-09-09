@@ -15,7 +15,7 @@ A2LConversion::A2LConversion(QObject* parent)
 }
 
 
-void A2LConversion::reloadResources()
+/*void A2LConversion::reloadResources()
 {
     loadChars();
     loadWords();
@@ -23,7 +23,7 @@ void A2LConversion::reloadResources()
     //loadPrefixes();
     //loadPostfixes();
     loadSpecialChars();
-}
+}*/
 
 
 QString A2LConversion::getTablesPostfix()
@@ -474,7 +474,7 @@ bool A2LConversion::ContainsBackVowel(const QString& w)
     return false;
 }
 
-QString A2LConversion::convert(QString text)
+QString A2LConversion::convert(QString text, bool /*wikiMode*/)
 {
     return convert(NULL, text);
 }
@@ -520,7 +520,7 @@ QString A2LConversion::convert(QProgressDialog* prg, QString text)
     return GetResult();
 }
 
-QString A2LConversion::convert(QProgressDialog* prg)
+QString A2LConversion::convert(QProgressDialog* prg, bool /*wikiMode*/)
 {
     return convert(prg, strSource);
 }

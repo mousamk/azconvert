@@ -20,7 +20,7 @@ public:
      * @brief Class constructor
      * @param source The source text to work on it
      */
-    RegexUrl(QString& source, Convertor* convertor);
+    RegexUrl(QString& source);
 
 
 protected:

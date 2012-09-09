@@ -18,6 +18,9 @@
 #include "regexwikipicture.h"
 #include "regexhtmltag.h"
 #include "regexwikilink.h"
+#include "regexwikinoconvert.h"
+#include "regexwikiforceconvert.h"
+#include "regexwikinowiki.h"
 
 
 L2AConversion::L2AConversion(QObject* parent)
@@ -37,7 +40,7 @@ L2AConversion::L2AConversion(QObject* parent)
 }
 
 
-void L2AConversion::reloadResources()
+/*void L2AConversion::reloadResources()
 {
     loadChars();
     loadWords();
@@ -45,7 +48,7 @@ void L2AConversion::reloadResources()
     loadPrefixes();
     loadPostfixes();
     loadSpecialChars();
-}
+}*/
 
 
 QString L2AConversion::getTablesPostfix()
@@ -96,7 +99,7 @@ void L2AConversion::setOriginalText(const QString &text)
 }
 
 
-void L2AConversion::separatePostfixes(const QString& word, QString &nakedWord, QString &wordPostfixes)
+void L2AConversion::separatePostfixes(const QString& word, bool part, QString &nakedWord, QString &wordPostfixes)
 {
     nakedWord = word;
     wordPostfixes = "";
@@ -105,9 +108,9 @@ void L2AConversion::separatePostfixes(const QString& word, QString &nakedWord, Q
 
     QString postfix;
     QStringList list;
-    bool hasVs = false;
-    bool removeLast = false;
+    bool hasVs, removeLast;
     QMapIterator<int, QStringList> it(postfixes);
+    int offset = part ? 0 : 3;
     while(it.hasNext())
     {
         it.next();
@@ -115,7 +118,7 @@ void L2AConversion::separatePostfixes(const QString& word, QString &nakedWord, Q
         postfix = list.at(0);
         hasVs = removeLast = false;
 
-        if (nakedWord.length() > postfix.length() + 2 &&
+        if (nakedWord.length() >= postfix.length() + offset &&
                 nakedWord.endsWith(postfix) &&
                      (list.at(3) == "0" ||
                           (list.at(3)=="1" && !lookupWord(nakedWord.left(nakedWord.length()-postfix.length())).isEmpty()
@@ -123,31 +126,34 @@ void L2AConversion::separatePostfixes(const QString& word, QString &nakedWord, Q
                      )
            )
         {
-            switch (list.at(2).toInt())
+            if (!part)
             {
-                case 1:
-                    //Nothing to do!
-                    break;
+                switch (list.at(2).toInt())
+                {
+                    case 1:
+                        //Nothing to do!
+                        break;
 
-                case 2:
-                    if (isSticking(nakedWord[nakedWord.length() - postfix.length() - 1]))
-                        hasVs = true;
-                    break;
+                    case 2:
+                        if (isSticking(nakedWord[nakedWord.length() - postfix.length() - 1]))
+                            hasVs = true;
+                        break;
 
-                case 3:
-                    if (nakedWord[(nakedWord.length() - postfix.length()) - 1] == eh)
-                        hasVs = true;
-                    break;
+                    case 3:
+                        if (nakedWord[(nakedWord.length() - postfix.length()) - 1] == eh)
+                            hasVs = true;
+                        break;
 
-                case 4:
-                    if (nakedWord[(nakedWord.length() - postfix.length()) - 1] == eh)
-                        removeLast = true;
-                    break;
+                    case 4:
+                        if (nakedWord[(nakedWord.length() - postfix.length()) - 1] == eh)
+                            removeLast = true;
+                        break;
+                }
             }
 
             wordPostfixes = (hasVs ? vs_str : "") + list.at(1) + wordPostfixes;
             nakedWord = nakedWord.left(nakedWord.length()-postfix.length());
-            if (removeLast)
+            if (removeLast && !part)
                 nakedWord = nakedWord.left(nakedWord.length()-1);
 
             //Check if the remaining word is in dictionary:
@@ -225,7 +231,7 @@ void L2AConversion::separatePrefixes(const QString& word, QString& nakedWord, QS
 }
 
 
-void L2AConversion::preprocessText()
+void L2AConversion::preprocessText(bool wikiMode)
 {
     //Changing "dr." to "dr ":
     strSource.replace("dr.", "dr", Qt::CaseInsensitive);
@@ -237,13 +243,16 @@ void L2AConversion::preprocessText()
 
     //List of regex processors:
     QList<Regex*> regexProcessors;
-    regexProcessors.append(new RegexUrl(strSource, this));
-    regexProcessors.append(new RegexEmail(strSource, this));
-    regexProcessors.append(new RegexWikiTemplate(strSource, this));
-    regexProcessors.append(new RegexWikiInterwiki(strSource, this));
-    regexProcessors.append(new RegexWikiLink(strSource, this));
-    regexProcessors.append(new RegexWikiPicture(strSource, this));      //NOTE: Needs completion
-    regexProcessors.append(new RegexHtmlTag(strSource, this));
+    if (wikiMode) regexProcessors.append(new RegexWikiNoWiki(strSource, new L2AConversion(this)));
+    if (wikiMode) regexProcessors.append(new RegexWikiNoConvert(strSource));
+    if (wikiMode) regexProcessors.append(new RegexWikiForceConvert(strSource));
+    regexProcessors.append(new RegexUrl(strSource));
+    regexProcessors.append(new RegexEmail(strSource));
+    if (wikiMode) regexProcessors.append(new RegexWikiTemplate(strSource));
+    if (wikiMode) regexProcessors.append(new RegexWikiInterwiki(strSource));
+    if (wikiMode) regexProcessors.append(new RegexWikiLink(strSource, new L2AConversion(this)));
+    if (wikiMode) regexProcessors.append(new RegexWikiPicture(strSource, new L2AConversion(this)));
+    regexProcessors.append(new RegexHtmlTag(strSource));
     //add others...
 
     //Run each one of the regex processors and collect its results:
@@ -260,63 +269,14 @@ void L2AConversion::preprocessText()
         }
     }
 
-    //Find urls:
-    //QString wikiNoConvert   = "(?:\\`\\{\\`\\{" + QString(WIKI_NO_CONVERT_TAG) + "\\s*\\|.*\\`\\}\\`\\})";         //TODO: Beware of this in non-wiki mode.
-    /*QString wikiTemplate    = "(?:\\`\\{\\`\\{[^\\`]*\\`\\}\\`\\})";       //TODO: Beware of this in non-wiki mode.    //TODO: This generalizes the wikiNoConvert. So in this situation, it's not needed!   //TODO: Beware when a ` character is in the middle!
-    QString wikiInterwiki   = "(?:\\[\\[[a-zA-Z\\-]+\\:[^\\]]*\\]\\])";           //TODO: Beware of this in non-wiki mode.
-    QString wikiPicture     = "(?:\\Şəkil:[^\\|]*\\|)";           //TODO: Beware of this in non-wiki mode. //TODO: Beware of the last necessary | character. It maybe sometimes missing!
-    QString htmlTag         = "(?:\\<[^\\>]*\\>)";       //TODO: Beware of this in non-html mode.
-
-    QString allRegexStr = urlRegexStr + "|" + emailRegexStr + "|" + wikiNoConvert + "|" + htmlTag
-            + "|" + wikiInterwiki + "|" + wikiPicture + "|" + wikiTemplate;
-    QRegExp regExp(allRegexStr, Qt::CaseInsensitive);
-    int index = 0;
-    QString match;
-    QString holder;
-    int count=0;
-    bool change = true;
-    while(change)
+    //Delete the regex processors:
+    for(int i=regexProcessors.count()-1; i>=0; i--)
     {
-        index = 0;
-        change = false;
-        while((index = regExp.indexIn(strSource, index)) != -1)
-        {
-            match = regExp.cap();
-            qDebug() << "found a match: " << match << " at position: " << index;
-
-            //Replace the url with a numbered place holder:
-            replaces.insert(count, match);
-            holder = "{" + QString::number(count) + "}";
-            strSource.replace(index, match.length(), holder);
-            count++;
-            index += holder.length();
-            change = true;
-        }
+        delete regexProcessors.at(i);
+        regexProcessors.removeLast();
     }
 
-    //Find wiki links:
-    QString wikiLinkSimple  = "(?:\\[\\[([^\\|\\]]+)(?:\\|([^\\]]+))?\\]\\])";       //TODO: Beware of this in non-wiki mode.
-    QRegExp customRegExp(wikiLinkSimple, Qt::CaseInsensitive);
-    index = 0;
-    QString link, link1, link2, equivalent, fullEqual;
-    //qDebug() << "source now: " <<strSource;
-    while((index = customRegExp.indexIn(strSource, index)) != -1)
-    {
-        match = customRegExp.cap();
-        link1 = customRegExp.cap(1);
-        link2 = customRegExp.cap(2);
-        link = link2.isEmpty() ? link1 : link2;
-        equivalent = convert(NULL, link);
-        fullEqual = "[[" + link1 + "|" + equivalent + "]]";
-
-        //qDebug() << "found a simple link: " << match << link1 << "|" << link2 << equivalent << fullEqual << "at index:" << index;
-
-        replaces.insert(count, fullEqual);
-        holder = "{" + QString::number(count) + "}";
-        strSource.replace(index, match.length(), holder);
-        count++;
-        index += holder.length();
-    }*/
+    //QString wikiNoConvert   = "(?:\\`\\{\\`\\{" + QString(WIKI_NO_CONVERT_TAG) + "\\s*\\|.*\\`\\}\\`\\})";         //TODO: Beware of this in non-wiki mode.
 }
 
 
@@ -376,19 +336,23 @@ QString L2AConversion::preprocessWord(QString word)
 }
 
 
-QString L2AConversion::convert(QString text)
+QString L2AConversion::convert(QString text, bool wikiMode)
 {
+    //Preprocess text:
+    preprocessText(wikiMode);
+
+    //Convert the preprocessed text:
     return convert(NULL, text);
+
+    //Postprocess converted text:
+    postprocessText();
 }
 
 
-QString L2AConversion::convert(QProgressDialog* prg)
+QString L2AConversion::convert(QProgressDialog* prg, bool wikiMode)
 {
-    //Load wiki mode:
-    //bool wikiMode = Settings::GetInstance(this->parent())->GetWikiMode();
-
     //Pre process text:
-    preprocessText();
+    preprocessText(wikiMode);
 
     //Convert the preprocessed text:
     strResult = convert(prg, strSource);
@@ -405,9 +369,11 @@ QString L2AConversion::convert(QProgressDialog* prg, QString text)
     QString res;
     int length = text.length();
     int i = 0;
+    bool bracket = false;       //Beware of this in non-wiki mode!
     while (i < length)
     {
         QString word = getWord(i, text);
+        bracket = i>0 && (text[i-1]==']' || text[i-1]=='}');
         i += word.length();
 
         if (NULL != prg)
@@ -424,7 +390,7 @@ QString L2AConversion::convert(QProgressDialog* prg, QString text)
                 break;
         }
 
-        res += convertWord(word);
+        res += convertWord(word, bracket);
 
         while ((i < length) && !isCharAInWordChar(text[i]))
         {
@@ -441,44 +407,51 @@ QString L2AConversion::convert(QProgressDialog* prg, QString text)
 }
 
 
-QString L2AConversion::convertWord(const QString& w)
+QString L2AConversion::convertWord(const QString& w, bool part)
 {
     if (w.isEmpty())
         return "";
 
-    if (isNonConvertableWord(w))
+    if (!part && isNonConvertableWord(w))
         return w;
 
 
     QString word;
     WORD_TO_LOWER(w, word);
-    QString str = lookupWord(word);
+    QString str = "";
+    if (!part) str = lookupWord(word);
     if (str.isEmpty())
     {
         //Separate and convert prefixes:
-        QString wordWithoutPrefixes;
-        QString wordPrefixes;
-        separatePrefixes(word, wordWithoutPrefixes, wordPrefixes);
-
-        //Check remaning in dictionary:
-        QString wordDict = lookupWord(wordWithoutPrefixes);
-        if (!wordDict.isEmpty())
+        QString wordWithoutPrefixes = word;
+        QString wordPrefixes, wordDict;
+        if (!part)
         {
-            str = wordPrefixes + wordDict;
-            return str;
+            separatePrefixes(word, wordWithoutPrefixes, wordPrefixes);
+
+            //Check remaning in dictionary:
+            wordDict = lookupWord(wordWithoutPrefixes);
+            if (!wordDict.isEmpty())
+            {
+                str = wordPrefixes + wordDict;
+                return str;
+            }
         }
 
         //Separate and convert postfixes:
         QString wordWithoutPostfixes;
         QString wordPostfixes;
-        separatePostfixes(wordWithoutPrefixes, wordWithoutPostfixes, wordPostfixes);
+        separatePostfixes(wordWithoutPrefixes, part, wordWithoutPostfixes, wordPostfixes);
 
         //Check remaining in dictionary:
-        wordDict = lookupWord(wordWithoutPostfixes);
-        if (!wordDict.isEmpty())
+        if (!part)
         {
-            str = wordPrefixes + wordDict + wordPostfixes;
-            return str;
+            wordDict = lookupWord(wordWithoutPostfixes);
+            if (!wordDict.isEmpty())
+            {
+                str = wordPrefixes + wordDict + wordPostfixes;
+                return str;
+            }
         }
 
         //Stick them together and form the final word:
@@ -521,12 +494,6 @@ QString L2AConversion::convertWordSimple(const QString &word)
 void L2AConversion::getCharEquivalent(const QChar &ch, int columnIndex, QString &equivalent)
 {
     equivalent = chars.contains(ch) ? chars.value(ch).at(columnIndex) : QString(ch);
-}
-
-
-QString L2AConversion::getResult()
-{
-    return strResult;
 }
 
 
