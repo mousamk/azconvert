@@ -234,8 +234,8 @@ void L2AConversion::preprocessText(bool wikiMode)
     if (wikiMode) regexProcessors.append(new RegexWikiNoWiki(strSource, new L2AConversion(this)));
     if (wikiMode) regexProcessors.append(new RegexWikiNoConvert(strSource));
     if (wikiMode) regexProcessors.append(new RegexWikiForceConvert(strSource));
-    regexProcessors.append(new RegexUrl(strSource));
     regexProcessors.append(new RegexEmail(strSource));
+    regexProcessors.append(new RegexUrl(strSource));
     if (wikiMode) regexProcessors.append(new RegexWikiTemplate(strSource));
     if (wikiMode) regexProcessors.append(new RegexWikiInterwiki(strSource));
     if (wikiMode) regexProcessors.append(new RegexWikiLink(strSource, new L2AConversion(this)));
@@ -309,9 +309,9 @@ QString L2AConversion::preprocessWord(QString word)
     if (res.length() > 2 &&
         (res.mid(0, 2) == ("sp") ||
         res.mid(0, 2) == ("st") ||
-        res.mid(0, 2) == ("sp") ||
-        res.mid(0, 2) == ("st") ||
-        res.mid(0, 2) == ("sk")))
+        res.mid(0, 2) == ("şp") ||
+        res.mid(0, 2) == ("şt") ||
+        res.mid(0, 2) == ("şk")))       //TODO: Not sure if this is sh or s!
         res = res.insert(0, "i");
 
     res.replace("iyi", "igi");
@@ -322,7 +322,7 @@ QString L2AConversion::preprocessWord(QString word)
 }
 
 
-QString L2AConversion::convert(QString text, bool wikiMode)
+/*QString L2AConversion::convert(QString text, bool wikiMode)
 {
     //Preprocess text:
     preprocessText(wikiMode);
@@ -332,7 +332,7 @@ QString L2AConversion::convert(QString text, bool wikiMode)
 
     //Postprocess converted text:
     postprocessText();
-}
+}*/
 
 
 QString L2AConversion::convert(QProgressDialog* prg, bool wikiMode)
@@ -514,16 +514,13 @@ int L2AConversion::getCharacterCount(QChar character, int position)
 
 QString L2AConversion::getWord(int i, QString source)
 {
-    if (source.isNull())
-        source = strSource;
-
     QString word = "";
     QChar c = source[i];
     int len = source.length();
 
     while (isCharAInWordChar(c))
     {
-        word = word + QString(c);
+        word += QString(c);
         i++;
 
         if (i >= len)
@@ -538,9 +535,7 @@ QString L2AConversion::getWord(int i, QString source)
 
 QString L2AConversion::lookupWord(const QString& w)
 {
-    QString res;
-    res = words.contains(w) ? words.value(w) : "";
-
+    QString res = words.contains(w) ? words.value(w) : "";
     return res;
 }
 

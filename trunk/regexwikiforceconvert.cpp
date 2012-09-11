@@ -19,6 +19,6 @@ RegexWikiForceConvert::RegexWikiForceConvert(QString &source)
 QString RegexWikiForceConvert::getMatchEquivalent()
 {
     qDebug() << "FORCECONVERT template Found:" << regexp.capturedTexts();
-    //Return the captured text, whichi is the second parameter of template:
+    //Return the captured text, which is the second parameter of template:
     return regexp.cap(1);
 }

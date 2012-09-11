@@ -12,10 +12,6 @@
 #include <QMap>
 
 
-//Forward declarations:
-class Convertor;
-
-
 /*!
  * @brief The abstract base class for RegEx checker classes.
  */

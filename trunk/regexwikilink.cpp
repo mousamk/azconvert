@@ -25,7 +25,8 @@ QString RegexWikiLink::getMatchEquivalent()
     QString link1 = regexp.cap(1);
     QString link2 = regexp.cap(2);
     QString link = link2.isEmpty() ? link1 : link2;
-    QString equivalent = convertor->convert(link, false);
+    convertor->setOriginalText(link);
+    QString equivalent = convertor->convert(NULL, false);
     QString fullEqual = "[[" + link1;
     if (link1 != equivalent)
         fullEqual += "|" + equivalent;

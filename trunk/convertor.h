@@ -55,14 +55,14 @@ public:
      */
     virtual QString convert(QProgressDialog* progressDialog, bool wikiMode) = 0;
 
-    /*!
+    /* !
      * @brief Converts a text without considering progress dialog.
      * @param text The text to be converted.
      * @param wikiMode Indicates whether the text be treated as wiki format and
      *        the required consideration be done or not
      * @return The converted result
      */
-    virtual QString convert(QString text, bool wikiMode) = 0;
+    //virtual QString convert(QString text, bool wikiMode) = 0;
     
     /*!
      * @brief Reloads the database resource.

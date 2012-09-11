@@ -11,7 +11,7 @@ class L2AConversion : public Convertor
 public:
     L2AConversion(QObject* parent);
     QString convert(QProgressDialog*, bool wikiMode);
-    QString convert(QString text, bool wikiMode);
+    //QString convert(QString text, bool wikiMode);
     //void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
@@ -41,7 +41,7 @@ private:
     void    separatePostfixes(const QString& word, bool part, QString& nakedWord, QString& wordPostfixes);
     void    separatePrefixes(const QString& word, QString& nakedWord, QString& wordPrefixes);
     QString getSpecialChar(QChar c, int index);
-    QString getWord(int i, QString source = QString());
+    QString getWord(int i, QString source);
     QString lookupWord(const QString& w);
     bool    isCharAInWordChar(QChar c);
     bool    isNonConvertableWord(const QString& w);

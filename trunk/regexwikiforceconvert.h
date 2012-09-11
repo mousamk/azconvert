@@ -9,8 +9,6 @@
 
 #include "regex.h"
 
-class Convertor;
-
 
 /*!
  * @brief The Wiki force convert template checker Regex class.

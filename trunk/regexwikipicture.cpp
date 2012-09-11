@@ -7,7 +7,6 @@
 RegexWikiPicture::RegexWikiPicture(QString &source, Convertor* convertor)
     : Regex(source), convertor(convertor)
 {
-    //QString pattern = "\\Şəkil:[^\\|]*\\|";         //TODO: Complete this one
     QString pattern =
             "(?:"
                 "\\[\\[\\s*(?:Şəkil|File)\\s*\\:"
@@ -98,7 +97,8 @@ QString RegexWikiPicture::getMatchEquivalent()
         QString equivalent;
         if (transliterate)
         {
-            equivalent = "Şəkil:" + prelast + "|" + convertor->convert(last, true);
+            convertor->setOriginalText(last);
+            equivalent = "Şəkil:" + prelast + "|" + convertor->convert(NULL, true);         //TODO: Instead of 'Şəkil' put the correct one (Sekil, File, Sound, ...).
             if (list.at(0).startsWith("[["))
                 equivalent = "[[" + equivalent + "]]";
             if(list.at(0).startsWith("\n"))

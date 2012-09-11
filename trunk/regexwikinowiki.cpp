@@ -23,7 +23,8 @@ QString RegexWikiNoWiki::getMatchEquivalent()
     qDebug() << "NOWIKI Found:" << regexp.capturedTexts();
 
     //Get inner contents of nowiki tag and convert it:
-    QString inner = convertor->convert(regexp.cap(1), false);
+    convertor->setOriginalText(regexp.cap(1));
+    QString inner = convertor->convert(NULL, false);
     QString equivalent = "<nowiki>" + inner + "</nowiki>";
 
     return equivalent;

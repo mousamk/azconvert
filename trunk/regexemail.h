@@ -22,6 +22,7 @@ public:
      */
     RegexEmail(QString& source);
 
+
 protected:
     /*!
      * @brief Reads the regexp.cap() and gets the equivalent for the matched substrings
