@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 3.5  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Mousa Moradi">
+	<META NAME="CREATED" CONTENT="20120911;18250600">
+	<META NAME="CHANGEDBY" CONTENT="Mousa Moradi">
+	<META NAME="CHANGED" CONTENT="20120911;19051300">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P STYLE="margin-bottom: 0in"><FONT SIZE=4><B>How to configure:</B></FONT></P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0in">First you need to have a
+MySql account. Open lib/config.php file and enter your db account
+there. The import the db_dump.sql file into your database so the
+tables and information in them, be created. Now you can use the
+program.</P>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0in"><BR>
+</P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<P STYLE="margin-bottom: 0in"><FONT SIZE=4><B>How to use:</B></FONT></P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0in">The API is so simple and
+straightforward. Just get a <FONT FACE="Courier New, monospace"><FONT SIZE=2>Convertor</FONT></FONT>
+subclass (i.e <FONT FACE="Courier New, monospace"><FONT SIZE=2>L2AConversion</FONT></FONT>)
+object, then set its original text, and then call <FONT FACE="Courier New, monospace"><FONT SIZE=2>convert()</FONT></FONT>.
+You can get converted result either by the <FONT FACE="Courier New, monospace"><FONT SIZE=2>convert()</FONT></FONT>'s
+output or by calling the <FONT FACE="Courier New, monospace"><FONT SIZE=2>getConvertedResult()</FONT></FONT>.</P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+<P STYLE="margin-bottom: 0in">Example:</P>
+<P STYLE="margin-left: 0.39in; margin-bottom: 0in"><BR>
+</P>
+<P STYLE="margin-left: 0.39in; margin-bottom: 0in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>$convertor
+= new L2AConversion();</FONT></FONT></P>
+<P STYLE="margin-left: 0.39in; margin-bottom: 0in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>$convertor-&gt;setOriginalText(“Lütfən
+bu yazını ərəb qrafikasına çevir!”);</FONT></FONT></P>
+<P STYLE="margin-left: 0.39in; margin-bottom: 0in"><FONT FACE="Courier New, monospace"><FONT SIZE=2>$result
+= $convertor-&gt;convert(false);</FONT></FONT></P>
+<P STYLE="margin-left: 0.39in; margin-bottom: 0in"><BR>
+</P>
+<P ALIGN=JUSTIFY STYLE="margin-bottom: 0in">The <FONT FACE="Courier New, monospace"><FONT SIZE=2>convert()</FONT></FONT>
+method gets a boolean variable which indicates if the text would be
+treated as a Wiki source text or not. If it's true, the convertor
+engine detects some Wiki formats (like links, templates, interwiki,
+...) and takes care of them. Otherwise blindly converts everything.</P>
+<P STYLE="margin-bottom: 0in"><BR>
+</P>
+</BODY>
+</HTML>
