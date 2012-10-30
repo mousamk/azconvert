@@ -15,7 +15,6 @@ public:
     //void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
-    void setOriginalText(const QString &text);
     QString getTablesPostfix();
     bool canAddWords();
 

@@ -22,8 +22,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void newVersionAvailable(QString version);
     Convertor* getConvertor();
+
+
+public slots:
+    void newVersionAvailable(QString version);
     
     
 protected:
@@ -43,7 +46,6 @@ private slots:
     void on_actionWikipediaMode_triggered();
     void on_actionCalendar_converter_triggered();
     void on_action_Add_word_to_dictionary_triggered();
-    void on_btnClear_clicked();
     void on_action_About_triggered();
     void on_actionAbout_Qt_triggered();
     void on_actionClear_All_triggered();
@@ -51,7 +53,6 @@ private slots:
     void on_btnOpen_clicked();
     void on_btnCopy_clicked();
     void on_btnPaste_clicked();
-    void on_btnNew_clicked();
     void on_action_Reload_dictionaries_triggered();
     void on_action_Cyrillic_to_Latin_triggered();
     void on_action_Arabic_to_Latin_triggered();
@@ -60,12 +61,11 @@ private slots:
 	void updateInfoLabelPosition(QResizeEvent*);
 	void checkForUpdate();
 	void handleFlashUrlClick(const QString&);
-    
-    
-public:
-    ConvertMode cMode;
+    void on_action_LangAzTurkish_triggered();
+    void on_action_LangEnglish_triggered();
+    void on_action_LangAzerbaijani_triggered();
 
-    
+
 private:
     Ui::MainWindow *ui;
 	QLabel* infoLabel;

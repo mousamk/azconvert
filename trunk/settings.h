@@ -21,24 +21,22 @@ public:
 
 private:
 	Settings(QObject* parent = NULL);
-	void initReadOnlySettings();
 
 
 public:
-    bool GetWikiMode();
-	void SetWikiMode(bool);
-	bool getUpdateCheck();
+    bool getWikiMode() const;
+    void setWikiMode(bool);
+    bool getUpdateCheck() const;
 	void setUpdateCheck(bool);
-	QString getUpdateUrl();
-	QString getCurrentVersion();
-	QString getApplicationHomepage();
+    QString getLanguage() const;
+    void setLanguage(QString lang);
+
 
 private:
     bool wikiMode;
 	bool updateCheck;
-	QString curVersion;
-	QString updateUrl;
-	QString appHomepage;
+    QString language;
+
 
 private:
     static Settings* instance;

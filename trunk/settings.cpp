@@ -1,45 +1,21 @@
 ﻿#include <QSettings>
+#include <QDebug>
+
 #include "settings.h"
+#include "config.h"
 
 
+//Allocate memory for static member variables:
 Settings* Settings::instance = NULL;
+
 
 Settings::Settings(QObject* parent)
 	: QObject(parent)
 {
 	//Load changable settings:
     LoadSettings();
-
-	//Load static values:
-	initReadOnlySettings();
 }
 
-void Settings::initReadOnlySettings()
-{
-	//Program current version:
-	curVersion = "3.2";
-
-	//Program latest version source:
-	updateUrl = "http://azconvert.sourceforge.net/lastver.txt";
-
-	//Program home page:
-	appHomepage = "http://azconvert.sourceforge.net/";
-}
-
-QString Settings::getUpdateUrl()
-{
-	return updateUrl;
-}
-
-QString Settings::getCurrentVersion()
-{
-	return curVersion;
-}
-
-QString Settings::getApplicationHomepage()
-{
-	return appHomepage;
-}
 
 Settings* Settings::GetInstance(QObject* parent)
 {
@@ -49,21 +25,25 @@ Settings* Settings::GetInstance(QObject* parent)
     return instance;
 }
 
-bool Settings::GetWikiMode()
+
+bool Settings::getWikiMode() const
 {
     return wikiMode;
 }
 
-void Settings::SetWikiMode(bool mode)
+
+void Settings::setWikiMode(bool mode)
 {
     wikiMode = mode;
 	settings.setValue("wikimode", wikiMode);
 }
 
-bool Settings::getUpdateCheck()
+
+bool Settings::getUpdateCheck() const
 {
 	return updateCheck;
 }
+
 
 void Settings::setUpdateCheck(bool check)
 {
@@ -71,12 +51,31 @@ void Settings::setUpdateCheck(bool check)
 	settings.setValue("updatecheck", updateCheck);
 }
 
+
+QString Settings::getLanguage() const
+{
+    qDebug() << "lang is: " << language;
+    return language;
+}
+
+
+void Settings::setLanguage(QString lang)
+{
+    language = lang;
+    settings.setValue("language", language);
+    qDebug() << "lang saved to " << language;
+}
+
+
 void Settings::LoadSettings()
 {
 	//Read each setting:
     wikiMode = settings.value("wikimode", false).toBool();
 	updateCheck = settings.value("updatecheck", true).toBool();
+    language = settings.value("language", "en_US").toString();
+    //qDebug() << "lang is:" << language;
 }
+
 
 /*void Settings::SaveSettings()
 {

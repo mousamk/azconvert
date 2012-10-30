@@ -14,18 +14,22 @@ class Update : public QObject
 
 
 public:
-	static Update* getInstance(MainWindow* mainWindow, QObject* parent = NULL);
+    static Update* getInstance(QObject* parent = NULL);
 	~Update();
 	void checkForUpdate();
 	static bool compareVersions(const QString& curVersion, const QString& lastVersion);
 
 
 private:
-	Update(MainWindow* mainWindow, QObject* parent = NULL);
+    Update(QObject* parent = NULL);
 
 
 private slots:
 	void replyGetLastVersionFinished(QNetworkReply*);
+
+
+signals:
+    void newVersionAvailable(QString version);
 
 
 private:

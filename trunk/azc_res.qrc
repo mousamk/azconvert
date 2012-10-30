@@ -1,9 +1,13 @@
 <RCC>
-    <qresource prefix="/" >
+    <qresource prefix="/">
         <file>res/AddWord.png</file>
         <file>res/Clear.png</file>
         <file>res/Calendar.png</file>
         <file>res/Convert.png</file>
         <file>res/AzConvert.ico</file>
+        <file>res/Flag_Turkey.png</file>
+        <file>res/Flag_Usa.png</file>
+        <file>res/Flag_Azerbaijan.png</file>
+        <file>res/Flag_Iran.png</file>
     </qresource>
 </RCC>

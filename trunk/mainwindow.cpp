@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QResizeEvent>
+#include <QTranslator>
 
 #include "settings.h"
 #include "mainwindow.h"
@@ -19,12 +20,19 @@
 #include "c2lconversion.h"
 #include "update.h"
 #include "dbservice.h"
+#include "config.h"
 
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    QTranslator translator;
+    translator.load(QString("../../trunk/azconvert_") + LANG + QString(".qm"));
+    QApplication::instance()->installTranslator(&translator);
+    this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
+    m_ui.retranslateUi(this);
+
 	ui->setupUi(this);
 	infoLabel = new QLabel(this);
 	infoLabel->setGeometry(0, 0, 0, 0);
@@ -49,11 +57,17 @@ MainWindow::MainWindow(QWidget *parent)
     SetModeDirection();
 
     //Load settings:
-	ui->actionWikipediaMode->setChecked(Settings::GetInstance(this)->GetWikiMode());
+    ui->actionWikipediaMode->setChecked(Settings::GetInstance(this)->getWikiMode());
 
 	//Check for update:
 	if (Settings::GetInstance(this)->getUpdateCheck())
+    {
+        connect(Update::getInstance(this->parent()), SIGNAL(newVersionAvailable(QString)), SLOT(newVersionAvailable(QString)));
 		QTimer::singleShot(10000, this, SLOT(checkForUpdate()));
+    }
+
+    //Retranslate ui:
+    //TRANSLATE(Settings::GetInstance(this)->getLanguage());
 }
 
 
@@ -72,9 +86,11 @@ void MainWindow::on_action_ConvertText_triggered()
     progress->show();
 
     //TODO: Get the proper wiki mode:
-    bool wikiMode = Settings::GetInstance(this)->GetWikiMode();
+    bool wikiMode = Settings::GetInstance(this)->getWikiMode();
+    //qDebug() << "org text:" << ui->txtSource->toPlainText();
     convertor->setOriginalText(ui->txtSource->toPlainText());
     ui->txtResult->document()->setPlainText(convertor->convert(progress, wikiMode));
+    //qDebug() << "res text:" << convertor->getConvertedResult();
     
     progress->close();
     setCursor(Qt::ArrowCursor);
@@ -82,7 +98,6 @@ void MainWindow::on_action_ConvertText_triggered()
 
 void MainWindow::on_action_Latin_to_Arabic_triggered()
 {
-    cMode = LatinToArabic;
     convertor = new L2AConversion(this);
 
     ui->action_Arabic_to_Latin->setChecked(false);
@@ -96,7 +111,6 @@ void MainWindow::on_action_Latin_to_Arabic_triggered()
 
 void MainWindow::on_action_Arabic_to_Latin_triggered()
 {
-    cMode = ArabicToLatin;
     convertor = new A2LConversion(this);
 
     ui->action_Arabic_to_Latin->setChecked(true);
@@ -111,7 +125,6 @@ void MainWindow::on_action_Arabic_to_Latin_triggered()
 
 void MainWindow::on_action_Cyrillic_to_Latin_triggered()
 {
-    cMode = CyrillicToLatin;
     convertor = new C2LConversion(this);
 
     ui->action_Arabic_to_Latin->setChecked(false);
@@ -137,13 +150,6 @@ void MainWindow::on_action_Reload_dictionaries_triggered()
 }
 
 
-void MainWindow::on_btnNew_clicked()
-{
-    ui->txtSource->clear();
-    ui->txtSource->setFocus();
-}
-
-
 void MainWindow::on_btnPaste_clicked()
 {
     QClipboard* clip = QApplication::clipboard();
@@ -165,7 +171,7 @@ void MainWindow::on_btnOpen_clicked()
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         ui->txtSource->setPlainText(QString::fromUtf8(file.readAll()));
-        statusBar()->showMessage(tr("File successfully loaded."), 3000);
+        //statusBar()->showMessage(tr("File successfully loaded."), 3000);
     }
 }
 
@@ -177,7 +183,7 @@ void MainWindow::on_btnSave_clicked()
     if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         file.write(ui->txtResult->toPlainText().toUtf8());
-        statusBar()->showMessage(tr("File saved successfully."), 3000);
+        //statusBar()->showMessage(tr("File saved successfully."), 3000);
     }
 }
 
@@ -204,12 +210,6 @@ void MainWindow::on_action_About_triggered()
 }
 
 
-void MainWindow::on_btnClear_clicked()
-{
-    ui->txtResult->clear();
-}
-
-
 void MainWindow::on_action_Add_word_to_dictionary_triggered()
 {
     QString word("");
@@ -230,21 +230,13 @@ void MainWindow::on_actionCalendar_converter_triggered()
 void MainWindow::on_actionWikipediaMode_triggered()
 {
     bool check = ui->actionWikipediaMode->isChecked();
-	Settings::GetInstance(this)->SetWikiMode(check);
-
-    //Show information:
-    /*if (check)
-    {
-        QMessageBox::information(this, tr("Wikipedia mode"), tr("This mode is for transliterating Azerbaijani wikipedia's articles."
-                                                                "\nIn this mode, AzConvert automatically knows WikiMedia's formats and considers them in tranliteration."
-                                                                "\n\nIt's not perfect yet and still is in development."), tr("Ok"));
-    }*/
+    Settings::GetInstance(this)->setWikiMode(check);
 }
 
 
 void MainWindow::checkForUpdate()
 {
-	Update::getInstance(this, this->parent())->checkForUpdate();
+    Update::getInstance(this->parent())->checkForUpdate();
 }
 
 
@@ -254,6 +246,7 @@ void MainWindow::showFlashInfo(const QString &message)
 	infoLabel->setGeometry(this->width()-210, 0, 200, 20);
 	infoLabel->setStyleSheet("background-color: #FFFF44;");
 	infoLabel->setText(message);
+    infoLabel->setToolTip(message);
 	infoLabel->show();
 }
 
@@ -277,8 +270,7 @@ void MainWindow::handleFlashUrlClick(const QString &url)
 
 void MainWindow::newVersionAvailable(QString version)
 {
-	QString url = Settings::GetInstance(this)->getApplicationHomepage();
-	showFlashInfo("&nbsp; <a href=\"" + url + "\">New Versian " + version + " is Available!</a>");
+    showFlashInfo("&nbsp; <a href=\"" + QString(APP_HOMEPAGE) + "\">New Versian " + version + " is Available!</a>");
 }
 
 
@@ -302,4 +294,26 @@ void MainWindow::resizeEvent(QResizeEvent*e)
 	QMainWindow::resizeEvent(e);
 
 	emit windowResized(e);
+}
+
+
+void MainWindow::on_action_LangAzTurkish_triggered()
+{
+    TRANSLATE("az_IR");
+    Settings::GetInstance(this)->setLanguage("az_IR");
+}
+
+
+void MainWindow::on_action_LangEnglish_triggered()
+{
+    TRANSLATE("en_US");
+    Settings::GetInstance(this)->setLanguage("en_US");
+    //ui->retranslateUi(this);
+}
+
+
+void MainWindow::on_action_LangAzerbaijani_triggered()
+{
+    TRANSLATE("az_AZ");
+    Settings::GetInstance(this)->setLanguage("az_AZ");
 }

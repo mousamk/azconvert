@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>627</width>
+    <width>693</width>
     <height>543</height>
    </rect>
   </property>
@@ -30,141 +30,104 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <property name="spacing">
-        <number>9</number>
-       </property>
-       <property name="margin">
-        <number>0</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <widget class="QTextEdit" name="txtSource">
+           <property name="font">
+            <font>
+             <family>Tahoma</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QTextEdit" name="txtSource">
-             <property name="font">
-              <font>
-               <family>Tahoma</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOn</enum>
+            <widget class="QPushButton" name="btnOpen">
+             <property name="text">
+              <string>&amp;Open...</string>
              </property>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <item>
-              <widget class="QPushButton" name="btnNew">
-               <property name="text">
-                <string>&amp;New</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btnOpen">
-               <property name="text">
-                <string>&amp;Open...</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btnPaste">
-               <property name="minimumSize">
-                <size>
-                 <width>71</width>
-                 <height>23</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>&amp;Paste</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+            <widget class="QPushButton" name="btnPaste">
+             <property name="minimumSize">
+              <size>
+               <width>71</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>&amp;Paste</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <widget class="QTextEdit" name="txtResult">
+           <property name="font">
+            <font>
+             <family>Tahoma</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QTextEdit" name="txtResult">
-             <property name="font">
-              <font>
-               <family>Tahoma</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::RightToLeft</enum>
-             </property>
-             <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOn</enum>
+            <widget class="QPushButton" name="btnSave">
+             <property name="text">
+              <string>&amp;Save...</string>
              </property>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QPushButton" name="btnSave">
-               <property name="text">
-                <string>&amp;Save...</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btnCopy">
-               <property name="text">
-                <string>&amp;Copy</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btnClear">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>75</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Cle&amp;ar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+            <widget class="QPushButton" name="btnCopy">
+             <property name="text">
+              <string>&amp;Copy</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
         </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout"/>
        </item>
       </layout>
      </widget>
@@ -176,7 +139,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>627</width>
+     <width>693</width>
      <height>21</height>
     </rect>
    </property>
@@ -204,9 +167,6 @@
      <string>&amp;Tools</string>
     </property>
     <widget class="QMenu" name="menu_Language">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="title">
       <string>&amp;Language</string>
      </property>
@@ -251,19 +211,32 @@
     <enum>Qt::ToolButtonTextUnderIcon</enum>
    </property>
    <attribute name="toolBarArea">
+    <enum>RightToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_ConvertText"/>
+   <addaction name="separator"/>
+   <addaction name="actionClear_All"/>
+   <addaction name="separator"/>
+   <addaction name="actionCalendar_converter"/>
+   <addaction name="action_Add_word_to_dictionary"/>
+  </widget>
+  <widget class="QToolBar" name="modeToolbar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionClear_All"/>
-   <addaction name="separator"/>
-   <addaction name="actionCalendar_converter"/>
-   <addaction name="action_Add_word_to_dictionary"/>
-   <addaction name="separator"/>
-   <addaction name="action_ConvertText"/>
+   <addaction name="action_Latin_to_Arabic"/>
+   <addaction name="action_Arabic_to_Latin"/>
+   <addaction name="action_Cyrillic_to_Latin"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="text">
     <string>E&amp;xit</string>
@@ -274,7 +247,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;1) Latin to Arabic</string>
+    <string>L -&gt; A</string>
    </property>
    <property name="toolTip">
     <string>Latin script to Arabic script convert mode</string>
@@ -288,7 +261,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;2) Arabic to Latin</string>
+    <string>A -&gt; L</string>
    </property>
    <property name="toolTip">
     <string>Arabic script to Latin script convert mode</string>
@@ -302,7 +275,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;3) Cyrillic to Latin</string>
+    <string>C -&gt; L</string>
    </property>
    <property name="toolTip">
     <string>Cyrillic script to Latin script convert mode</string>
@@ -349,7 +322,7 @@
      <normaloff>:/res/Calendar.png</normaloff>:/res/Calendar.png</iconset>
    </property>
    <property name="text">
-    <string>Calen&amp;dar switch...</string>
+    <string>Calen&amp;dar...</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
@@ -389,21 +362,40 @@
    </property>
   </action>
   <action name="action_LangEnglish">
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Flag_Usa.png</normaloff>:/res/Flag_Usa.png</iconset>
+   </property>
    <property name="text">
     <string notr="true">English</string>
    </property>
   </action>
   <action name="action_LangAzerbaijani">
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Flag_Azerbaijan.png</normaloff>:/res/Flag_Azerbaijan.png</iconset>
+   </property>
    <property name="text">
     <string notr="true">Azərbaycanca</string>
    </property>
   </action>
   <action name="action_LangTurkish">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Flag_Turkey.png</normaloff>:/res/Flag_Turkey.png</iconset>
+   </property>
    <property name="text">
     <string notr="true">Türkçe</string>
    </property>
   </action>
   <action name="action_LangAzTurkish">
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Flag_Iran.png</normaloff>:/res/Flag_Iran.png</iconset>
+   </property>
    <property name="text">
     <string notr="true">تورکجه</string>
    </property>
@@ -414,6 +406,13 @@
    </property>
   </action>
   <action name="action_LangPersian">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="azc_res.qrc">
+     <normaloff>:/res/Flag_Iran.png</normaloff>:/res/Flag_Iran.png</iconset>
+   </property>
    <property name="text">
     <string notr="true">فارسی</string>
    </property>
@@ -434,14 +433,11 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>txtSource</tabstop>
   <tabstop>txtResult</tabstop>
-  <tabstop>btnNew</tabstop>
   <tabstop>btnOpen</tabstop>
   <tabstop>btnPaste</tabstop>
   <tabstop>btnSave</tabstop>
   <tabstop>btnCopy</tabstop>
-  <tabstop>btnClear</tabstop>
  </tabstops>
  <resources>
   <include location="azc_res.qrc"/>

@@ -3,30 +3,28 @@
 
 #include "update.h"
 #include "util.h"
-#include "mainwindow.h"
 #include "settings.h"
+#include "config.h"
 
 
 //Allocate memory for static member variable:
 Update* Update::instance = NULL;
 
 
-Update* Update::getInstance(MainWindow *mainWindow, QObject *parent)
+Update* Update::getInstance(QObject *parent)
 {
 	if (NULL == instance)
-	{
-		instance = new Update(mainWindow, parent);
-	}
+        instance = new Update(parent);
 
 	return instance;
 }
 
-Update::Update(MainWindow* mainWindow, QObject* parent)
+
+Update::Update(QObject* parent)
 	: QObject(parent)
 {
 	//Initialize:
 	networkManager = new QNetworkAccessManager(parent);
-	this->mainWindow = mainWindow;
 
 	//Setup connections:
 	connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyGetLastVersionFinished(QNetworkReply*)));
@@ -48,8 +46,8 @@ void Update::replyGetLastVersionFinished(QNetworkReply* reply)
 		QString ver(data);
 
 		//If it's a new release, Notify main window:
-		if (compareVersions(Settings::GetInstance(this->parent())->getCurrentVersion(), ver))
-			mainWindow->newVersionAvailable(ver);
+        if (compareVersions(APP_VERSION, ver))
+            emit newVersionAvailable(ver);
 		else
 			qDebug() << "We're using the latest version!";
 	}
@@ -60,11 +58,13 @@ void Update::replyGetLastVersionFinished(QNetworkReply* reply)
 	}
 }
 
+
 void Update::checkForUpdate()
 {
 	//Issue request:
-	networkManager->get(QNetworkRequest(QUrl(Settings::GetInstance(this->parent())->getUpdateUrl())));
+    networkManager->get(QNetworkRequest(QUrl(APP_UPDATE_URL)));
 }
+
 
 bool Update::compareVersions(const QString &curVersion, const QString &lastVersion)
 {
@@ -116,6 +116,6 @@ bool Update::compareVersions(const QString &curVersion, const QString &lastVersi
 
 
 	//Not checking the third and fourth numbers,
-	// cause they don't worth informing user!
+    // cause they aren't worth informing user!
 	return false;
 }

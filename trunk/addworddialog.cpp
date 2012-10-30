@@ -2,11 +2,13 @@
 #include <QFile>
 #include <QDir>
 #include <QHash>
+#include <QTranslator>
 
 #include "addworddialog.h"
 #include "convertor.h"
 #include "util.h"
 #include "dbservice.h"
+#include "settings.h"
 
 
 
@@ -37,6 +39,10 @@ AddWordDialog::AddWordDialog(MainWindow* main, QString word, QWidget* parent) :
     //focus and select word:
     m_ui.txtWord->setFocus();
     m_ui.txtWord->selectAll();
+
+    //Retranslate UI:
+    //TRANSLATE_MUI(Settings::GetInstance(this->parent())->getLanguage());
+    m_ui.retranslateUi(this);
 }
 
 

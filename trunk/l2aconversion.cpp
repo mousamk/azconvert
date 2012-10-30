@@ -21,6 +21,7 @@
 #include "regexwikinoconvert.h"
 #include "regexwikiforceconvert.h"
 #include "regexwikinowiki.h"
+#include "regexruminumbers.h"       //TODO: This file should be ported to php version, too.
 
 
 L2AConversion::L2AConversion(QObject* parent)
@@ -78,13 +79,6 @@ Qt::LayoutDirection L2AConversion::getSourceLayoutDirection()
 Qt::LayoutDirection L2AConversion::getDestinationLayoutDirection()
 {
     return Qt::RightToLeft;
-}
-
-
-void L2AConversion::setOriginalText(const QString &text)
-{
-    Convertor::setOriginalText(text);
-    this->strResult = "";
 }
 
 
@@ -241,6 +235,7 @@ void L2AConversion::preprocessText(bool wikiMode)
     if (wikiMode) regexProcessors.append(new RegexWikiLink(strSource, new L2AConversion(this)));
     if (wikiMode) regexProcessors.append(new RegexWikiPicture(strSource, new L2AConversion(this)));
     regexProcessors.append(new RegexHtmlTag(strSource));
+    regexProcessors.append(new RegexRumiNumbers(strSource));        //TODO: This should be ported to php version, too.
 
 
     //Run each one of the regex processors and collect its results:

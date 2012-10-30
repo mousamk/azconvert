@@ -23,22 +23,24 @@
 #define WORD_TO_LOWER(w, lw) lw = w; lw.replace('I', CHAR_iH); lw.replace(CHAR_IH, 'i'); lw = lw.toLower()
 
 
-/*!
- * @enum ConvertMode
- * @brief This mode specifies transliteration direction.
- */
-enum ConvertMode
-{
-    LatinToArabic = 0,             ///< @brief Latin to Arabic mode
-    ArabicToLatin,                 ///< @brief Arabic to Latin mode
-    CyrillicToLatin                ///< @brief Cyrillic to latin mode
-};
+#define TRANSLATE(LANG) QTranslator translator; \
+    translator.load(QString("../../trunk/azconvert_") + LANG + QString(".qm")); \
+    QApplication::instance()->installTranslator(&translator); \
+    this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft); \
+    ui->retranslateUi(this)
+
+
+#define TRANSLATE_MUI(LANG) QTranslator translator; \
+    translator.load(QString("../../trunk/azconvert_") + LANG + QString(".qm")); \
+    QApplication::instance()->installTranslator(&translator); \
+    this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft); \
+    m_ui.retranslateUi(this)
+
 
 
 class Util
 {
 public:
-
 };
 
 #endif // UTIL_H

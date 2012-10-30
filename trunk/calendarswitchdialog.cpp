@@ -1,8 +1,11 @@
 ﻿#include <QMessageBox>
 #include <QIntValidator>
+#include <QTranslator>
 
 #include "calendarswitchdialog.h"
 #include "calendarconverter.h"
+#include "settings.h"
+#include "util.h"
 
 
 
@@ -38,6 +41,14 @@ CalendarSwitchDialog::CalendarSwitchDialog(QWidget *parent) :
     QValidator* validator = new QIntValidator(NULL);
     m_ui.txtGrYear->setValidator(validator);
     m_ui.txtJaYear->setValidator(validator);
+
+    //Retranslate UI:
+    TRANSLATE_MUI(Settings::GetInstance(this->parent())->getLanguage());
+    /*QTranslator translator;
+    translator.load(QString("../../trunk/azconvert_az_IR.qm"));
+    QApplication::instance()->installTranslator(&translator);
+    this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
+    m_ui.retranslateUi(this);*/
 }
 
 

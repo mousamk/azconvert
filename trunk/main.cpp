@@ -1,6 +1,6 @@
 ﻿#include <QtGui/QApplication>
 #include <QTextCodec>
-//#include <QTranslator>
+#include <QTranslator>
 
 #include "mainwindow.h"
 //#include "mydata.h"

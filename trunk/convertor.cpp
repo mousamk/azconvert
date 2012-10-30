@@ -47,6 +47,7 @@ void Convertor::reloadResources(bool force)
 void Convertor::setOriginalText(const QString &text)
 {
     strSource = text;
+    strResult = "";
 }
 
 

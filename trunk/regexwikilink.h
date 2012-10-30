@@ -21,6 +21,7 @@ public:
     /*!
      * @brief Class constructor
      * @param source The source text to work on it
+     * @param convertor The convertor to be used in partial converting of links
      */
     RegexWikiLink(QString& source, Convertor* convertor);
 
