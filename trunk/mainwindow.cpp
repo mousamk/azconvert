@@ -18,6 +18,7 @@
 #include "l2aconversion.h"
 #include "a2lconversion.h"
 #include "c2lconversion.h"
+#include "l2cconversion.h"
 #include "update.h"
 #include "dbservice.h"
 #include "config.h"
@@ -27,13 +28,14 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    //Load translator:
     QTranslator translator;
-    translator.load(QString("../../trunk/azconvert_") + LANG + QString(".qm"));
+    translator.load(QString("../../trunk/azconvert_") + Settings::GetInstance(this)->getLanguage() + QString(".qm"));
     QApplication::instance()->installTranslator(&translator);
-    this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
-    m_ui.retranslateUi(this);
 
 	ui->setupUi(this);
+    this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
+
 	infoLabel = new QLabel(this);
 	infoLabel->setGeometry(0, 0, 0, 0);
     
@@ -103,6 +105,7 @@ void MainWindow::on_action_Latin_to_Arabic_triggered()
     ui->action_Arabic_to_Latin->setChecked(false);
     ui->action_Latin_to_Arabic->setChecked(true);
     ui->action_Cyrillic_to_Latin->setChecked(false);
+    ui->action_Latin_to_Cyrillic->setChecked(false);
 
     ui->action_Add_word_to_dictionary->setEnabled(true);
 
@@ -116,6 +119,7 @@ void MainWindow::on_action_Arabic_to_Latin_triggered()
     ui->action_Arabic_to_Latin->setChecked(true);
     ui->action_Latin_to_Arabic->setChecked(false);
     ui->action_Cyrillic_to_Latin->setChecked(false);
+    ui->action_Latin_to_Cyrillic->setChecked(false);
 
     ui->action_Add_word_to_dictionary->setEnabled(true);
 
@@ -130,6 +134,22 @@ void MainWindow::on_action_Cyrillic_to_Latin_triggered()
     ui->action_Arabic_to_Latin->setChecked(false);
     ui->action_Latin_to_Arabic->setChecked(false);
     ui->action_Cyrillic_to_Latin->setChecked(true);
+    ui->action_Latin_to_Cyrillic->setChecked(false);
+
+    ui->action_Add_word_to_dictionary->setEnabled(false);
+
+    SetModeDirection();
+}
+
+
+void MainWindow::on_action_Latin_to_Cyrillic_triggered()
+{
+    convertor = new L2CConversion(this);
+
+    ui->action_Arabic_to_Latin->setChecked(false);
+    ui->action_Latin_to_Arabic->setChecked(false);
+    ui->action_Cyrillic_to_Latin->setChecked(false);
+    ui->action_Latin_to_Cyrillic->setChecked(true);
 
     ui->action_Add_word_to_dictionary->setEnabled(false);
 
@@ -317,3 +337,4 @@ void MainWindow::on_action_LangAzerbaijani_triggered()
     TRANSLATE("az_AZ");
     Settings::GetInstance(this)->setLanguage("az_AZ");
 }
+

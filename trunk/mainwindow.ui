@@ -157,6 +157,7 @@
      <addaction name="action_Latin_to_Arabic"/>
      <addaction name="action_Arabic_to_Latin"/>
      <addaction name="action_Cyrillic_to_Latin"/>
+     <addaction name="action_Latin_to_Cyrillic"/>
     </widget>
     <addaction name="menu_Convert"/>
     <addaction name="separator"/>
@@ -236,6 +237,7 @@
    <addaction name="action_Latin_to_Arabic"/>
    <addaction name="action_Arabic_to_Latin"/>
    <addaction name="action_Cyrillic_to_Latin"/>
+   <addaction name="action_Latin_to_Cyrillic"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -428,6 +430,20 @@
    </property>
    <property name="text">
     <string>&amp;Wikipedia mode</string>
+   </property>
+  </action>
+  <action name="action_Latin_to_Cyrillic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>L -&gt; C</string>
+   </property>
+   <property name="toolTip">
+    <string>Latin script to Cyrillic script convert mode</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+4</string>
    </property>
   </action>
  </widget>

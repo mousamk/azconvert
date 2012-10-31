@@ -38,7 +38,8 @@ SOURCES += main.cpp \
     regexwikiforceconvert.cpp \
     regexwikinowiki.cpp \
     regexruminumbers.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    l2cconversion.cpp
 
 
 HEADERS += mainwindow.h \
@@ -68,7 +69,8 @@ HEADERS += mainwindow.h \
     regexwikiforceconvert.h \
     regexwikinowiki.h \
     regexruminumbers.h \
-    aboutdialog.h
+    aboutdialog.h \
+    l2cconversion.h
 
 
 FORMS += mainwindow.ui \

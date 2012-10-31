@@ -1,6 +1,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QVariant>
+
 #include "c2lconversion.h"
 
 
@@ -55,82 +56,28 @@ QStringList C2LConversion::getCharacterTuple(const QSqlQuery& query, const QSqlR
 }
 
 
-QString C2LConversion::convert(QString text, bool /*wikiMode*/)
+/*QString C2LConversion::convert(QString text, bool / *wikiMode* /)
 {
-    //TODO: Update this method.
     QString str = text;
-    str.replace("А", "A");
-    str.replace("а", "a");
-    str.replace("Б", "B");
-    str.replace("б", "b");
-    str.replace("Ҹ", "C");
-    str.replace("ҹ", "c");
-    str.replace("Ч", "Ç");
-    str.replace("ч", "ç");
-    str.replace("Д", "D");
-    str.replace("д", "d");
-    str.replace("Е", "E");
-    str.replace("е", "e");
-    str.replace("Ә", "Ə");
-    str.replace("ә", "ə");
-    str.replace("Ф", "F");
-    str.replace("ф", "f");
-    str.replace("Ҝ", "G");
-    str.replace("ҝ", "g");
-    str.replace("Ғ", "Ğ");
-    str.replace("ғ", "ğ");
-    str.replace("Һ", "H");
-    str.replace("һ", "h");
-    str.replace("Х", "X");
-    str.replace("х", "x");
-    str.replace("И", "İ");
-    str.replace("и", "i");
-    str.replace("Ы", "I");
-    str.replace("ы", "ı");
-    str.replace("Ж", "J");
-    str.replace("ж", "j");
-    str.replace("К", "K");
-    str.replace("к", "k");
-    str.replace("Г", "Q");
-    str.replace("г", "q");
-    str.replace("Л", "L");
-    str.replace("л", "l");
-    str.replace("М", "M");
-    str.replace("м", "m");
-    str.replace("Н", "N");
-    str.replace("н", "n");
-    str.replace("О", "O");
-    str.replace("о", "o");
-    str.replace("Ө", "Ö");
-    str.replace("ө", "ö");
-    str.replace("П", "P");
-    str.replace("п", "p");
-    str.replace("Р", "R");
-    str.replace("р", "r");
-    str.replace("С", "S");
-    str.replace("с", "s");
-    str.replace("Ш", "Ş");
-    str.replace("ш", "ş");
-    str.replace("Т", "T");
-    str.replace("т", "t");
-    str.replace("У", "U");
-    str.replace("у", "u");
-    str.replace("Ү", "Ü");
-    str.replace("ү", "ü");
-    str.replace("В", "V");
-    str.replace("в", "v");
-    str.replace("Ј", "Y");
-    str.replace("ј", "y");
-    str.replace("З", "Z");
-    str.replace("з", "z");
+    ...
 
     return str;
-}
+}*/
 
 
-QString C2LConversion::convert(QProgressDialog* /*progressDialog*/, bool wikiMode)
+QString C2LConversion::convert(QProgressDialog* /*progressDialog*/, bool /*wikiMode*/)
 {
-    strResult = convert(strSource, wikiMode);
+    QString str = "";
+    for(int i=0; i<strSource.size(); i++)
+    {
+        QChar ch = strSource[i];
+        if (chars.contains(ch))
+            str += chars[ch].at(0);
+        else
+            str += ch;
+    }
+
+    strResult = str;
     return strResult;
 }
 

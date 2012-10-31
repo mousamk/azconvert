@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="az_AZ">
+<defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>AboutDialog</name>
     <message>
@@ -23,7 +24,7 @@
         <source>v 3.2</source>
         <translation></translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="aboutdialog.ui" line="91"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -100,32 +101,32 @@ p, li { white-space: pre-wrap; }
         <translation>&amp;Bağla</translation>
     </message>
     <message>
-        <location filename="addworddialog.cpp" line="76"/>
+        <location filename="addworddialog.cpp" line="82"/>
         <source>Already exists</source>
         <translation>Öncədən vardır</translation>
     </message>
     <message>
-        <location filename="addworddialog.cpp" line="76"/>
+        <location filename="addworddialog.cpp" line="82"/>
         <source>The same word with the same equivalent already exists in database.</source>
         <translation>O kəlmə, həmin bərabərilə veritabanında öncədən vardır.</translation>
     </message>
     <message>
-        <location filename="addworddialog.cpp" line="82"/>
+        <location filename="addworddialog.cpp" line="88"/>
         <source>Another equivalent</source>
         <translation>Başqa bərabər</translation>
     </message>
     <message>
-        <location filename="addworddialog.cpp" line="82"/>
+        <location filename="addworddialog.cpp" line="88"/>
         <source>The word with another equivalent (&lt;b&gt;%1&lt;/b&gt;) already exists in database. Do you want to change it?</source>
         <translation>O kəlmə başqa bir bərabər ilə (&lt;b&gt;%1&lt;/b&gt;) öncədən veritabanında vardır. Onu dəyişmək istəyirsiniz?</translation>
     </message>
     <message>
-        <location filename="addworddialog.cpp" line="110"/>
+        <location filename="addworddialog.cpp" line="116"/>
         <source>Not successful</source>
         <translation>Müvəffəqiyyətsiz</translation>
     </message>
     <message>
-        <location filename="addworddialog.cpp" line="110"/>
+        <location filename="addworddialog.cpp" line="116"/>
         <source>An error happened and the operation was unsuccessful!</source>
         <translation>Bir xəta qabağa gəldi və o iş müvəffəqiyyətsiz oldu!</translation>
     </message>
@@ -199,14 +200,14 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; color:#ff0000;&quot;&gt;Diqqət: Burada işləyən alqoritm 1925-dən 2088-in eyşiyində olan tarixləri xətalı çevirə bilər!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="calendarswitchdialog.cpp" line="124"/>
-        <location filename="calendarswitchdialog.cpp" line="145"/>
+        <location filename="calendarswitchdialog.cpp" line="135"/>
+        <location filename="calendarswitchdialog.cpp" line="156"/>
         <source>Date</source>
         <translation>Tarix</translation>
     </message>
     <message>
-        <location filename="calendarswitchdialog.cpp" line="124"/>
-        <location filename="calendarswitchdialog.cpp" line="145"/>
+        <location filename="calendarswitchdialog.cpp" line="135"/>
+        <location filename="calendarswitchdialog.cpp" line="156"/>
         <source>The date you entered, is not valid!</source>
         <translation>Verdiyiniz tarix, düz bir tarix deyil!</translation>
     </message>
@@ -245,167 +246,182 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="155"/>
-        <location filename="mainwindow.ui" line="293"/>
+        <location filename="mainwindow.ui" line="295"/>
         <source>&amp;Convert</source>
         <translation>&amp;Çevir</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="167"/>
+        <location filename="mainwindow.ui" line="168"/>
         <source>&amp;Tools</source>
         <translation>&amp;Vəsilələr</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="171"/>
+        <location filename="mainwindow.ui" line="172"/>
         <source>&amp;Language</source>
         <translation>&amp;Dil</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="191"/>
+        <location filename="mainwindow.ui" line="192"/>
         <source>&amp;Help</source>
         <translation>&amp;Yardım</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="228"/>
+        <location filename="mainwindow.ui" line="229"/>
         <source>toolBar</source>
         <translation>Vəsilə navarı</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="242"/>
+        <location filename="mainwindow.ui" line="244"/>
         <source>E&amp;xit</source>
         <translation>Çı&amp;x</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="250"/>
+        <location filename="mainwindow.ui" line="252"/>
         <source>L -&gt; A</source>
         <translation>L -&gt; Ə</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="253"/>
+        <location filename="mainwindow.ui" line="255"/>
         <source>Latin script to Arabic script convert mode</source>
         <translation>Latın xəttindən ərəb xəttinə çevirən durum</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="256"/>
+        <location filename="mainwindow.ui" line="258"/>
         <source>Ctrl+1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="264"/>
+        <location filename="mainwindow.ui" line="266"/>
         <source>A -&gt; L</source>
         <translation>Ə -&gt; L</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="267"/>
+        <location filename="mainwindow.ui" line="269"/>
         <source>Arabic script to Latin script convert mode</source>
         <translation>Ərəb xəttindən Latın xəttinə çevirən durum</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="270"/>
+        <location filename="mainwindow.ui" line="272"/>
         <source>Ctrl+2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="278"/>
+        <location filename="mainwindow.ui" line="280"/>
         <source>C -&gt; L</source>
         <translation>K -&gt; L</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="281"/>
+        <location filename="mainwindow.ui" line="283"/>
         <source>Cyrillic script to Latin script convert mode</source>
         <translation>Kiril xəttindən Latın xəttinə çevirən durum</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="284"/>
+        <location filename="mainwindow.ui" line="286"/>
         <source>Ctrl+3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="296"/>
+        <location filename="mainwindow.ui" line="298"/>
         <source>F9</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="301"/>
+        <location filename="mainwindow.ui" line="303"/>
         <source>&amp;Reload dictionaries</source>
         <translation>&amp;Sözlükləri yenidən yüklə</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="304"/>
+        <location filename="mainwindow.ui" line="306"/>
         <source>F5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="313"/>
+        <location filename="mainwindow.ui" line="315"/>
         <source>&amp;Add word...</source>
         <translation>&amp;Kəlmə artır...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="316"/>
+        <location filename="mainwindow.ui" line="318"/>
         <source>F4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="325"/>
+        <location filename="mainwindow.ui" line="327"/>
         <source>Calen&amp;dar...</source>
         <translation>&amp;Təqvim...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="328"/>
+        <location filename="mainwindow.ui" line="330"/>
         <source>F6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="336"/>
+        <location filename="mainwindow.ui" line="338"/>
         <source>&amp;Options...</source>
         <translation>Seç&amp;mələr...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="341"/>
+        <location filename="mainwindow.ui" line="343"/>
         <source>&amp;About...</source>
         <translation>&amp;Haqqında...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="350"/>
+        <location filename="mainwindow.ui" line="352"/>
         <source>Clear All</source>
         <translation>Hamısını sil</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="353"/>
+        <location filename="mainwindow.ui" line="355"/>
         <source>Clear both boxes</source>
         <translation>Hər iki qutunu sil </translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="356"/>
+        <location filename="mainwindow.ui" line="358"/>
         <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="361"/>
+        <location filename="mainwindow.ui" line="363"/>
         <source>About &amp;Qt...</source>
         <translation>Q&amp;t haqqında...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="424"/>
+        <location filename="mainwindow.ui" line="432"/>
         <source>&amp;Wikipedia mode</source>
         <translation>&amp;Vikipediya durumu</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="37"/>
+        <location filename="mainwindow.ui" line="440"/>
+        <source>L -&gt; C</source>
+        <translation>K -&gt; L</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="443"/>
+        <source>Latin script to Cyrillic script convert mode</source>
+        <translation>Latın xəttindən Kiril xəttinə çevirən durum</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="446"/>
+        <source>Ctrl+4</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="45"/>
         <source>Database Error</source>
         <translation>Veritabanı xətası</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="75"/>
+        <location filename="mainwindow.cpp" line="86"/>
         <source>Converting...</source>
         <translation>Çevirilir...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="75"/>
+        <location filename="mainwindow.cpp" line="86"/>
         <source>Cancel</source>
         <translation>Ləğv et</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="318"/>
+        <location filename="mainwindow.cpp" line="37"/>
         <source>LTR</source>
         <translation>LTR</translation>
     </message>

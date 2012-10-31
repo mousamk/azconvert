@@ -48,7 +48,7 @@ private:
     void    preprocessText(bool wikiMode);
     void    postprocessText();
     QString preprocessWord(QString word);
-    void    getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
+    inline void getCharEquivalent(const QChar& ch, int columnIndex, QString& equivalent);
     int     getCharacterCount(QChar character, int position);
     
     

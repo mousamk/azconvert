@@ -66,6 +66,8 @@ private slots:
     void on_action_LangAzerbaijani_triggered();
 
 
+    void on_action_Latin_to_Cyrillic_triggered();
+
 private:
     Ui::MainWindow *ui;
 	QLabel* infoLabel;
