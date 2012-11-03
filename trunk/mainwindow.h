@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include <QLabel>
+#include <QTranslator>
 
 #include "convertor.h"
 #include "util.h"
@@ -73,6 +74,8 @@ private:
 	QLabel* infoLabel;
 	//QString infoLabelUrl;
     Convertor* convertor;
+	QString qmPath;
+	QTranslator appTranslator;
 };
 
 #endif // MAINWINDOW_H

@@ -11,7 +11,7 @@ class A2LConversion : public Convertor
 public:
     A2LConversion(QObject* parent);
     QString convert(QProgressDialog*, bool wikiMode);
-    QString convert(QString text, bool wikiMode);
+    //QString convert(QString text, bool wikiMode);
     //void    reloadResources();
     Qt::LayoutDirection getSourceLayoutDirection();
     Qt::LayoutDirection getDestinationLayoutDirection();
@@ -36,8 +36,8 @@ private:
     QChar   GetSpecialChar(QChar);
     QString GetWord(int);
     QString GetWordFromDictionary(const QString&);
-    bool    IsCharAEndStatementChar(QChar);
-    bool    IsCharAInWordChar(QChar);
+    bool    IsCharAEndStatementChar(QChar) const;
+    bool    IsCharAInWordChar(QChar) const;
     bool    IsEnd(const QString&, int);
     QString IslahEt(const QString&);
     bool    IsLatinSesli(QChar);
@@ -48,7 +48,7 @@ private:
     bool    IsSessiz(QChar);
     bool    IsSessiz(const QString&, int);
     bool    IsSessizYV(const QString&, int);
-    void    RaiseUpFirstLetters();
+    QString RaiseUpFirstLetters(const QString&) const;
     int     GetHicaNumber(const QString&, int);
     
     

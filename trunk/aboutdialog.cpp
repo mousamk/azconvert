@@ -11,5 +11,5 @@ AboutDialog::AboutDialog(QWidget *parent) :
     m_ui.setupUi(this);
 
     //Retranslate UI:
-    TRANSLATE_MUI(Settings::GetInstance(parent)->getLanguage());
+    //TRANSLATE_MUI(Settings::GetInstance(parent)->getLanguage());
 }

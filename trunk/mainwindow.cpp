@@ -7,7 +7,6 @@
 #include <QFile>
 #include <QDebug>
 #include <QResizeEvent>
-#include <QTranslator>
 
 #include "settings.h"
 #include "mainwindow.h"
@@ -29,9 +28,14 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     //Load translator:
-    QTranslator translator;
-    translator.load(QString("../../trunk/azconvert_") + Settings::GetInstance(this)->getLanguage() + QString(".qm"));
-    QApplication::instance()->installTranslator(&translator);
+	qmPath = qApp->applicationDirPath() + "/";
+#ifdef DEBUG_BUILD
+	qmPath += "../../trunk/";
+    //qDebug() << "HI";
+#endif
+	qDebug() << qmPath;
+	appTranslator.load("azconvert_" + Settings::GetInstance(this)->getLanguage() + ".qm", qmPath);
+	qApp->installTranslator(&appTranslator);
 
 	ui->setupUi(this);
     this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
@@ -319,22 +323,30 @@ void MainWindow::resizeEvent(QResizeEvent*e)
 
 void MainWindow::on_action_LangAzTurkish_triggered()
 {
-    TRANSLATE("az_IR");
+	//TRANSLATE("az_IR");
+	appTranslator.load("azconvert_az_IR.qm", qmPath);
     Settings::GetInstance(this)->setLanguage("az_IR");
+	this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
+	ui->retranslateUi(this);
 }
 
 
 void MainWindow::on_action_LangEnglish_triggered()
 {
-    TRANSLATE("en_US");
+    //TRANSLATE("en_US");
+	appTranslator.load("azconvert_en_US.qm", qmPath);
     Settings::GetInstance(this)->setLanguage("en_US");
-    //ui->retranslateUi(this);
+	this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
+    ui->retranslateUi(this);
 }
 
 
 void MainWindow::on_action_LangAzerbaijani_triggered()
 {
-    TRANSLATE("az_AZ");
+    //TRANSLATE("az_AZ");
+	appTranslator.load("azconvert_az_AZ.qm", qmPath);
     Settings::GetInstance(this)->setLanguage("az_AZ");
+	this->setLayoutDirection(tr("LTR") == "LTR" ? Qt::LeftToRight : Qt::RightToLeft);
+	ui->retranslateUi(this);
 }
 

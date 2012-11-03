@@ -43,7 +43,7 @@ CalendarSwitchDialog::CalendarSwitchDialog(QWidget *parent) :
     m_ui.txtJaYear->setValidator(validator);
 
     //Retranslate UI:
-    TRANSLATE_MUI(Settings::GetInstance(this->parent())->getLanguage());
+    //TRANSLATE_MUI(Settings::GetInstance(this->parent())->getLanguage());
     /*QTranslator translator;
     translator.load(QString("../../trunk/azconvert_az_IR.qm"));
     QApplication::instance()->installTranslator(&translator);

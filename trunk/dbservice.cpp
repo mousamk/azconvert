@@ -4,6 +4,8 @@
 #include <QSqlRecord>
 #include <QDir>
 #include <QCoreApplication>
+#include <QVariant>
+
 #include "dbservice.h"
 
 
@@ -41,10 +43,10 @@ bool DbService::loadDb()
     QString dbFilePath = QCoreApplication::applicationDirPath() + QDir::separator();
 
 #ifdef DEBUG_BUILD
-    dbFilePath += "../../otherfiles/db.sqlite";
-#else
-    dbFilePath += "db.sqlite";
+    dbFilePath += "../../otherfiles/";
+    //qDebug() << "HII";
 #endif
+	dbFilePath += "db.sqlite";
 
     db.setDatabaseName(dbFilePath);
     if (!db.open())

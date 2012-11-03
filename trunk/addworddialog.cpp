@@ -42,7 +42,7 @@ AddWordDialog::AddWordDialog(MainWindow* main, QString word, QWidget* parent) :
 
     //Retranslate UI:
     //TRANSLATE_MUI(Settings::GetInstance(this->parent())->getLanguage());
-    m_ui.retranslateUi(this);
+    //m_ui.retranslateUi(this);
 }
 
 

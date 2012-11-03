@@ -10,7 +10,7 @@
 
 //AzConvert general info:
 #define APP_NAME                    "AzConvert"
-#define APP_VERSION                 "3.2"
+#define APP_VERSION                 "3.3"
 #define APP_UPDATE_URL              "http://azconvert.sourceforge.net/lastver.txt"
 #define APP_HOMEPAGE                "http://azconvert.sourceforge.net/"
 

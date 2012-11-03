@@ -140,14 +140,29 @@
      <x>0</x>
      <y>0</y>
      <width>693</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
    <widget class="QMenu" name="menu_File">
+    <property name="font">
+     <font>
+      <family>Tahoma</family>
+     </font>
+    </property>
     <property name="title">
      <string>&amp;File</string>
     </property>
     <widget class="QMenu" name="menu_Convert">
+     <property name="font">
+      <font>
+       <family>Tahoma</family>
+      </font>
+     </property>
      <property name="tearOffEnabled">
       <bool>false</bool>
      </property>
@@ -164,6 +179,11 @@
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_Tools">
+    <property name="font">
+     <font>
+      <family>Tahoma</family>
+     </font>
+    </property>
     <property name="title">
      <string>&amp;Tools</string>
     </property>
@@ -243,6 +263,11 @@
    <property name="text">
     <string>E&amp;xit</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
   </action>
   <action name="action_Latin_to_Arabic">
    <property name="checkable">
@@ -253,6 +278,11 @@
    </property>
    <property name="toolTip">
     <string>Latin script to Arabic script convert mode</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
    </property>
    <property name="shortcut">
     <string>Ctrl+1</string>
@@ -268,6 +298,11 @@
    <property name="toolTip">
     <string>Arabic script to Latin script convert mode</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
    <property name="shortcut">
     <string>Ctrl+2</string>
    </property>
@@ -282,6 +317,11 @@
    <property name="toolTip">
     <string>Cyrillic script to Latin script convert mode</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
    <property name="shortcut">
     <string>Ctrl+3</string>
    </property>
@@ -294,6 +334,11 @@
    <property name="text">
     <string>&amp;Convert</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
    <property name="shortcut">
     <string>F9</string>
    </property>
@@ -301,6 +346,11 @@
   <action name="action_Reload_dictionaries">
    <property name="text">
     <string>&amp;Reload dictionaries</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -314,6 +364,11 @@
    <property name="text">
     <string>&amp;Add word...</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
    <property name="shortcut">
     <string>F4</string>
    </property>
@@ -326,6 +381,11 @@
    <property name="text">
     <string>Calen&amp;dar...</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
    <property name="shortcut">
     <string>F6</string>
    </property>
@@ -337,10 +397,20 @@
    <property name="text">
     <string>&amp;Options...</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
   </action>
   <action name="action_About">
    <property name="text">
     <string>&amp;About...</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
    </property>
   </action>
   <action name="actionClear_All">
@@ -362,6 +432,11 @@
    <property name="text">
     <string>About &amp;Qt...</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
   </action>
   <action name="action_LangEnglish">
    <property name="icon">
@@ -371,6 +446,11 @@
    <property name="text">
     <string notr="true">English</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
   </action>
   <action name="action_LangAzerbaijani">
    <property name="icon">
@@ -379,6 +459,11 @@
    </property>
    <property name="text">
     <string notr="true">Azərbaycanca</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
    </property>
   </action>
   <action name="action_LangTurkish">
@@ -391,6 +476,11 @@
    </property>
    <property name="text">
     <string notr="true">Türkçe</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
    </property>
   </action>
   <action name="action_LangAzTurkish">
@@ -431,6 +521,11 @@
    <property name="text">
     <string>&amp;Wikipedia mode</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
+   </property>
   </action>
   <action name="action_Latin_to_Cyrillic">
    <property name="checkable">
@@ -441,6 +536,11 @@
    </property>
    <property name="toolTip">
     <string>Latin script to Cyrillic script convert mode</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Tahoma</family>
+    </font>
    </property>
    <property name="shortcut">
     <string>Ctrl+4</string>

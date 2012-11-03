@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
+#include <QVariant>
 
 #include "a2lconversion.h"
 #include "dbservice.h"
@@ -475,13 +476,14 @@ bool A2LConversion::ContainsBackVowel(const QString& w)
     return false;
 }
 
-QString A2LConversion::convert(QString text, bool /*wikiMode*/)
+/*QString A2LConversion::convert(QString text, bool / *wikiMode* /)
 {
     return convert(NULL, text);
-}
+}*/
 
 QString A2LConversion::convert(QProgressDialog* prg, QString text)
 {
+	QString res;
     ChangeAlternativeForms();
     int length = text.length();
     int i = 0;
@@ -506,24 +508,25 @@ QString A2LConversion::convert(QProgressDialog* prg, QString text)
         }
 
         w = IslahEt(w);
-        strResult = strResult + w;
+        res = res + w;
         while ((i < length) && !IsCharAInWordChar(text[i]))
         {
             QChar ch = GetSpecialChar(text[i]);
             if (ch != ' ')
-                strResult = strResult + QChar(ch);
+                res += QChar(ch);
             else
-                strResult = strResult + QChar(text[i]);
+                res += QChar(text[i]);
             i++;
         }
     }
-    RaiseUpFirstLetters();
-    return GetResult();
+    res = RaiseUpFirstLetters(res);
+    return res;
 }
 
 QString A2LConversion::convert(QProgressDialog* prg, bool /*wikiMode*/)
 {
-    return convert(prg, strSource);
+    strResult = convert(prg, strSource);
+	return strResult;
 }
 
 QChar A2LConversion::ConvertSessizChar(QChar c)
@@ -1036,12 +1039,12 @@ QString A2LConversion::GetWordFromDictionary(const QString& wo)
     return str;
 }
 
-bool A2LConversion::IsCharAEndStatementChar(QChar c)
+bool A2LConversion::IsCharAEndStatementChar(QChar c) const
 {
     return (c == '?' || c == QChar('\x1f', '\x06') || c == '.' || c == '!');
 }
 
-bool A2LConversion::IsCharAInWordChar(QChar c)
+bool A2LConversion::IsCharAInWordChar(QChar c) const
 {
     return (c != ' ' && c != '\n' && c != '\t' && c != '\r' && c != '?' && c != '.' && c != '!' && c != '(' && c != ')' && c != '[' && c != ']' && c != '{' && c != '}' && c != '"' && c != '-' && c != '=' && c != ',' && c != QChar('\x0c', '\x06') && c != QChar('\x1c', '\x20') && c != QChar('\x1d', '\x20') && c != ':' && c != ';' && c != QChar('\x1b', '\x06') && c != QChar('\xbb', '\x00') && c != QChar('\xab', '\x00') && c != QChar('\x1f', '\x06'));
 }
@@ -1177,19 +1180,22 @@ bool A2LConversion::IsSessizYV(const QString& w, int ind)
         return;
 }*/
 
-void A2LConversion::RaiseUpFirstLetters()
+QString A2LConversion::RaiseUpFirstLetters(const QString& text) const
 {
-    int length = strResult.length();
+	QString res;
+    int length = text.length();
     bool flag = true;
     for (int i = 0; i < length; i++)
     {
-        if (IsCharAInWordChar(strResult[i]) && flag)
+        if (IsCharAInWordChar(text[i]) && flag)
         {
-            QString str = strResult.mid(0, i) + ((strResult[i] == 'i') ? "\u0130" : QString(QChar(strResult[i]).toUpper())) + strResult.mid(i + 1);
+            QString str = text.mid(0, i) + ((text[i] == 'i') ? "\u0130" : QString(QChar(text[i]).toUpper())) + text.mid(i + 1);
             flag = false;
-            strResult = str;
+            res = str;
         }
-        else if (IsCharAEndStatementChar(strResult[i]))
+        else if (IsCharAEndStatementChar(text[i]))
             flag = true;
     }
+	
+	return res;
 }

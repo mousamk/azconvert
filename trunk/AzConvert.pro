@@ -54,7 +54,6 @@ HEADERS += mainwindow.h \
     util.h \
     dbservice.h \
     convertor.h \
-    wordpair.h \
     specialcharacterrecord.h \
     config.h \
     regex.h \
