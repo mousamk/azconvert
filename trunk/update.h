@@ -10,7 +10,7 @@ class MainWindow;
 
 class Update : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 
 public:

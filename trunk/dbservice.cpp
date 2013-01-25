@@ -136,6 +136,27 @@ void DbService::getPostfixes(QString tablePostfix, QMap<int, QStringList> &postf
 }
 
 
+void DbService::getReplaceChars(QString tablePostfix, QMap<int, CharReplaceRecord> &replaceChars)
+{
+    QString queryStr = "SELECT * FROM nodiac_" + QString(tablePostfix.at(tablePostfix.length()-1)) + ";";
+    QSqlQuery query(queryStr, db);
+    QSqlRecord record = query.record();
+
+    int id, enabled;
+    QString source, equivalent;
+    while(query.next())
+    {
+        id = query.value(record.indexOf("id")).toInt();
+        source = query.value(record.indexOf("source")).toString();
+        equivalent = query.value(record.indexOf("equivalent")).toString();
+        enabled = query.value(record.indexOf("enabled")).toInt();
+
+        CharReplaceRecord replaceRecord(id, source, equivalent, bool(enabled));
+        replaceChars.insert(id, replaceRecord);
+    }
+}
+
+
 void DbService::loadPostOrPrefix(QString postOrPrefix, QString tablePostfix, QMap<int, QStringList> &postOrPrefixes)
 {
     QString queryStr = "SELECT * FROM " + postOrPrefix + tablePostfix + ";";
@@ -159,6 +180,24 @@ void DbService::loadPostOrPrefix(QString postOrPrefix, QString tablePostfix, QMa
 
         //qDebug() << "A" << postOrPrefix << "is loaded: " << id << ": " << list;
     }
+}
+
+
+bool DbService::updateReplaceChar(QString tablePostfix, int id, bool enabled)
+{
+    QString queryStr = "UPDATE nodiac_" + QString(tablePostfix.at(tablePostfix.length()-1)) + " "
+            "SET enabled=%1 "
+            "WHERE id=%2;";
+    queryStr = queryStr.arg(int(enabled)).arg(id);
+    QSqlQuery query(db);
+    query.prepare(queryStr);
+
+    //Execute query:
+    bool res = query.exec();
+    if(!res)
+        qDebug() << "Error happened: " << query.lastError().text();
+
+    return query.exec();
 }
 
 

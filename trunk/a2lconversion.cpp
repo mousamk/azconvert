@@ -72,6 +72,11 @@ void A2LConversion::setOriginalText(const QString &text)
 }
 
 
+void A2LConversion::replaceSpecialChars(QString &/*text*/)
+{
+}
+
+
 void A2LConversion::ChangeAlternativeForms()
 {
     strSource = strSource.replace(QChar('\x4a', '\x06'), QChar('\xcc', '\x06'));

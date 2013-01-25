@@ -15,6 +15,7 @@
 #include <QList>
 
 #include "specialcharacterrecord.h"
+#include "charreplacerecord.h"
 
 
 class QProgressDialog;
@@ -101,6 +102,12 @@ public:
     QHash<QString,QString>& getWords();
 
     /*!
+     * @brief Gets the replace chars list.
+     * @return The replace chars list.
+     */
+    QMap<int, CharReplaceRecord>& getReplaceChars();
+
+    /*!
      * @brief Gets the convertor's postfix for database tables
      * @returns The postfix of the convertor in db tables
      */
@@ -132,6 +139,9 @@ protected:
     //! @brief Loads postfixes table used in transliteration
     void loadPostfixes();
 
+    //! @brief Loads replaced character records
+    void loadReplaceChars();
+
     /*!
      * @brief Fetches the record for a character and returns all parts in a string list.
      * @param query The query to get the fields from.
@@ -139,6 +149,12 @@ protected:
      * @returns The list of fields for a character record.
      */
     virtual QStringList getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record) = 0;
+
+    /*!
+     * @brief Gets a text and replaces some characters in it according to the 'nodiac' table.
+     * @param text The text to replace its special characters.
+     */
+    virtual void replaceSpecialChars(QString& text) = 0;
     
     
 protected:
@@ -165,6 +181,9 @@ protected:
 
     //! @brief Table of postfixes and their related fields
     static QMap<int, QStringList> postfixes;
+
+    //! @brief Table of character replacing records
+    static QMap<int, CharReplaceRecord> replaceChars;
 
     //! @brief The loaded mode's table postfix will be saved in this when db data are loaded:
     static QString loadedMode;

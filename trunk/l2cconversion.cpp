@@ -45,6 +45,11 @@ QStringList L2CConversion::getCharacterTuple(const QSqlQuery& query, const QSqlR
 }
 
 
+void L2CConversion::replaceSpecialChars(QString &/*text*/)
+{
+}
+
+
 QString L2CConversion::convert(QProgressDialog* /*progressDialog*/, bool /*wikiMode*/)
 {
     QString str = "";

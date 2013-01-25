@@ -67,11 +67,25 @@ void Settings::setLanguage(QString lang)
 }
 
 
+bool Settings::getEnableDiacritics() const
+{
+    return diacritics;
+}
+
+
+void Settings::setEnableDiacritics(bool diac)
+{
+    diacritics = diac;
+    settings.setValue("diacritics", diac);
+}
+
+
 void Settings::LoadSettings()
 {
 	//Read each setting:
     wikiMode = settings.value("wikimode", false).toBool();
 	updateCheck = settings.value("updatecheck", true).toBool();
+    diacritics = settings.value("diacritics", true).toBool();
     language = settings.value("language", "en_US").toString();
     //qDebug() << "lang is:" << language;
 }

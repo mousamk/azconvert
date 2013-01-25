@@ -14,6 +14,7 @@
 #include "calendarswitchdialog.h"
 #include "ui_mainwindow.h"
 #include "ui_aboutdialog.h"
+#include "settingsdialog.h"
 #include "l2aconversion.h"
 #include "a2lconversion.h"
 #include "c2lconversion.h"
@@ -350,3 +351,9 @@ void MainWindow::on_action_LangAzerbaijani_triggered()
 	ui->retranslateUi(this);
 }
 
+
+void MainWindow::on_action_Options_triggered()
+{
+    SettingsDialog* dlg = new SettingsDialog(convertor->getReplaceChars(), this);
+    dlg->show();
+}

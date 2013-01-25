@@ -65,9 +65,9 @@ private slots:
     void on_action_LangAzTurkish_triggered();
     void on_action_LangEnglish_triggered();
     void on_action_LangAzerbaijani_triggered();
-
-
     void on_action_Latin_to_Cyrillic_triggered();
+    void on_action_Options_triggered();
+
 
 private:
     Ui::MainWindow *ui;

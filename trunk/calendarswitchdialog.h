@@ -6,6 +6,7 @@
 class CalendarSwitchDialog : public QDialog {
     Q_OBJECT
     Q_DISABLE_COPY(CalendarSwitchDialog)
+
 public:
     explicit CalendarSwitchDialog(QWidget *parent = 0);
 

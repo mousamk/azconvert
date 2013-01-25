@@ -61,6 +61,12 @@ protected:
      */
     QStringList getCharacterTuple(const QSqlQuery& query, const QSqlRecord& record);
 
+    /*!
+     * @brief Gets a text and replaces some characters in it according to the 'nodiac' table.
+     * @param text The text to replace its special characters.
+     */
+    void replaceSpecialChars(QString& text);
+
 
 public:
     QString AA2AL;

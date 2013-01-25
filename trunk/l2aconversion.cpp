@@ -293,6 +293,9 @@ void L2AConversion::postprocessText()
     strResult.replace("`{", "{");
     strResult.replace("`}", "}");
     strResult.replace("``", "`");
+
+    //Replace special chars:
+    replaceSpecialChars(strResult);
 }
 
 
@@ -317,17 +320,18 @@ QString L2AConversion::preprocessWord(QString word)
 }
 
 
-/*QString L2AConversion::convert(QString text, bool wikiMode)
+void L2AConversion::replaceSpecialChars(QString &text)
 {
-    //Preprocess text:
-    preprocessText(wikiMode);
-
-    //Convert the preprocessed text:
-    return convert(NULL, text);
-
-    //Postprocess converted text:
-    postprocessText();
-}*/
+    if (Settings::GetInstance(this)->getEnableDiacritics())
+    {
+        QMap<int, CharReplaceRecord>::const_iterator i;
+        for(i = replaceChars.begin(); i != replaceChars.end(); i++)
+        {
+            if (i.value().enabled)
+                text.replace(i.value().source, i.value().equivalent);
+        }
+    }
+}
 
 
 QString L2AConversion::convert(QProgressDialog* prg, bool wikiMode)
@@ -460,7 +464,10 @@ QString L2AConversion::convertWordSimple(const QString &word)
         if (0 == i) modeIndex = 0;
         else if (length-1 == i) modeIndex = 2;
         else modeIndex = 1;
-        //TODO: Consider 'voc' modes too
+
+        //Consider 'voc' mode, which saves diacratics:
+        if(Settings::GetInstance(this)->getEnableDiacritics())
+            modeIndex += 3;
 
         QChar c = word[i];
         QString eq;

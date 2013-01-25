@@ -12,11 +12,14 @@ QList<QString> Convertor::solidWords;
 QMap<int, QStringList> Convertor::prefixes;
 QMap<int, QStringList> Convertor::postfixes;
 QString Convertor::loadedMode;
+QMap<int, CharReplaceRecord> Convertor::replaceChars;
 
 
 Convertor::Convertor(QObject *parent)
     : QObject(parent)
 {
+    //Load chars independent of child class type:
+    loadReplaceChars();
 }
 
 
@@ -60,6 +63,12 @@ QString Convertor::getConvertedResult()
 QHash<QString,QString>& Convertor::getWords()
 {
      return words;
+}
+
+
+QMap<int, CharReplaceRecord>& Convertor::getReplaceChars()
+{
+    return replaceChars;
 }
 
 
@@ -112,4 +121,14 @@ void Convertor::loadPostfixes()
 {
     postfixes.clear();
     DbService::getInstance()->getPostfixes(getTablesPostfix(), postfixes);
+}
+
+
+void Convertor::loadReplaceChars()
+{
+    replaceChars.clear();
+    DbService::getInstance()->getReplaceChars("a", replaceChars);
+    //NOTE: For now only arabic destination character replacement is needed and
+    //      this always gets them. It's needed in settings form, independent of
+    //      convertor's state.
 }

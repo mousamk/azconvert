@@ -31,6 +31,7 @@ public:
     SpecialCharacterRecord(QString source, QString equivalent, SpecialCharacterSituation position)
         : source(source), equivalent(equivalent), position(position) {}
 
+
 public:
     //! @brief Source character
     QString source;

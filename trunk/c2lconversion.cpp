@@ -56,6 +56,11 @@ QStringList C2LConversion::getCharacterTuple(const QSqlQuery& query, const QSqlR
 }
 
 
+void C2LConversion::replaceSpecialChars(QString &/*text*/)
+{
+}
+
+
 /*QString C2LConversion::convert(QString text, bool / *wikiMode* /)
 {
     QString str = text;

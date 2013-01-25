@@ -39,7 +39,8 @@ SOURCES += main.cpp \
     regexwikinowiki.cpp \
     regexruminumbers.cpp \
     aboutdialog.cpp \
-    l2cconversion.cpp
+    l2cconversion.cpp \
+    settingsdialog.cpp
 
 
 HEADERS += mainwindow.h \
@@ -69,13 +70,16 @@ HEADERS += mainwindow.h \
     regexwikinowiki.h \
     regexruminumbers.h \
     aboutdialog.h \
-    l2cconversion.h
+    l2cconversion.h \
+    settingsdialog.h \
+    charreplacerecord.h
 
 
 FORMS += mainwindow.ui \
     aboutdialog.ui \
     addworddialog.ui \
-    calendarswitchdialog.ui
+    calendarswitchdialog.ui \
+    settingsdialog.ui
 
 
 RESOURCES += azc_res.qrc

@@ -13,6 +13,7 @@
 #include <QSqlQuery>
 
 #include "specialcharacterrecord.h"
+#include "charreplacerecord.h"
 
 
 template <class Key, class T>
@@ -67,11 +68,27 @@ public:
     void getPostfixes(QString tablePostfix, QMap<int,QStringList>& postfixes);
 
     /*!
+     * @brief Loads characters for being replaced after transliteration
+     * @param tablePostfix Postfix of the table to load postfixes from it
+     * @param replaceChars The reference where the replace characters will be saved in
+     */
+    void getReplaceChars(QString tablePostfix, QMap<int, CharReplaceRecord>& replaceChars);
+
+    /*!
+     * @brief Updates enabled status of a replace character in database.
+     * @param tablePostfix Postfix of the table to update this record on it.
+     * @param id Id of the record of the replace character.
+     * @param enabled Specifies whether this replacing is enabled or not.
+     * @return Returns whether it's been successfully updated or not.
+     */
+    bool updateReplaceChar(QString tablePostfix, int id, bool enabled);
+
+    /*!
      * @brief Adds a word to database.
      * @param tablePostfix Postfix of the table to add word to it.
      * @param word The word to be added.
      * @param equal Equivalent of the word to be added.
-     * @return Returns whether it's been successfuly added or not.
+     * @return Returns whether it's been successfully added or not.
      */
     bool addWord(QString tablePostfix, QString word, QString equal);
 
@@ -80,7 +97,7 @@ public:
      * @param tablePostfix Postfix of the table to update word in it.
      * @param word The word, it's equivalent to be updated.
      * @param equal Equivalent of the word to be updated.
-     * @return Returns whether it's been successfuly updated or not.
+     * @return Returns whether it's been successfully updated or not.
      */
     bool updateWord(QString tablePostfix, QString word, QString equal);
     

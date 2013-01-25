@@ -10,6 +10,7 @@
 class AddWordDialog : public QDialog {
     Q_OBJECT
     Q_DISABLE_COPY(AddWordDialog)
+
 public:
     explicit AddWordDialog(QWidget *parent = 0);
     AddWordDialog(MainWindow* main, QString word, QWidget* parent = 0);

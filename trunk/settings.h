@@ -30,11 +30,14 @@ public:
 	void setUpdateCheck(bool);
     QString getLanguage() const;
     void setLanguage(QString lang);
+    bool getEnableDiacritics() const;
+    void setEnableDiacritics(bool);
 
 
 private:
     bool wikiMode;
 	bool updateCheck;
+    bool diacritics;
     QString language;
 
 
