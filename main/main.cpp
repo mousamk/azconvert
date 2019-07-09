@@ -1,4 +1,4 @@
-﻿#include <QtGui/QApplication>
+﻿#include <QtWidgets/QApplication>
 #include <QTextCodec>
 #include <QTranslator>
 
@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
 	//Set application attributes:
 	QCoreApplication::setOrganizationName("AzTools");

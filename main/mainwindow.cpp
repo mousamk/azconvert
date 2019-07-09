@@ -1,8 +1,8 @@
-﻿#include <QProgressDialog>
+﻿#include <QtWidgets/QProgressDialog>
 #include <QDesktopServices>
-#include <QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QClipboard>
-#include <QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include <QTimer>
 #include <QFile>
 #include <QDebug>

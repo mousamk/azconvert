@@ -2,8 +2,9 @@
 #define A2LCONVERSION_H
 
 #include <QObject>
-#include <QProgressDialog>
 #include "convertor.h"
+
+class QProgressDialog;
 
 
 class A2LConversion : public Convertor

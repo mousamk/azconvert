@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QProgressDialog>
+#include <QtWidgets/QProgressDialog>
 #include "convertor.h"
 
 

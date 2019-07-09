@@ -2,7 +2,8 @@
 #include <QDir>
 #include <QFile>
 #include <QDebug>
-#include <QMessageBox>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 #include <QVariant>
 
 #include "a2lconversion.h"

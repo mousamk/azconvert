@@ -1,7 +1,8 @@
 #include <QDir>
 #include <QFile>
-#include <QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QCoreApplication>
+#include <QtWidgets/QProgressDialog>
 #include <QDebug>
 #include <QHash>
 #include <QRegExp>

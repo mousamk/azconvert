@@ -1,4 +1,4 @@
-﻿#include <QMessageBox>
+﻿#include <QtWidgets/QMessageBox>
 #include <QIntValidator>
 #include <QTranslator>
 

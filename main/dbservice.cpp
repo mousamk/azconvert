@@ -43,7 +43,7 @@ bool DbService::loadDb()
     QString dbFilePath = QCoreApplication::applicationDirPath() + QDir::separator();
 
 #ifdef DEBUG_BUILD
-    dbFilePath += "../../otherfiles/";
+    dbFilePath += "../otherfiles/";
     //qDebug() << "HII";
 #endif
 	dbFilePath += "db.sqlite";

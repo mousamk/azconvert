@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-09-02T13:27:10
 # -------------------------------------------------
-QT += core gui network sql
+QT += core gui widgets network sql
 TARGET = AzConvert
 TEMPLATE = app
 

@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
-#include <QLabel>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QLabel>
 #include <QTranslator>
 
 #include "convertor.h"

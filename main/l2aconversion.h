@@ -2,7 +2,6 @@
 #define L2ACONVERSION_H
 
 #include <QObject>
-#include <QProgressDialog>
 #include "convertor.h"
 
 

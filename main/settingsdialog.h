@@ -1,7 +1,7 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 #include <QMap>
 
 #include "charreplacerecord.h"
